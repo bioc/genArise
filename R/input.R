@@ -26,3 +26,15 @@ read.spot <- function( file.name, cy3 = 1, cy5 = 2, bg.cy3 = 3, bg.cy5 = 4, ids 
                                                 Cy5=spot[,cy5], BgCy3=spot[,bg.cy3], BgCy5=spot[,bg.cy5], Id = as.vector(spot[,ids]))))
       }
 }
+
+read.dataset <- function( file.name, cy3 = 1, cy5 = 2, ids = 3, zscore = 4, type = 5, header = FALSE, sep = "\t"){
+  tmp <- unlist(strsplit(file.name, "\\/"))
+  dataset.name <- unlist(strsplit(tmp[length(tmp)], "\\."))[1]
+  dataset <- read.csv( file.name, header = header, sep = sep)
+  type <- trim(as.character(dataset[1,4]))
+  dataset <- dataset[-1,]
+  new ("DataSet", name = dataset.name ,dataSets = list(Cy3 = as.numeric(dataset[,cy3]),
+                                         Cy5 = as.numeric(dataset[,cy5]), Id = as.vector(dataset[,ids]),
+                                         Zscore = as.numeric(as.vector(dataset[,zscore]))), type= type)
+  
+}
