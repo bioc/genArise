@@ -1,0 +1,29 @@
+DataSet-class           DataSet - class
+Simon                   Dataset: Little fragment of a microarray from
+                        IFC UNAM
+Spot-class              Spot - class
+WT.dataset              Microarray from the IFC
+Zscore                  Z-scores for identifying differential
+                        expression
+Zscore.plot             Z-score Data Visualization: R vs I or M vs A
+a.arise                 A Arise
+alter.unique            Remove Duplicates
+bg.correct              Background Correction
+classes                 Classes Defined by this Package
+cys.plot                Data Visualization: Cy3 vs Cy5
+filter.spot             Intensity-based filtering of array elements
+genArise                GUI: Graphical User Interface
+genMerge                genMerge: Post-Genomic Analysis
+global.norm             Global Normalization of Spot
+grid.norm               Normalization by grid of Spot
+i.arise                 I Arise
+imageLimma              Image Plot of Microarray
+m.arise                 M Arise
+ma.plot                 Data Visualization: M vs. A plot
+r.arise                 Get R value
+read.spot               Read Spot from File
+ri.plot                 Data Visualization: R vs I
+uniqueMean              Remove Duplicates
+uniqueSpot              Replicate filtering
+write.dataSet           Write dataSet
+write.spot              Write Spot
