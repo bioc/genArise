@@ -6,7 +6,7 @@
 \topmargin=0in
 \oddsidemargin 0.0in
 \evensidemargin 0.0in
-
+\usepackage{url}
 \usepackage{Sweave}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
@@ -15,7 +15,7 @@
 \fancyhead[R]{\Large{\bf{genArise}}} %Especifico
 
 \title{The genArise Package}
-\author{Ana Patricia G\'omez May\'en\\ Gustavo Corral Guill\'e\\ Lina Riego\\ Gerardo Coello Couti\~no}
+\author{Ana Patricia G\'omez May\'en\\ Gustavo Corral Guill\'e\\ Lina Riego Ruiz\\ Gerardo Coello Couti\~no}
 
 \begin{document}
 
@@ -23,7 +23,16 @@
 
 \section{Introduction}
 
-genArise is a package that contains specific functions to do the analysis of the obtained data of a microarray. You must install the packages tkrplot, tcltk and locfit in order to be able to use this package. genArise is loaded with the next instruction:\\
+genArise is a package that contains specific functions to perform an analysis of microarray obtained data to select genes that are significantly differentially expressed between classes of samples. Before this analysis, genArise carry out a number of transformations on the data to eliminate low-quality measurements and to adjust the measured intensities to facilitate comparisons.\\
+
+First, you must install the R system. The current released version is 2.0.0 and the binary can be obtained via CRAN, a collection of sites which carry identical material, consisting of the R distribution(s), the contributed extensions, documentation for R, and binaries. The CRAN master site can be found at the URL \url{http://cran.R-project.org/}. \\
+
+Then, you need install the packages tkrplot and locfit in order to be able to use this package. This can be done as follows:
+\begin{Scode}
+> install.packages(c("locfit","tkrplot"))
+\end{Scode}
+
+Finally, genArise can be loaded with the next instruction:\\
 \begin{Schunk}
 \begin{Sinput}
 > library(genArise)
@@ -44,14 +53,12 @@ Loading required package: tkrplot
 Loading required package: tcltk 
 \end{Soutput}
 \end{Schunk}
-Once loaded genArise, we can proceed with the analysis of the data of a microarray. genArise is provided of functions applied in an atomic way in every step of analysis, however there is a graphical user interface to facilitate the use of all the functions in the package. This graphic function will be described ahead, by now we will describe just the functions in a lower level.
+Once loaded, you can proceed with the analysis of the microarray data. genArise is provided with functions that can be applied from R prompt in every step of analysis; however, there is also a graphical user interface to facilitate the use of all the functions in the package.
 
-\section{The Package's Functions}
-The first that we must do is read the data contained in the input file. The format from the file must be columns of data separated by some character. The input file must contains only the rows with the data and no more, nevertheless it can have a header but this is not mandatory  to be able to read the files by the function.\\
+\section{The genArise Package's Functions}
+The first step that you must do is to read the data contained in the input file.\\
 
-To read the input files genArise contains the function \texttt{read.spot}. This function can read all data in the file, but it only consider the columns of interest for the analysis, in this case Cy3, Cy5, BgCy3, BgCy5 and the Ids.\\
-
-This function returns an object of type Spot, and we will be working with this object. The syntax of this function is the next:
+To read the input files genArise have the function \texttt{read.spot}. This function returns an object of type Spot, because a number of functions that carry out transformations on the data need a spot object as argument. The syntax for this function is:
 
 \begin{Scode}
 > my.spot <- read.spot( file.name, cy3 = 1, cy5 = 2, 
@@ -63,10 +70,21 @@ This function returns an object of type Spot, and we will be working with this o
 Output: an object of class Spot called my.spot
 \end{Soutput}
 
-In the input arguments of the function we must include the name of the input file and a number that indicates the position of the correspondig data in the file. The argument header indicates if the file contains header and the argument \texttt{is.ifc} represents a boolean that indicates if the file was done by the Microarray Unit of the Cellular Physiology Institute of UNAM. When this argument is TRUE, the columns without information of our interest will be ommited. So, when this argument is TRUE the other arguments (except the name of the input file) will be ignored. In this example, we suppose that the file just contains the columns of our interest. Besides, this columns are ordered.\\
+And the meaning of each one of the arguments is:\\
 
+\begin{description}
+\item{file.name:} this is the name of the file which the data are to be read from.  The input file format must be in columns of data which values are separated by some character. The default separator is tab character, but you can change that in the sep argument of this function. The input file must contain a row for each spot in the grid, at least that the experiment was performed by the IFC in UNAM (the 13 last rows contain statistical information about the experiment) and probably a header row.
+\item{cy3:} location of the column that contain the query sample in the array (red color).
+\item{cy5:} location of the column that contain the reference sample in the array (green color).
+\item{bg.cy3:} location of the column that contain the background correction for cy3.
+\item{bg.cy5:} location of the column that contain the background correction for cy5.
+\item{ids:} location of the column that contain the ids for the distinct elements in the array.
+\item{header:} a logical value indicating whether the file contains the names of the variables as its first row.
+\item{sep:} the field separator character.  Values on each line of the file are separated by this character.
+\item{is.ifc:} a logical value indicating whether the experiment was performed by the Microarray Unit of the Cellular Physiology Institute of UNAM. It just eliminate the last 13 rows that contain a statistic about the experiment.
+\end{description}
 
-Now exists an object of the class Spot in my.spot. This data corresponds to a fragment from a microarray of yeast that was done by the Microarray Unit of the Cellular Physiology Institute of UNAM. The original array has 24 grids, but this fragment corresponds only to the first two grids. We can define this object in the current environment in this way:
+As an example for describing each package's function contained in this user's manual we will use a subset of the microarray data object generated with \texttt{read.spot} function. This subset is called Simon and it can be loaded in this way:
 
 \begin{Schunk}
 \begin{Sinput}
@@ -79,18 +97,18 @@ Now exists an object of the class Spot in my.spot. This data corresponds to a fr
 \end{Schunk}
 
 \begin{Soutput}
-We have created an object of the class Spot in the current
-environment so we will be able to apply to that object any 
+You have created an object of the class Spot in the current
+environment so you will be able to apply to that object any 
 function of genArise that receives a spot as argument.
 \end{Soutput}
 
-In order to be able to visualize the data previous the analysis once we have read the input data, we can use the function \texttt{imageLimma()}. This function allows plot an image of colours representing the log intensity ratio for each  spot on the array and receives several arguments depending on the data that we are going to analyze.
-\pagebreak
+\subsection{Diagnostic plots}
+Previous to any kind of analysis, once you have load the input, you are able to visualize it using the function \texttt{imageLimma}. This function constructs an image plot in a green to red scale representing the $log_2$ intensity ratio for each spot on the array. See Figure \ref{fig1}. The imageLimma function receives several arguments depending on the data that is going to be analyzed.\footnote{imageLimma is completly based in the imageplot function from the limma package.\\ \textit{Gordon K. Smyth (2004) \textquotedblleft Linear Models and Empirical Bayes Methods for Assessing Differential Expression in Microarray Experiments \textquotedblright, Statistical Applications in Genetics and Molecular Biology: Vol. 3: No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}}} \\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-003}
-\caption{Cy3 and Cy5 intensities mixed.\label{fig1}}
+\caption{Image plot in a green to red scale.\label{fig1}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -102,52 +120,50 @@ In order to be able to visualize the data previous the analysis once we have rea
 \end{Scode}
 
 \begin{Soutput}
-Output: Plot the intensities values
+Output: Plot the intensity values
 \end{Soutput}
 
-In the same way we can plot the values of each one of the intensities, this we can do it with the values of background corresponding to each one of the intensities.\\
+In the same way that you can plot the $log_2$ intensity ratio for each spot, you can also plot the background value that correspond to each one of the intensities. See Figure \ref{fig2} and \ref{fig3}.\\
 
 For example, this is the plot for Cy3 intensities.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-004}
-\caption{Cy3 intensity preview. \label{fig2}}
+\caption{Cy3 background preview. \label{fig2}}
 \end{center}
 \end{figure}
 \begin{Scode}
 > data(Simon)
 > datos <- attr(Simon, "spotData")# Extract spot data
-> R <- log(datos$Cy3, 2)
+> R <- log(datos$BgCy3, 2)
 > imageLimma(z = R, row = 23, column = 24, meta.row = 2, 
   meta.column = 2, low = "white", high = "red")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy3 intensity value
+Output: Cy3 Background value
 \end{Soutput}
-\pagebreak
-And this is the plot for Cy5 intensities.
+And this is the plot for Cy5 background.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-005}
-\caption{Cy5 intensity preview. \label{fig3}}	
+\caption{Cy5 background preview. \label{fig3}}	
 \end{center}
 \end{figure}
 \begin{Scode}
 > data(Simon)
 > datos <- attr(Simon, "spotData")# Extract spot data
-> G <- log(datos$Cy5, 2)
+> G <- log(datos$BgCy5, 2)
 > imageLimma(z = G, row = 23, column = 24, meta.row = 2, 
   meta.column = 2, low = "white", high = "green")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy5 intensity value
+Output: Cy5 Background value
 \end{Soutput}
-\pagebreak
-The previous plots can show us a preview of the data, but it is important to clarify that this one does not replace the original TIFF image\\
+With the previous plots, you can see a preview of the raw data (without background correction and normalization).It is important to clarify that these image plot one does not replace the original TIFF image from the microarray experiment.\\
 
-Data analysis requires be able to plot a spot after apply any operation and genArise provides functions for this purpose. For example, we can plot the values R vs I, M vs A and Cy5 vs Cy3. This functions receive an object of the class Spot.
+Data analysis requires to be able to plot a spot after apply any operation and genArise provides functions for this purpose. For example, we can plot the values R vs I, M vs A and Cy5 vs Cy3. This functions receive an object of the class Spot.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-006}
@@ -159,9 +175,8 @@ Data analysis requires be able to plot a spot after apply any operation and genA
 > ri.plot(Simon)
 \end{Scode}
 \begin{Soutput}
-Output: R vs I plot 
+Output: R vs I plot. See Figure 4.
 \end{Soutput}
-\pagebreak
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-007}
@@ -173,9 +188,8 @@ Output: R vs I plot
 > ma.plot(Simon)
 \end{Scode}
 \begin{Soutput}
-Output: M vs A plot 
+Output: M vs A plot. See Figure 5.
 \end{Soutput}
-\pagebreak
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-008}
@@ -187,14 +201,13 @@ Output: M vs A plot
 > cys.plot(Simon)
 \end{Scode}
 \begin{Soutput}
-Output: plot the Cy3 and Cy5 values
+Output: plot the Cy3 and Cy5 values. See Figure 6.
 \end{Soutput}
-\pagebreak
-Once well-known and identified these plots, we can proceed with the data analysis. There are different functions for this purpose. The first of them make the background correction that is a subtraction of backgrounds to the intensity values. The name of this function is \texttt{bg.correct}.
+At this moment, you can proceed with the data analysis. There are different functions for this purpose. The first of them makes the background correction; that is a subtraction Cy3 - BckgCy3 and Cy5 - BckgCy5 for each spot. See Figure \ref{fig7}. The name of this function is \texttt{bg.correct}.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-009}
-\caption{Data with background corrected, R vs I. \label{fig7}}
+\caption{R vs I plot of backgroung corrected data. \label{fig7}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -205,16 +218,16 @@ Once well-known and identified these plots, we can proceed with the data analysi
 
 \begin{Soutput}
 input: The argument of this function is a spot object
-output: A spot objet with the corrected background
+output: A spot object with the corrected background
 \end{Soutput}
 
-The normalization of the data can be done in a global way or by grids, and each one of them returns different results for the same input data set. We must remark that the normalization by grid just can be applied to the complete data set, so we don`t must eliminate observations because we can get some error executing this function.  In the normalization any observation where the R value is zero will be eliminated since it does not have changes in their expression level.\\
+Data normalization can be done by grids or in a global way, and each method returns different results for the same input data set. We must remark that the grid normalization can just be applied to the complete data set, so you must not eliminate spots in order to avoid errors executing this function.  In the normalization procedure any observation in which the R value is zero will be eliminated.\\
 
-The normalization by grid is executed with the function \texttt{grid.norm()} and is mandatory to indicate the dimensions of every grid, so, we must indicate the number of rows and the number of columns that the grid contains.
+Grid normalization is executed with the function \texttt{grid.norm()} and is mandatory to indicate the dimensions of the subgrid, so, you must indicate the number of rows and columns within each subgrid. See Figure \ref{fig8}.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-010}
-\caption{Normalized data by grid, R vs I plot \label{fig8}}	
+\caption{R vs I plot of grid normalized data.\label{fig8}}	
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -225,14 +238,16 @@ The normalization by grid is executed with the function \texttt{grid.norm()} and
 
 \begin{Soutput}
 input: The argument of this function is a spot object
-       and the grid dimension.
-output: A normalized spot objet
+       and the number of rows (nr) and columns (nc) of each subgrid.
+output: A normalized spot object
 \end{Soutput}
+
+On the other hand, the global normalization is executed with the function \texttt{global.norm} and it only requires as argument an object of the class Spot. See Figure \ref{fig9}.
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-011}
-\caption{Data after global normalisation, R vs I plot. \label{fig9}}
+\caption{R vs I plot of data after global normalization. \label{fig9}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -242,20 +257,19 @@ output: A normalized spot objet
 \end{Scode}
 \begin{Soutput}
 Input: The argument of this function is a spot object
-Output: A normalized spot objet
+Output: A normalized spot object
 \end{Soutput}
 
-
-
-On the other hand, the global normalization is executed with the function \texttt{global.norm()} and it only requires as argument an object of the class Spot. As we said previously both functions returns different results and for this reason we must choose the suitable function of normalization to the analysis that we want to do. Remember that once eliminated any observation the normalization by grid can not be done, so in this case this function is the best option.
+As we said previously both functions returns different results and for this reason you must choose the suitable function of normalization to the analysis that we want to do. It for any reason spots are eliminated before normalization procedure (applying operations as filtering or duplicates elimination) the global normalization is the only normalization way.\\
 
 In this example, the number of data in the spot is small and for this reason the obtained values with both normalization functions could seems very similar in the plots, however this is not the same in all the cases.\\
-\pagebreak
-The filter of the data is an important step too in the data analysis. genArise implements a filter by low-intensity cutoff. There is a default threshold but you can specify a different one in the moment of the analysis.
+
+Data filtering is an important step too in the data analysis. genArise implements the intensity-based filtering algorithm described by John Quackenbush\footnote[2]{ John Quackenbush \textquotedblleft Microarray data normalization and transformation\textquotedblright. Nature Genetics. Vol.32 supplement pp 496-501 (2002)}. After this filtering you keep only array elements with intensities that are statistically significantly different from background. See Figure \ref{fig10}.\\
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-012}
-\caption{Filtered data, R vs I plot \label{fig8}}	
+\caption{Filtered data, R vs I plot. \label{fig10}}	
 \end{center}
 \end{figure}
 
@@ -267,14 +281,14 @@ The filter of the data is an important step too in the data analysis. genArise i
 
 \begin{Soutput}
 Input: The argument of this function is a spot object.
-Output: A filter spot 
+Output: A spot filtering spot object
 \end{Soutput}
 
-Another step is the replicates filtering and in this step a lot of observations are eliminated. We can not just conserve the half of points, but also this function eliminates those points where the diference between the R value of the duplicated observations is bigger than 20\% of one of them. These points are eliminated because it probably means that noise exists and that they are not reliable data to be taken into account in the experiment.
+Another step is the replicates filtering, and in this step, a lot of observations are eliminated. We can not just conserve the half of points, but also this function eliminates those points where the diference between the R value of the duplicated observations is bigger than 20\% of one of them. See Figure \ref{fig11}.\\
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-013}
-\caption{Data without duplicates, R vs I\label{fig10}}
+\caption{R vs I plot of data after apply \texttt{spotUnique} function. \label{fig11}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -288,11 +302,11 @@ Input: The argument of this function is a spot object.
 Output: A spot object without duplicates observations
 \end{Soutput}
 
-However, genArise offers another functions to the elimination of duplicates different to the previous one. We talk about the function \texttt{alter.unique()}. This function takes the R value of each one of the duplicated observations but just keep that observation with the extremest R value. So, if both of them are positives this function keeps the greater one, if both of them are negatives it keep the lower one and if there is one positive and one negative both observations are eliminated. It is clear that with this function it is conserved a greater number of observations than using the previous algorithm. By this way we probably have at the final of the analysis a greater number of observations in the upper-expressed and lower-expressed because we keep the extreme values.
+However, genArise offers other functions for the elimination of duplicates different from the previous one. We talk about the function \texttt{alter.unique}. This function takes the R value of each one of the duplicated observations but just keep that observation with the extremest R value. So, if both of them are positives this function keeps the greater one, if both of them are negatives it keep the lower one and if there is one positive and one negative both observations are eliminated. It is clear that with this function a greater number of observations is conserved compared to those that are obtained with \texttt{spotUnique} function. By this way you will probably have at the final of the analysis a greater number of observations in the upper-expressed and lower-expressed because you keep the extreme values. See Figure \ref{fig12}.\\
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-014}
-\caption{Data without duplicated observations.\label{fig11}}
+\caption{R vs I plot of data after apply \texttt{alter.unique} function.\label{fig12}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -306,12 +320,12 @@ input: The argument of this function is a spot object.
 output: A spot object without duplicates observations
 \end{Soutput}
 
-The other fuction just get the mean of the duplicates and perform the filtering. The name of this function is \texttt{meanUnique()}.
+The other fuction just get the mean of the duplicates and perform the filtering. The name of this function is \texttt{meanUnique}. See Figure \ref{fig13}.
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-015}
-\caption{Data without duplicated observations.\label{fig11}}
+\caption{R vs I plot of data after apply \texttt{meanUnique} function.\label{fig13}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -325,11 +339,11 @@ input: The argument of this function is a spot object
 output: A spot object without duplicates observations
 \end{Soutput}
 
-The intensity-dependent Z-score function allows identify and classify array elements depending on the standard deviations they are from the mean.\\
+The approach we use involves calculating the mean and standard deviation of the distribution of $log_2$(ratio) values and defining a global fold-change difference and confidence; for this we use a Z-score for the data set. In an R-I plot, that would be represented as parallel horizontal lines; genes outside of those lines would be the differentially expressed\footnotemark[2]. See Figure \ref{fig14}.\\
 
-As a matter of fact genArise offers two options for this analysis. You just need to specify in the type argument on the Zscore function if you want a R-I or a M-A analysis.The first one slide the window along the I value axis and the second slide the window along the A value axis. This function receive as argument an object of the class Spot and returns an object of another class called DataSet that has a different format.\\
+As a matter of fact genArise offers two options for this analysis. You just need to specify in the type argument on the \texttt{Zscore} function if you want a R-I or a M-A analysis. This function receive as argument an object of the class Spot and returns an object of other class called DataSet that includes as one of their values the Z-score for the data set.\\
 
-This is the example for \texttt{Zscore}
+This is the example for \texttt{Zscore} using  R-I values.
 
 \begin{Scode}
 > data(Simon)
@@ -341,7 +355,7 @@ Input: The argument of this function is a spot object
 Output: An object of the class DataSet
 \end{Soutput}
 
-And this is the example for \texttt{M-A} analysis
+And this is the example for \texttt{Zscore} using \texttt{M-A} values
 
 \begin{Scode}
 > data(Simon)
@@ -353,11 +367,11 @@ Input: The argument of this function is a spot object
 Output: An object of the class DataSet
 \end{Soutput}
 
-Since the objects of the class DataSet are different to the objects of the class Spot we need a function to plot them. For this purpose exists a function called \texttt{Zscore.plot}.So, in a R-I plot, array elements are color-coded depending on wether they are less than 1 standard deviation from the mean (blue), between 1 and 1.5 standard deviations (green), between 1.5 and 2 sd (red), or more than 2 standard deviations from the mean (orange).
+Since the objects of the class \texttt{DataSet} are different from the objects of the class Spot we need a function to plot them. For this purpose exists a function called \texttt{Zscore.plot}. So, in a R-I plot, array elements are color-coded depending on wether they are less than 1 standard deviation from the mean (blue), between 1 and 1.5 standard deviations (green), between 1.5 and 2 standard deviations (red), or more than 2 standard deviations from the mean (orange).
 \begin{figure}[h]
 \begin{center}
 \includegraphics{example-genArise-016}
-\caption{Data after Z-score Analysis. \label{fig12}}
+\caption{Data after Z-score Analysis. \label{fig14}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -366,16 +380,18 @@ Since the objects of the class DataSet are different to the objects of the class
 \end{Scode}
 
 \begin{Soutput}
-Input: A object of the class DataSet
+Input: An object of the class DataSet
 Output: Plot for identify differential expression
 \end{Soutput}
 
-With the upper-expressed and lower-expressed sets, or together or separated we can start a post-analysis with a function called genMerge. This function allows analyze the functional genomic data related with the genes located in upper and lower sets.
+After we finished our slice analysis we get a up-regulated and down-regulated set. This will be the set of study genes for genMerge. Given this set, genMerge retrieves functional genomic data for each gene and provides statistical rank scores for over-representation of particular functions in the dataset. The \texttt{genMerge} function is completly based on GeneMerge from Cristian I. Castillo-Davis and Daniel L. Hartl \footnote[3]{Cristian I. Castillo-Davis, Department of Statistics, Harvard University \url{http://www.oeb.harvard.edu/hartl/lab/publications/GeneMerge}
+}.\\
 
-Given a set of genes (for example the upper-expressed), genMerge writes in a files the data of an statistic analysis of the upper/representation of functions or particular categories on the set of data upper-expressed.\\
+Given a set of genes (for example the upper-expressed), genMerge write in files the data of an statistic analysis of the upper/representation of functions or particular categories on the set of data upper-expressed.\\
 
-We must take care in the format of the input file. No one parameter file should have header. This function requires four data files and the file name where will be save the obtained information. The main file that the function needs are:\\
-\textbf{Association file}. This file contains two columns separated by tabs. The first column corresponds to the gen identifier in the microarray and the second one corresponds to a list of associated GOs to this gen. Each GO in this list is separted by ";" and is necesary to consult a database to locate the associated GOs to each gen (see htttp://genontology.org)
+You must take care in the format of the input file, the file must not have a header row. This function requires four data files and the file name where will be save the obtained information. The main file that the function needs are:\\\\
+
+\textbf{Association file}. This file contains two columns splited by tab characters. The first column corresponds to the gene identifier in the microarray and the second one corresponds to a list of associated ids for the geneontology database to this gen (GO). Each GO in this list is separted by ";" and is necessary to consult a database to locate the associated GOs to each gen (see http://www.geneontology.org)
 \begin{Scode}
 Example:
 
@@ -386,7 +402,7 @@ YAL005C GO:0003754;GO:0003773;GO:0004002;
 YAL007C GO:0005554;
 \end{Scode}
 
-\textbf{Description file}. This file also contains two columns separated by tabs, the first corresponds to the name of some GOs and the second corresponds to the description associated to each GO in the database.
+\textbf{Description file}. This file also contains two columns splited by tab characters, the first one corresponds to the name of some GOs and the second one corresponds to the description associated to each GO in the database.
 \begin{Scode}
 Example:
 
@@ -400,7 +416,7 @@ GO:0000014      single-stranded DNA specific endodeoxyribonuclease activity
 GO:0000016      lactase activity
 \end{Scode}
 
-\textbf{All genes (population.genes)}. This file only should contains one column, the spot identifiers or those of the input file not analyzed yet are the column information, each identifier is a row file. 
+\textbf{All genes (population.genes)}. This file should only contain one column, the spot identifiers or those of the input file not analyzed yet are the column information, each identifier is a row file. 
 \begin{Scode}
 YAL001C
 YAL002W
@@ -414,12 +430,12 @@ YAL010C
 YAL011W
 \end{Scode}
 
-\textbf{The genes to study}. Like the preceding described file, this file only contains one column and each row correspond to the name of one of the genes in the set that will be studied (upper-expressed or lower-expressed). The function sintax is the next one:
+\textbf{The genes to study}. Like the preceding described file, this file only contains one column and each row corresponds to the name of one of the genes in the set that will be studied (upper-expressed or lower-expressed). The function sintax is the next one:
 
 \begin{Scode}
 > # Let's suppose that original spot is o.spot
 > # To write the population file you can use write.table
-> ids <- atrr(o.spot, "spotData")$Ids
+> ids <- attr(o.spot, "spotData")$Ids
 > ids <- unique(ids)
 > write.table(ids, "population.genes")
 \end{Scode}
@@ -429,7 +445,7 @@ Input: An object of class Slice
 Output: Plot upper-expressed and lower-expressed
 \end{Soutput}
 
-In the same way, we write the identifiers of the genes set that will be studied. Suppose there exist a slice Spot we call s.spot wich have the results after slice analysis, if we wish that our set of study have the upper-expressed identifiers and the lower-expressed identifiers to write the corresponding file we must follow the next code.
+In the same way, with the \texttt{write.table} function you can write the identifiers of the genes set that will be studied. Suppose there exist a slice Spot we call s.spot wich have the results after slice analysis, if you wish that your set of study have the upper-expressed identifiers and the lower-expressed identifiers to write the corresponding file, you must follow the next code.
 
 \begin{Scode}
 > # To write the study genes file
@@ -438,7 +454,7 @@ In the same way, we write the identifiers of the genes set that will be studied.
 > write.table(study.ids, "study.genes")
 \end{Scode}
 
-If we only want to preserve the identifier of some set, say upper-expressed or lower-expressed type the next lines:
+If you only want to preserve the identifier of some set, say upper-expressed or lower-expressed type the next lines:
 
 \begin{Scode}
 > # Only write upper-expressed
@@ -447,119 +463,123 @@ If we only want to preserve the identifier of some set, say upper-expressed or l
 > write.table(study.ids, "study.genes")
 \end{Scode}
 
-The other files should be constructed consulting a database or could be downloaded from internet, this files should contain the format described above, so that the genMerge function operates correctly. The sintax of this is:   
+The other files should be constructed consulting a database or could be downloaded from the internet, this files should contain the format described above, so that the genMerge function operates correctly. The sintax of this is:   
 
 \begin{Scode}
-> genMerge(gene.association, description, population.genes, study.genes, output.file = "GenMerge.txt"){
+> genMerge(gene.association, description, population.genes,
+  study.genes, output.file = "GeneMerge.txt"){
 \end{Scode}
 
-The results will be in the corresponding file.
+The results will be in the corresponding file, in the above example \texttt{GeneMerge.txt}.
 
 \section{The genArise GUI}
 
-For make easier the analysis, genArise joins all functions in a single one with a graphic interface, to call this function we type the next line:
+For making the analysis easier, genArise joins all functions in a graphic interface, to call this function we type the next line:
 
 \begin{Scode}
 > genArise()
 \end{Scode}
 
-Now the next menu is displayed.
+Now the next menu-bar is displayed.
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/mainmenu.pdf}\\
-\caption{genArise Menu. \label{fig1}}
+\caption{genArise Menu-bar. \label{fig15}}
 \end{center}
 \end{figure}
 
-Once in this menu we should create a New Project following the sequence  \textbf{File $\rightarrow$ Project $\rightarrow$ New Project}.\\
-The last step displays a window where we should indicate the file' s location containing the data to analyze, indicating whether the file is a foreing experiment or belong to one made in the Cellular Physiology Institute UNAM. 
+Once in this menu you should create a New Project following the sequence  \textbf{File $\rightarrow$ Project $\rightarrow$ New Project}.\\
+The last step displays a window where you should indicate the file' s location containing the data to analyze, indicating whether the file is a foreing experiment or belong to one made in the Cellular Physiology Institute UNAM. 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/projectmenufilled.pdf}\\
-\caption{Project Configuration Window. \label{fig2}}
+\caption{Project Configuration Window. \label{fig16}}
 \end{center}
 \end{figure}
 
-In the lower textfields we should indicate the location and name of the new project containing the results and graphics obtained during the analysis.\\
+In the lower textfields you should indicate the name of the new project, including the complete path (location where you want to save the project containing the results and graphics obtained during the analysis).\\\\
  For example:\\
  \\
-The image above shows an analysis that will be made on the file Rat\_5k\_014.csv containig a microarray made in the Cellular Physiology Institute' s Microarray Unit. We call the project ProjectRat. The default name for the graphics directory is Plot and for the data files is Results. If we wish modify this names we just change the names that appear in the options \textbf{Location for Plots } and \textbf{Location for Results } respectively.\\
+The Figure \ref{fig16} shows an analysis that will be made on the file Rat\_5k\_014.csv containig a microarray made in the Cellular Physiology Institute' s Microarray Unit. We call the project \textquotedblleft ProjectRat \textquotedblright. The default name for the graphics directory is Plot and for the data files is Results. If we wish to modify this names we just change the names that appear in the options \textbf{Location for Plots } and \textbf{Location for Results}, respectively.\\
 
-Then, the window containing a preliminary view of the spot is displayed to verify that there  exist any error in the experiment. It's important make clear that these images don't substitute the TIFF file.
+Then, the window containing a preliminary view of the main grid is displayed as an image plot in a green to red scale representing the $log_2$ intensity ratio for each spot on the array. See Figure \ref{fig17}. It is important to clarify that these image plot one does not replace the original TIFF image from the microarray experiment.
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/principal.pdf}\\
-\caption{Preview Window, plotting Cy3 and Cy5 intensities mixed\label{fig3}}
+\caption{Window with image plot in a green to red scale. \label{fig17}}
 \end{center}
 \end{figure}
-We also can see the green and red levels in a separated form just by pressing the radiobuttons in the lower right part of the window.
+You also can see the green and red levels in a separated form just by selecting the corresponding option in the lower right part of the window. See Figure \ref{fig18} and \ref{fig19}.
 \begin{figure}[h]
 \begin{center}
 \includegraphics[height=3.in,width=3.15in]{./images/principalRed.pdf}\\
-\caption{Preview Window, plotting Cy3 intensity value. \label{fig4}}
+\caption{Window with image plot for Cy3 Background value. \label{fig18}}
 \end{center}
 \end{figure}
 \textbf{\\\\}
 \begin{figure}[h]
 \begin{center}
 \includegraphics[height=3in,width=3.15in]{./images/principalGreen.pdf}\\
-\caption{Preview Window, plotting Cy5 intensity value. \label{fig5}}
+\caption{Window with image plot for Cy5 Background value. \label{fig19}}
 \end{center}
 \end{figure}
 
 In the upper right side of the window we can see the data attributes of the file that is being analyzed and the experiment configuration.\\
-We can save the plot in a pdf file by selecting the option \textbf{Save as PDF} in the menu Options. With the option Annotations of the same menu we can make some important annotations through the analysis and save these in a file called annotations.txt.
+You can save the plot in a pdf file by selecting the option \textbf{Save as PDF} in the menu Options. With the option \textbf{Annotations} of the same menu, you can make some important annotations through the analysis and save these in a file called annotations.txt. See Figure \ref{fig20}.
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/annotation.pdf}\\
-\caption{An Editor for annotations\label{fig6}}
+\caption{An Editor for annotations. \label{fig20}}
 \end{center}
 \end{figure}
 
-At this moment we can begin the analysis by clicking on the menu Analyze that will display a dialog box like the next one:
+At this moment you can begin the analysis by clicking on the menu Analyze that will display a dialog box like the one showed in Figure \ref{fig21}.\\
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/wizarddialog.pdf}\\
-\caption{Asking dialog box.\label{fig7}}
+\caption{Asking dialog box.\label{fig21}}
 \end{center}
 \end{figure}
 
-By clicking \textbf{Yes }the program makes the operations in a sequential order that follows the Cellular Physilogy Institute UNAM; these operations are: background correction, loess normalization, filter, duplicate elimination. Once this analysis end we see the next window.
+By clicking \textbf{Yes }the program makes the operations in the next sequential order: background correction, loess normalization, intensity-filter, duplicate elimination. Once this analysis end we see the next window. See Figure \ref{fig22}.\\
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/wizardOriginal.pdf}\\
-\caption{Text area while analisis.. \label{fig8}}
+\caption{Text area while analysis. \label{fig22}}
 \end{center}
 \end{figure}
 
-This windows shows the graphic obtained from the complete analysis, also shows five options where we can select the original-experiment graphic and after each oparation; for example after select the option \textbf{Normalized Spot} the next result is shown:
+This window shows the graphic obtained from the complete analysis, also shows five options where you can select the original-experiment graphic and after each operation; for example after select the option \textbf{Normalized Spot} the next result is shown in Figure \ref{fig23}.\\
 \begin{figure}[h]
 \begin{center}
 \includegraphics[scale= 0.3]{./images/wizardNorm.pdf}\\
-\caption{You can select any step of this analisis for preview \label{fig9}}
+\caption{You can select any step of this analisis for preview \label{fig23}}
 \end{center}
 \end{figure}
 
-There are a text area in the lower side of the window where we can find the operations done and their values.When we follow the wizard the default values are employed in the operations, in this case, for the filter operation we take as keywords the words \textbf{empty, 0 and blank }. The threshold value is \textbf{max(max(Cy3),max(Cy5))* 0.01.}. We use the grid normalization.\\
-The menu \textbf{Graphics} allow us change the type of the graphic that is displayed. The options are:  \textbf{Cy3 vs Cy5, R vs I } and \textbf{M vs A}, if you select \textbf{Cy3 vs Cy3} as shown the next figure.
+There is a text area in the lower side of the window where you can find the operations done and their values.When you follow the wizard the default values are employed in the operations. We use the grid normalization.\\
+The menu \textbf{Graphics} allows you change the type of the graphic that is displayed. The options are:  \textbf{Cy3 vs Cy5, R vs I } and \textbf{M vs A}. See Figure \ref{fig24}.\\
+
 \begin{figure}
 \begin{center}
 \includegraphics[scale= 0.3]{./images/nodupsCy3vsCy5.pdf}
-\caption{}
+\caption{Cy3 vs Cy5 plot \label{fig24}}
 \end{center}
 \end{figure}
 
-At the end, we find one file for each done operation, as well as for each graphic, in the directory where are the result files of our project.\\
+At the end, you find one file for each operation done, as well as for each graphic, in the directory where are the result files of your project.\\
 
-Let see what happen if we decide don't follow the wizard. In this case only the original-experiment graphic is displayed as shown the next image.
+Let see what happen if you decide not to follow the wizard. In this case, only the original-experiment graphic is displayed as shown in Figure \ref{fig25}.\\
 
-
+\begin{figure}
 \begin{center}
 \includegraphics[scale= 0.3]{./images/original.pdf}
+\caption{Making the analysis without follow the wizard. \label{fig25}}
 \end{center}
+\end{figure}
 
-In the menu bar we should select the operations we wish the program make in the desired order, once an operation is made  a new radiobutton appears in the right side of the window with which we can see the graphic's results obtained with that operation, is important to note that the operations is realiced on the selected spot. If we wish to make a sequential analysis we must take care on the selected spot. The operations the program make when we decide follow the wizard are the same that we can find in the menu\textbf{Options}.\\
+In the menu bar you should select the operations you wish the program make in the desired order, once an operation is made a new reference to the transformed spot will appear in the right side of the window with which you can see the graphic's results obtained with that operation. Is important to note that the operations are performed on the selected spot. If we wish to make a sequential analysis you must take care of the selected option. The operations that the program makes when you decide to follow the wizard are the same that you can find in the menu \textbf{Options}.\\
 
 \end{document}

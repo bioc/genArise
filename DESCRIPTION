@@ -1,11 +1,12 @@
 Package: genArise
-Version: 0.8.2
+Version: 1.0.0
 Title: Microarray Analysis tool
-Author: Ana Patricia G\'omez May\'en <pgomez@ifc.unam.mx>,\\
-	Gustavo Corral Guill\'e <gcorral@ifc.unam.mx>, \\ Lina Riego <lriego@ifc.unam.mx>,\\ Gerardo Coello Couti\~no <gcoello@ifc.unam.mx>
+Author: Ana Patricia Gomez Mayen <pgomez@ifc.unam.mx>,\\
+	Gustavo Corral Guille <gcorral@ifc.unam.mx>, \\ Lina Riego Ruiz <lriego@ifc.unam.mx>,\\ Gerardo Coello Coutino <gcoello@ifc.unam.mx>
+Acknowledgements: Jorge Ramirez Salcedo and the Microarray Unit of the Cellular Physiology Institute.
 Maintainer: IFC Development Team <genArise@ifc.unam.mx>
 Depends: R (>= 1.7.1), locfit, tkrplot, methods
 Description: genArise is a easy to use tool for dual color microarray data. Its GUI-Tk based environment let any non-experienced user performs a basic, but not simple, data analysis just following a wizard. In addition it provides some tools for the developer.
 License: Free for non-commercial use
 URL: http://www.ifc.unam.mx
-Packaged: Mon Sep 13 18:44:50 2004; root
+Packaged: Wed Oct 27 21:08:19 2004; root

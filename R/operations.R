@@ -245,7 +245,7 @@ alter.unique <- function(mySpot){
 # Remove replicated observations, geometric mean
 spotUnique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
-  id.sort.index <-  rev(sort.list(spot$Id))
+  id.sort.index <-  sort.list(spot$Id)
   i <-  1
   n <- length(spot$Cy3)
   Cy3.list <- Cy5.list <- BgCy3.list <- BgCy5.list <- id.list <- list()

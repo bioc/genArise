@@ -377,7 +377,7 @@ genArise <- function(){
                 no.siguiendo.wizard(tclvalue(tkget(txt,"0.0","end")))
                 tkdestroy(tt)
               }else{
-                                        #Se cancela la pediticion del analisis
+
               }
             }
           })
@@ -841,6 +841,19 @@ genArise <- function(){
                 grafica()})
       }
       })
+
+    tkadd(optionsMenu,"command",label="Write as outputfile",command = function() {
+      name <- tclvalue(tkgetSaveFile(initialdir = get("path.results", envir = genArise.env),
+                                     initialfile=get("spot.name",envir=genArise.env),
+                                     filetypes="{{CVS Files} {.cvs}} {{All files} *}"))
+      if (!nchar(name))
+        tkmessageBox(parent = tt,  message= "You must write a name of file!", icon = "error", default = "ok")
+      else{
+        write.spot(get("a.spot", envir = genArise.env), name)
+      }
+                 
+    })
+  
     tkadd(optionsMenu,"command",label="Annotations",command = function() annotation())
     tkadd(topMenu,"cascade",label="Options",menu =optionsMenu)
     
@@ -941,7 +954,7 @@ genArise <- function(){
                 Zscore.plot(get("Zscore.spot", envir = genArise.env))})
       }
     })
-    tkadd(optionsMenu,"command",label="Write as outputfile",command = function() {
+     tkadd(optionsMenu,"command",label="Write as outputfile",command = function() {
       name <- tclvalue(tkgetSaveFile(initialdir = get("path.results", envir = genArise.env),
                                      initialfile=get("spot.name",envir=genArise.env),
                                      filetypes="{{CVS Files} {.cvs}} {{All files} *}"))

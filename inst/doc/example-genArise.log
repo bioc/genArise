@@ -1,0 +1,513 @@
+This is pdfTeX, Version 3.14159-14h-released-20010417 (Web2C 7.3.3.1) (format=pdflatex 2003.2.18)  27 OCT 2004 21:08
+**\nonstopmode \input /home/gcorral/genArise/inst/doc/example-genArise.tex
+(/home/gcorral/genArise/inst/doc/example-genArise.tex
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2001/04/21 v1.4e Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size12.clo
+File: size12.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+(/usr/local/lib/R/share/texmf/Sweave.sty
+(/usr/share/texmf/tex/latex/base/fontenc.sty
+Package: fontenc 2001/06/05 v1.94 Standard LaTeX package
+
+(/usr/share/texmf/tex/latex/base/t1enc.def
+File: t1enc.def 2001/06/05 v1.94 Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 38.
+))
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg)
+Package graphics Info: Driver file: pdftex.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/pdftex.def
+File: pdftex.def 2001/11/29 v0.03i graphics/color for pdftex
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texmf/tex/latex/ae/ae.sty
+Package: ae 1998/11/17 1.0 Almost European Computer Modern
+
+(/usr/share/texmf/tex/latex/base/fontenc.sty
+Package: fontenc 2001/06/05 v1.94 Standard LaTeX package
+
+(/usr/share/texmf/tex/latex/base/t1enc.def
+File: t1enc.def 2001/06/05 v1.94 Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 38.
+)
+LaTeX Font Info:    Try loading font information for T1+aer on input line 95.
+
+(/usr/share/texmf/tex/latex/ae/t1aer.fd
+File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
+)))
+(/usr/share/texmf/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 1998/07/17
+
+Style option: `fancyvrb' v2.6, with DG/SPQR fixes <1998/07/17> (tvz)
+\FV@CodeLineNo=\count88
+\FV@InFile=\read1
+\FV@TabBox=\box26
+\c@FancyVerbLine=\count89
+\FV@StepNumber=\count90
+\FV@OutFile=\write3
+
+No file fancyvrb.cfg.
+) (/usr/local/lib/R/share/texmf/upquote.sty
+Package: upquote 2003/08/11 v1.1 Covington's upright-quote modification to verb
+atim and verb
+
+(/usr/share/texmf/tex/latex/base/textcomp.sty
+Package: textcomp 2001/06/05 v1.94 Standard LaTeX package
+
+(/usr/share/texmf/tex/latex/base/ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+))))
+(/usr/share/texmf/tex/latex/fancyhdr/fancyhdr.sty
+\headwidth=\dimen105
+) (./example-genArise.aux)
+\openout1 = `example-genArise.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 20.
+
+(/usr/share/texmf/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 20.
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+(/usr/share/texmf/tex/context/base/supp-mis.tex
+loading : Context Support Macros / Missing
+\protectiondepth=\count91
+\scratchcounter=\count92
+\scratchtoks=\toks15
+\scratchdimen=\dimen106
+\scratchskip=\skip43
+\scratchmuskip=\muskip10
+\scratchbox=\box27
+\scratchread=\read2
+\scratchwrite=\write4
+\zeropoint=\dimen107
+\nextbox=\box28
+\nextdepth=\dimen108
+\everyline=\toks16
+\!!counta=\count93
+\!!countb=\count94
+\recursecounter=\count95
+)
+loading : Context Support Macros / PDF
+\nofMPsegments=\count96
+\nofMParguments=\count97
+\everyMPtoPDFconversion=\toks17
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 22.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 22.
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+
+ []
+
+LaTeX Font Info:    Try loading font information for T1+aett on input line 28.
+(/usr/share/texmf/tex/latex/ae/t1aett.fd
+File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 28.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 28.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 28.
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+
+ []
+
+[1
+
+{/usr/share/texmf/dvips/config/pdftex.map}]
+LaTeX Font Info:    Try loading font information for TS1+aett on input line 45.
+
+
+(/usr/local/lib/R/share/texmf/ts1aett.fd
+File: ts1aett.fd 
+)
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 45.
+
+
+(/usr/share/texmf/tex/latex/base/ts1cmtt.fd
+File: ts1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `TS1/aett/m/n' in size <12> not available
+(Font)              Font shape `TS1/cmtt/m/n' tried instead on input line 45.
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--60
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
+
+ []
+
+[2] [3]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 106.
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
+
+ []
+
+<example-genArise-003.pdf, id=30, 433.62pt x 433.62pt>
+File: example-genArise-003.pdf Graphic file (type pdf)
+
+<use example-genArise-003.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 126--127
+
+ []
+
+<example-genArise-004.pdf, id=31, 433.62pt x 433.62pt>
+File: example-genArise-004.pdf Graphic file (type pdf)
+
+<use example-genArise-004.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[4] <example-genArise-005.pdf, id=53, 433.62pt x 433.62pt>
+File: example-genArise-005.pdf Graphic file (type pdf)
+
+<use example-genArise-005.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
+
+ []
+
+[5 <./example-genArise-003.pdf>]
+<example-genArise-006.pdf, id=65, 433.62pt x 433.62pt>
+File: example-genArise-006.pdf Graphic file (type pdf)
+
+<use example-genArise-006.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[6 <./example-genArise-004.pdf>]
+<example-genArise-007.pdf, id=77, 433.62pt x 433.62pt>
+File: example-genArise-007.pdf Graphic file (type pdf)
+
+<use example-genArise-007.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<example-genArise-008.pdf, id=78, 433.62pt x 433.62pt>
+File: example-genArise-008.pdf Graphic file (type pdf)
+
+<use example-genArise-008.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<example-genArise-009.pdf, id=79, 433.62pt x 433.62pt>
+File: example-genArise-009.pdf Graphic file (type pdf)
+
+<use example-genArise-009.pdf> [7 <./example-genArise-005.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
+
+ []
+
+[8 <./example-genArise-006.pdf>]
+<example-genArise-010.pdf, id=103, 433.62pt x 433.62pt>
+File: example-genArise-010.pdf Graphic file (type pdf)
+
+<use example-genArise-010.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[9 <./example-genArise-007.pdf>]
+<example-genArise-011.pdf, id=115, 433.62pt x 433.62pt>
+File: example-genArise-011.pdf Graphic file (type pdf)
+
+<use example-genArise-011.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[10 <./example-genArise-008.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 263--264
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 265--266
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 267--268
+
+ []
+
+[11 <./example-genArise-009.pdf>]
+<example-genArise-012.pdf, id=138, 433.62pt x 433.62pt>
+File: example-genArise-012.pdf Graphic file (type pdf)
+
+<use example-genArise-012.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12 <./example-genArise-010.pdf>]
+<example-genArise-013.pdf, id=150, 433.62pt x 433.62pt>
+File: example-genArise-013.pdf Graphic file (type pdf)
+
+<use example-genArise-013.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[13 <./example-genArise-011.pdf>]
+<example-genArise-014.pdf, id=163, 433.62pt x 433.62pt>
+File: example-genArise-014.pdf Graphic file (type pdf)
+
+<use example-genArise-014.pdf> [14 <./example-genArise-012.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<example-genArise-015.pdf, id=175, 433.62pt x 433.62pt>
+File: example-genArise-015.pdf Graphic file (type pdf)
+
+<use example-genArise-015.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[15 <./example-genArise-013.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 342--343
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 344--345
+
+ []
+
+[16 <./example-genArise-014.pdf>] [17 <./example-genArise-015.pdf>]
+<example-genArise-016.pdf, id=209, 433.62pt x 433.62pt>
+File: example-genArise-016.pdf Graphic file (type pdf)
+
+<use example-genArise-016.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 387--389
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 390--391
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 392--393
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 392--393
+
+ []
+
+[18] [19 <./example-genArise-016.pdf>]
+LaTeX Font Info:    Font shape `TS1/aett/m/sl' in size <12> not available
+(Font)              Font shape `TS1/cmtt/m/sl' tried instead on input line 436.
+
+ [20] [21]
+<./images/mainmenu.pdf, id=235, 588.1975pt x 51.19125pt>
+File: ./images/mainmenu.pdf Graphic file (type pdf)
+
+<use ./images/mainmenu.pdf>
+<./images/projectmenufilled.pdf, id=236, 476.78125pt x 475.7775pt>
+File: ./images/projectmenufilled.pdf Graphic file (type pdf)
+
+<use ./images/projectmenufilled.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 500--504
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 500--504
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 500--504
+
+ []
+
+<./images/principal.pdf, id=237, 639.38875pt x 653.44125pt>
+File: ./images/principal.pdf Graphic file (type pdf)
+
+<use ./images/principal.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./images/principalRed.pdf, id=238, 639.38875pt x 653.44125pt>
+File: ./images/principalRed.pdf Graphic file (type pdf)
+
+<use ./images/principalRed.pdf>
+<./images/principalGreen.pdf, id=239, 639.38875pt x 653.44125pt>
+File: ./images/principalGreen.pdf Graphic file (type pdf)
+
+<use ./images/principalGreen.pdf>
+Underfull \hbox (badness 10000) in paragraph at lines 513--527
+
+ []
+
+[22 <./images/mainmenu.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./images/annotation.pdf, id=249, 869.2475pt x 551.05875pt>
+File: ./images/annotation.pdf Graphic file (type pdf)
+
+<use ./images/annotation.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./images/wizarddialog.pdf, id=250, 270.00874pt x 132.495pt>
+File: ./images/wizarddialog.pdf Graphic file (type pdf)
+
+<use ./images/wizarddialog.pdf> [23 <./images/projectmenufilled.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 545--546
+
+ []
+
+<./images/wizardOriginal.pdf, id=257, 670.505pt x 618.31pt>
+File: ./images/wizardOriginal.pdf Graphic file (type pdf)
+
+<use ./images/wizardOriginal.pdf>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./images/wizardNorm.pdf, id=258, 670.505pt x 618.31pt>
+File: ./images/wizardNorm.pdf Graphic file (type pdf)
+
+<use ./images/wizardNorm.pdf> [24 <./images/principal.pdf>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 562--564
+
+ []
+
+<./images/nodupsCy3vsCy5.pdf, id=265, 670.505pt x 618.31pt>
+File: ./images/nodupsCy3vsCy5.pdf Graphic file (type pdf)
+
+<use ./images/nodupsCy3vsCy5.pdf>
+Underfull \hbox (badness 10000) in paragraph at lines 572--573
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 574--575
+
+ []
+
+<./images/original.pdf, id=266, 640.3925pt x 618.31pt>
+File: ./images/original.pdf Graphic file (type pdf)
+
+<use ./images/original.pdf>
+Underfull \hbox (badness 10000) in paragraph at lines 583--584
+
+ []
+
+[25 <./images/principalRed.pdf>] [26 <./images/principalGreen.pdf>] [27 <./imag
+es/annotation.pdf> <./images/wizarddialog.pdf>] [28 <./images/wizardOriginal.pd
+f>] [29 <./images/wizardNorm.pdf>] [30 <./images/nodupsCy3vsCy5.pdf>] [31 <./im
+ages/original.pdf>] (./example-genArise.aux) ) 
+Here is how much of TeX's memory you used:
+ 2283 strings out of 50453
+ 31874 string characters out of 688420
+ 72098 words of memory out of 1500001
+ 5221 multiletter control sequences out of 10000+25000
+ 41106 words of font info for 86 fonts, out of 400000 for 1000
+ 14 hyphenation exceptions out of 10000
+ 35i,10n,40p,940b,482s stack positions out of 3000i,500n,3000p,50000b,5000s
+</usr/share/texmf/fonts/type1/blu
+esky/cm/cmsy10.pfb> </usr/share/texmf/fonts/pk/ljfour/jknappen/tc/tcst1200.600p
+k></usr/share/texmf/fonts/type1/bluesky/cm/cmtt10.pfb></usr/share/texmf/fonts/t
+ype1/bluesky/cm/cmitt10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb
+></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/
+share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb> </usr/share/texmf/fonts/pk/ljfou
+r/jknappen/tc/tctt1200.600pk></usr/share/texmf/fonts/type1/bluesky/cm/cmsl12.pf
+b></usr/share/texmf/fonts/type1/bluesky/cm/cmsltt10.pfb></usr/share/texmf/fonts
+/type1/bluesky/cm/cmtt12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pf
+b></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/ty
+pe1/bluesky/cm/cmr17.pfb>
+Output written on example-genArise.pdf (31 pages, 2022671 bytes).
