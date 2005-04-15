@@ -1,7 +1,7 @@
 get.values <- function(list.values, genes.values, up.down, min.val, max.val){
   if( !(up.down == "up" || up.down == "down"))
     stop("The value for the  up.down argument must be up or down")
-  if(is.null(min.val) || is.null(max.val))
+  if(is.null(min.val) && is.null(max.val))
     stop("You must select a range")
   if(up.down == "up"){
     if(!is.null(max.val) && !is.null(min.val)){
@@ -35,7 +35,7 @@ post.analysis <-  function(values, min.val, max.val, up.down, output){
     results.file <- read.table(values[i], sep ="\t", header = FALSE)[1,1]
     file.data <- read.table(file.path(unlist( strsplit(values[i], "\\.prj"))[1],
                                       results.file, "zscore.txt"),sep = "\t", header = TRUE) 
-    assign(values[i], get.values(as.vector(file.data[,4]), as.vector(file.data[,3]), up.down, min.val, max.val))
+    assign(values[i], get.values(as.vector(file.data[,4]), as.vector(file.data[,3]), up.down, min.val, max.val), envir = myHash)
   }
 
 
@@ -94,7 +94,7 @@ post.analysis <-  function(values, min.val, max.val, up.down, output){
 
     for(i in 1:((2^length(lista))-1)){
       contador.binario <- binary.add(contador.binario,1)
-      datos <- intersect.sets(my.hash, lista, contador.binario)
+      datos <- intersect.sets(myHash, lista, contador.binario)
       output.file <- file.path(output, paste(paste(contador.binario, collapse= ""), ".set", sep = ""))
       unlink(output.file)
       objeto <- file(output.file, "w")

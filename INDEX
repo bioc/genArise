@@ -1,48 +1,52 @@
-a.arise                 Extract A values from a Spot
-alter.unique            Remove duplicates
-analysis.window		genArise GUI auxiliar function
-annotations		Performed an HTML file
-bg.correct		Background correction
-classes			Classes defined by genArise
-create.project		genArise GUI auxiliar function
-cys.plot		Data visualization: Cy3 vs Cy5
 DataSet-class           DataSet - class
-filter.spot		Intensity-based filtering of array elements
-genArise.init		genArise GUI auxiliar function
-genArise		genArise Graphical User Interface
-genMerge		genMerge: post genomic analysis
-global.norm		Global normalization
-graphic.choose		Graphic choose
-grid.norm		Normalization by grid
-help			Help of genArise
-i.arise			Extract I values from a Spot
-imageLimma		Image plot of microarray
-ma.plot			Data visualization: M vs A
-m.arise			Extract M values from a Spot
-meanUnique		Remove duplicates
-new.project		Show the GUI for begin a new project
-note			Call a editor for note about actual experiment
-old.project		genArise GUI auxiliar function
-principal		genArise GUI auxiliar function
-projects.select		genArise GUI auxiliar function
-r.arise			Extract R values from a Spot
-read.dataset		Read DataSet from file
-read.spot		Read Spot from File
-reset.history		Clean all the operations saved in the prj history file
-ri.plot			Data visualization: R vs I
-set.grid.properties	genArise GUI auxiliar function
-set.history.project	genArise GUI auxiliar function
-set.path.project	genArise GUI auxiliar function
-set.project.properties	genArise GUI auxiliar function
-Simon			Dataset: Little fragment of a microarray from IFC UNAM
-Spot-class		Spot - class
-spotUnique		Replicate filtering
-trim			Remove white spaces at the begining or end of a word
-write.dataSet		Write DataSet objet in a file
-write.spot		Write Spot object in a file
-write.zscore		Write Z-score data
-WT.dataset		Microarray from the IFC
-Zscore.plot		Z-score Data Visualization: R vs I or M vs A
-Zscore.points		genArise GUI auxiliar function
-Zscore			Z-scores for identifying differential
-			expression
+Simon                   Dataset: Little fragment of a microarray from
+                        IFC UNAM
+Spot-class              Spot - class
+WT.dataset              Microarray from the IFC
+Zscore                  Z-scores for identifying differential
+                        expression
+Zscore.plot             Z-score Data Visualization: R vs I or M vs A
+Zscore.points           Z-score Window
+a.arise                 A Arise
+alter.unique            Remove Duplicates
+analysis.window         Analysis.window
+annotations             Gene Annotations
+bg.correct              Background Correction
+classes                 Classes Defined by this Package
+create.project          create.project
+cys.plot                Data Visualization: Cy3 vs Cy5
+filter.spot             Intensity-based filtering of array elements
+genArise                GUI: Graphical User Interface
+genArise.init           genArise.init
+genMerge                genMerge: Post-Genomic Analysis
+get.values              Auxiliar function for post-analysis
+global.norm             Global Normalization of Spot
+graphic.choose          Graphic choose
+grid.norm               Normalization by grid of Spot
+help                    Help of genArise
+i.arise                 I Arise
+imageLimma              Image Plot of Microarray
+m.arise                 M Arise
+ma.plot                 Data Visualization: M vs. A plot
+meanUnique              Remove Duplicates
+new.project             new.project
+note                    note
+old.project             Open previous project
+post.analysis           Set-combinatorial analysis
+principal               Principal window of genAriseGUI
+projects.select         File selector
+r.arise                 Get R value
+read.dataset            Read Dataset from File
+read.spot               Read Spot from File
+reset.history           Reset the prj history file
+ri.plot                 Data Visualization: R vs I
+set.grid.properties     set.grid.properties
+set.history.project     Save the history of a project
+set.path.project        set.path.project
+set.project.properties
+                        set.project.properties
+spotUnique              Replicate filtering
+trim                    Trim
+write.dataSet           Write dataSet
+write.spot              Write Spot
+write.zscore            Write Z-score data

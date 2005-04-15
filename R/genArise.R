@@ -1,3 +1,5 @@
+# Main Window of genArise
+# Contains menus for all the options in the system
 genArise.init <- function(envir){
   tclRequire("BWidget")
   tclRequire("Img")
@@ -13,6 +15,8 @@ genArise.init <- function(envir){
   optMenu <- tkmenu(topMenu,tearoff=FALSE)
   helpMenu <- tkmenu(topMenu,tearoff=FALSE)
   project.menu <- tkmenu(topMenu,tearoff=FALSE)
+
+  # open a project already performed
   abre.project <- function(){
     file <- tclvalue(tkgetOpenFile(filetypes = "{{PRJ Files} {.prj}} {{All files} *}"))
     if(nchar(file)){
@@ -21,10 +25,12 @@ genArise.init <- function(envir){
     }
   }
 
+  # open a new project to be performed
   nuevo.project <-  function(){
     tkdestroy(tt)
     new.project(envir)}
-  
+
+  # select the projects to perform the post-analysis
   projectos.select <- function() {
     tkdestroy(tt)
     projects.select(envir = envir)
@@ -53,7 +59,9 @@ genArise.init <- function(envir){
   butt.frame <- tkframe(lower.frame)
   label.frame <- tkframe(lower.frame)
   etiqueta <- tklabel(label.frame, text = "")
-  tkconfigure(etiqueta, text = "", width = "100") 
+  tkconfigure(etiqueta, text = "", width = "100")
+
+  # shortcuts
   tkbind(tt, "<Control-O>",abre.project)   
   tkbind(tt, "<Control-o>",abre.project)
   tkbind(tt, "<Control-N>",nuevo.project)
@@ -68,6 +76,7 @@ genArise.init <- function(envir){
   newButton <- .Tcl(paste("button",.Tk.subwin(butt.frame),"-image [Bitmap::get new]",
                           .Tcl.args(command = nuevo.project)))
 
+  # icons in the bar menu
   tkcmd("image","create","photo","help",file=file.path(get("icons.dir", envir = envir),"icons/help.png"))
   help.button <- tkbutton(butt.frame,image="help", command = function() help())
   tkconfigure(help.button, heigh = 16, width = 16)
@@ -107,4 +116,3 @@ genArise <- function(){
          envir = genArise.env)
   genArise.init(genArise.env)
 }
-

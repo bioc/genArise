@@ -38,7 +38,7 @@ low = NULL, high = NULL)
 \examples{
 data(Simon)
 spot.data <- attr(Simon, "spotData")
-M <- log(spot.data$Cy3, 2) - log(spot.data$Cy5, 2)
+M <- log(spot.data$Cy5, 2) - log(spot.data$Cy3, 2)
 imageLimma(z = M, row = 23, column = 24, meta.row = 2, meta.column = 2,
 low = NULL, high = NULL)
 }

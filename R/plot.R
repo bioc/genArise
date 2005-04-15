@@ -1,14 +1,14 @@
 # GENARISE 
 # Graphics and statistics operations
 
-#Simple graphics 
-
+# Plot the signals: Cy3 vs Cy5 (obtained from the Spot object)
 cys.plot <- function(mySpot, col = "green"){
 	spot <- attr(mySpot, "spotData")
 	par( bg = "black", col.axis = "white", col.lab = "white", fg = "white")
 	plot(spot$Cy3, spot$Cy5,xlab = "Cy3", ylab= "Cy5",  pch = ".", col = col)
 }
 
+# Plot mean log intensity versus intensity log-ratio: M vs A
 ma.plot <- function (mySpot, col = "green"){
 	spot <- attr(mySpot, "spotData")
 	cys.index <- (spot$Cy3 > 0) & (spot$Cy5 > 0) & (!is.na(spot$Cy3)) &(!is.na(spot$Cy5)) & is.finite(spot$Cy3) & is.finite(spot$Cy5)
@@ -21,6 +21,7 @@ ma.plot <- function (mySpot, col = "green"){
 	plot(A,M, xlab = "A", ylab = "M", pch = ".",col = col)
 }
 
+# log2(Cy5/Cy3) ratio as a function of the log10(Cy5*Cy3) product intensities
 ri.plot <- function(mySpot, col = "green"){
 	spot <- attr(mySpot, "spotData")
 	cys.index <- (spot$Cy3 > 0) & (spot$Cy5 > 0) & (!is.na(spot$Cy3)) &(!is.na(spot$Cy5)) & is.finite(spot$Cy3) & is.finite(spot$Cy5)
@@ -32,6 +33,9 @@ ri.plot <- function(mySpot, col = "green"){
 	plot(I,R, xlab = "I", ylab = "R", pch = ".",col = col)
 }
 
+# In this plot , array elements are color-coded depending on wether they are less than
+# 1 standard deviation from the mean (green), between 1 and 1.5 standard deviations (blue)
+# between 1.5 and 2 standard deviations (cyan), or more than 2 standard deviations (white)
 Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all = TRUE, col = "green"){
   values <- attr(dataSet.spot, "dataSets")
   type <- attr(dataSet.spot, "type")
@@ -44,15 +48,18 @@ Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all
   y.axis <- log(values$Cy5, 2)  - log(values$Cy3, 2)
   if(all){
     par(bg = "black", col.axis = "white", col.lab = "white", fg = "white")
+    # get the ranges for the color-code
     azul <- abs(Zscore) < 1
     verde <- (abs(Zscore) >= 1) & (abs(Zscore) < 1.5)
     rojo <- (abs(Zscore) >= 1.5) & (abs(Zscore) <= 2)
     naranja <- abs(Zscore) > 2
+    # the plot will be R vs I or M vs A
     if(type == "ri"){    
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "I", ylab = "R")
     }else{
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "A", ylab = "M")
     }
+    # draw the points
     points(x.axis[naranja], y.axis[naranja], col = "snow", pch =3)      
     points(x.axis[azul], y.axis[azul], col = "green", pch = 3)
     points(x.axis[verde], y.axis[verde], col = "blue",pch= 3)
@@ -80,7 +87,7 @@ Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all
       points(x.axis[verde], y.axis[verde], col = col, pch = 3)
     }else{
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "A", ylab = "M")      
-      plot(x.axis[verde], y.axis[verde], col = col, pch = 3)
+      points(x.axis[verde], y.axis[verde], col = col, pch = 3)
     }
   }
 }

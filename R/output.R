@@ -4,6 +4,11 @@
 
 write.spot <- function( spot, fileName, quote=FALSE,sep="\t",col.names=FALSE, row.names=FALSE ) {
   spotData<-attr(spot,"spotData")
+
+  spotData$Cy3 <- format(spotData$Cy3,justify="left",trim=TRUE)
+  spotData$Cy5 <- format(spotData$Cy5,justify="left",trim=TRUE)
+  spotData$BgCy3 <- format(spotData$BgCy3,justify="left",trim=TRUE)
+  spotData$BgCy5 <- format(spotData$BgCy5,justify="left",trim=TRUE)
   write.table(spotData, fileName, quote = quote,sep = sep, col.names = col.names, row.names = row.names )
 }
 

@@ -1,3 +1,6 @@
+# Miscelaneous functions to get information for the project to perform
+
+# Just set the options for the GUI
 set.project.properties <- function(envir){
   assign("height", "550", envir = envir)
   assign("graphic.type", 2, envir = envir)
@@ -15,6 +18,8 @@ set.project.properties <- function(envir){
   }
 }
 
+# Set properties of the experiment
+# nr: Rows, nc: Columns, nmr: Meta-rows, nmc: Meta-columns
 set.grid.properties <- function(envir, name, nr, nc, nmr, nmc){
   assign("name.project", name, envir = envir)
   assign("nr", nr, envir = envir)
@@ -23,12 +28,14 @@ set.grid.properties <- function(envir, name, nr, nc, nmr, nmc){
   assign("nmc", nmc, envir = envir)
 }
 
+# The path of the project's output 
 set.path.project <-  function(path, results.file, graphics.file, envir){
   assign("path.project", path, envir = envir)
   assign("path.results", file.path(path, results.file), envir = envir)
   assign("path.graphics", file.path(path, graphics.file), envir = envir)
 }
 
+# Create the directory's hierarchy of the project
 create.project <-  function(project.name, results.file = "Results", graphics.file = "Graphics"){
   if(length(unlist(strsplit(results.file, .Platform$file.sep))) > 1 || length(unlist(strsplit(graphics.file, .Platform$file.sep))) > 1 )
     stop("Argument 2 and 3 must be the file name without the path!..")
@@ -41,12 +48,14 @@ create.project <-  function(project.name, results.file = "Results", graphics.fil
   dir.create(file.path(project.name, graphics.file))
 }
 
+# Concatenate the complete text that appear in the history file of the project
 set.history.project <- function(history.file, id.name, data.file){
   history.project <- file(history.file, "a")
   cat(paste(id.name, data.file, sep = "\t"), file = history.file, append = TRUE, sep = "\n")
   close(history.project)
 }
 
+# Select the type of graphic to be shown
 graphic.choose <- function(spot.object, graphic.type){
   switch(graphic.type,
          cys.plot(spot.object),
@@ -54,10 +63,12 @@ graphic.choose <- function(spot.object, graphic.type){
          ma.plot(spot.object))
 }
 
+#Triming a string
 trim <- function(word){
   sub("^[ \t\n\r]*", "", sub("[ \t\n\r]*$", "", word))
 }
 
+# Update the information of the history file of the project
 reset.history <- function(history.file, text){
   write.table(text, history.file, sep ="\t", quote = FALSE, col.names = FALSE, row.names = FALSE)
 }

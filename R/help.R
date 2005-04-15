@@ -1,3 +1,5 @@
+# Just the graphic help of genArise
+
 help <- function(){
   tclRequire("BWidget")
   tt <- tktoplevel()

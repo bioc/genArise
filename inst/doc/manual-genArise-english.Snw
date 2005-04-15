@@ -35,10 +35,10 @@ Then, you need install the packages \emph{tkrplot}, \emph{locfit} y \emph{xtable
 
 This R function automatically download and install the three packages from CRAN, but you must be connected to the network. In other case, you must download the three packages from CRAN for the correct O.S. (Windows, Linux) and install from the terminal these add-on packages with the script \emph{R CMD INSTALL package\_name} for Linux or \emph{Rcmd INSTALL package\_name} for Windows. With the same script you can install genArise too. You can read the instalation manual in the URL: \url{http://biotux.ifc.unam.mx/~pgomez/genArise}.\\
 
-genArise GUI uses widgets from the BWidget package and from the Img package, neither of which come bundled with the default installation of R. If you are using Windows (and not using the installation wizard), you need to install ActiveTcl 8.4.x from \url{http://aspn.activestate.com/ASPN/Downloads/ActiveTcl/}.\\
+genArise GUI uses widgets from the BWidget package and from the Img package, neither of which come bundled with the default installation of R. If you are using Windows (and not using the installation wizard), you need to install ActiveTcl 8.4.x from \url{http://aspn.activestate.com/ASPN/Downloads/ActiveTcl/}. After install ActiveTcl, you must set the environment variable MY\_TCLTK to a non-empty value, for example: \texttt{MY\_TCLTK=Yes} and it is assumed that you want to use a different Tcl/Tk 8.4.x installation, and that this is set up correctly. You must too set the environment variable TCL\_LIBRARY with the path where are the DLLs of Tcl in your machine, for example: \texttt{TCL\_LIBRARY=C:/Tcl/lib/tcl8.4}.\\
 
 If using Linux, install the Tcl and Tk 8.3 rpms from CD, e.g. into /usr/lib, then download BWidget from \url{http://sourceforge.net/projects/tcllib/}.\\
-You must gunzip and untar this file into /usr/lib. Download too tkimg1.3 (this is the version for Tcl and Tk 8.3) from \url{http://sourceforge.net/project/showfiles.php?group_id=52039&package_id=46055&release_id=261562} and gunzip it and untar it into /usr/lib. Then you probably must copy the directory /usr/lib/tkimg1.3/Img/exec\_prefix/lib/Img/ to /usr/lib.\\
+You must gunzip and untar this file into /usr/lib. Download too tkimg1.3 (this is the version for Tcl and Tk 8.3) which you can search in \url{http://sourceforge.net} and gunzip it and untar it into /usr/lib. Then you probably must copy the directory /usr/lib/tkimg1.3/Img/exec\_prefix/lib/Img/ to /usr/lib.\\
 
 Finally, genArise can be loaded with the next instruction:\\
 <<>>=
@@ -316,7 +316,7 @@ Output: A filtered spot object.
 
 \subsubsection{Replicates Filtering}
 
-Another step is the replicates filtering, and in this step, a lot of observations are eliminated. One of the function for this purpose is called \texttt{spotUnique} and this function keep not just one element for each id, but also this function eliminates those points where the diference between the R value of the duplicated observations is bigger than 20\% of one of them. See Figure \ref{fig11}.\\
+Another step is the replicates filtering, and in this step, a lot of observations are eliminated. One of the function for this purpose is called \texttt{spotUnique} and this function compute the geometric mean for the replicates to average our measurements, and the adjusted average measures for each gene can then be used to carry out further analyses. See Figure \ref{fig11}.\\
 
 \begin{figure}[h]
 \begin{center}
@@ -362,7 +362,7 @@ Input: The argument of this function is a spot object.
 Output: A spot object without duplicates observations
 \end{Soutput}
 
-A third function for the same purpose just get the mean of the duplicates and perform the filtering. The name of this function is \texttt{meanUnique}. See Figure \ref{fig13}.
+A third function compute the mean for the duplicates. This function keeps not just one element for each id, but also this function eliminates those points where the diference between the R value of the duplicated observations is bigger than 20% of one of them. The name of this function is \texttt{meanUnique}. See Figure \ref{fig13}.
 
 \begin{figure}[h]
 \begin{center}
@@ -565,6 +565,8 @@ Now a menu-bar like the one shown in Figure \ref{fig15} is displayed.
 In this menu there are two options and some icons for specific functions, in this case: \textbf{Create a new project}, \textbf{Open project} and \textbf{Post-analysis} described in the past section.\\
 
 When the mouse is passed over any icon in the main menu bar, a label with a description of the corresponding function will be displayed in the right side. From now on every icon in this menu bar will be identified by this description.\\
+
+The GUI use R TclTk and if you are using the RGui in Windows, you can quickly notices that the RGui main window frequently "gets in the way", as genArise windows like to hide behind it. It therefore becomes convenient to bypass RGui altogether and just run Rterm and call \texttt{genArise()} from there.\\
 
 \subsection{Create a new project}
 

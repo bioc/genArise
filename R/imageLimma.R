@@ -30,7 +30,7 @@ imageLimma <-  function(z, row, column, meta.row, meta.column, low = NULL, high 
       high <- c(0, 0, 1)
       zlim <- c(zmin, zmax)
   }
-  col <- rgb(seq(low[1], high[1], len = 123), seq(low[2], high[2], len = 123), seq(low[3], high[3], len = 123))
+  col <- rgb(seq(high[1], low[1], len = 123), seq(high[2], low[2], len = 123), seq(high[3], low[3], len = 123))
   dim(z) <- c(column, row, meta.column, meta.row)
   z <- aperm(z, perm = c(1, 3, 2, 4))
   dim(z) <- c(meta.column * column, meta.row * row)

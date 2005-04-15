@@ -8,7 +8,7 @@ bg.correct <- function(mySpot){
   new("Spot", name = spotName, spotData= SD)
 }
 
-# Filtering
+                                        # Filtering
 # Intensity-based filtering of array elements
 
 filter.spot <- function (mySpot){
@@ -19,6 +19,12 @@ filter.spot <- function (mySpot){
   spot$BgCy3 <- spot$BgCy3[condition]
   spot$BgCy5 <- spot$BgCy5[condition]
   spot$Id <- spot$Id[condition]
+  cys <- (!is.na(spot$Cy3)) & (!is.na(spot$Cy5)) & (!is.na(spot$BgCy3)) & (!is.na(spot$BgCy5)) & (!is.na(spot$Id))
+  spot$Cy3 <- spot$Cy3[cys]
+  spot$Cy5 <- spot$Cy5[cys]
+  spot$BgCy3 <- spot$BgCy3[cys]
+  spot$BgCy5 <- spot$BgCy5[cys]
+  spot$Id <- spot$Id[cys]
   newSpot <- list(Cy3 = spot$Cy3 , Cy5= spot$Cy5 , BgCy3 = spot$BgCy3 , BgCy5 = spot$BgCy5, Id = spot$Id)
   spotName <- attr(mySpot, "name")
   new("Spot", name = spotName, spotData= newSpot)
@@ -45,7 +51,7 @@ grid.norm <- function(mySpot, nr, nc){
     d <- unlist(sapply(j : (j+k),function(x) spot$BgCy5[x]))
     e <- unlist(sapply(j : (j+k),function(x) spot$Id[x]))
 
-    index.temp <- a > 0 &  b > 0
+    index.temp <- a > 0 &  b > 0 & (!is.na(a)) & (!is.na(b)) & (!is.na(c)) & (!is.na(d)) & (!is.na(e))
     a <- a[index.temp]
     b <- b[index.temp]
     c <- c[index.temp]
@@ -125,167 +131,182 @@ global.norm <- function(mySpot){
 
 # Mean Replicate filtering 
 meanUnique <- function(mySpot){
-	spot <- attr(mySpot, "spotData")
-	id.sort <- sort.list(spot$Id)
-	i <- 1
-	n <- length(spot$Cy3)
-	Cy3.list <- Cy5.list <- BgCy3.list <- BgCy5.list <- id.list <- list()
-        compara <- function(lista.cy3, lista.cy5){
-          resultado <- FALSE
-          lista.length <- length(lista.cy3)
-          k <- 1
-          while( k < lista.length){
-            r.temp <- (log(lista.cy5[k]) - log(lista.cy3[k]))
-            r.prima.temp <- (log(lista.cy5[k + 1]) - log(lista.cy3[k + 1]))
-            if(abs(r.prima.temp) <= (abs(r.temp) *1.2)){
-              resultado <- TRUE 
-            }
-            else{
-              resultado <- FALSE
-            }
-            k <- k + 1
-          }
-          resultado
+  spot <- attr(mySpot, "spotData")
+  idHash <- new.env(hash=TRUE)
+  n <- length(spot$Cy3)
+  
+  for(i in 1:n){
+    if(exists( spot$Id[i], envir = idHash)){
+      idData <- get( spot$Id[i], envir = idHash)
+      assign(spot$Id[i], list(spotCy3 = c( idData$spotCy3, spot$Cy3[i],recursive=TRUE) ,
+                              spotCy5 = c( idData$spotCy5, spot$Cy5[i],recursive=TRUE),spotBgCy3 = c( idData$spotBgCy3, spot$BgCy3[i],recursive=TRUE),
+                              spotBgCy5 = c( idData$spotBgCy5, spot$BgCy5[i],recursive=TRUE)), envir = idHash)
+    }
+    
+    else{
+      assign(spot$Id[i], list(spotCy3 =  spot$Cy3[i] ,spotCy5 =  spot$Cy5[i],spotBgCy3 =  spot$BgCy3[i],
+                              spotBgCy5 = spot$BgCy5[i]), envir = idHash)
+    }
+  }
+  
+  compara <- function(lista.cy3, lista.cy5){
+    resultado <- TRUE
+    R.list <- log2(lista.cy5)-log2(lista.cy3)
+    n <- length(R.list)
+    if(n > 1){
+      for( i in 1:(length(R.list)-1)) {
+        if((R.list[i] < 0 & R.list[i+1] > 0) | (R.list[i] > 0 & R.list[i+1] < 0)){
+          return( FALSE )
         }
-        while( i < n) {
-          if(spot$Id[id.sort[i]] == spot$Id[id.sort[(i+1)]]){
-            cy3.tmp <- cy5.tmp <- id.tmp <- list()
-            j <- i
-            while(j <= n && spot$Id[id.sort[i]] == spot$Id[id.sort[j]]){
-              cy3.tmp <- c(cy3.tmp, spot$Cy3[id.sort[j]], recursive = TRUE)
-              cy5.tmp <- c(cy5.tmp, spot$Cy5[id.sort[j]], recursive = TRUE)
-              id.tmp <- c(id.tmp, spot$Id[id.sort[j]], recursive = TRUE)
-              j  <- j + 1
-            }
-            condicion <- compara(cy3.tmp, cy5.tmp)
-            if(condicion == TRUE){			
-              tmp1 <- mean(cy3.tmp, na.rm = TRUE)
-              tmp2 <- mean(cy5.tmp, na.rm = TRUE)
-              Cy3.list <- c(Cy3.list, tmp1, recursive = TRUE)
-              Cy5.list <- c(Cy5.list, tmp2, recursive = TRUE)
-              id.list <- c(id.list, spot$Id[id.sort[i]], recursive = TRUE)
-              BgCy3.list <- c(BgCy3.list, spot$BgCy3[id.sort[i]], recursive = TRUE)
-              BgCy5.list <- c(BgCy5.list, spot$BgCy5[id.sort[i]], recursive = TRUE)
-            }
-            i <- i + length(cy3.tmp) - 1
-          }
-          else{
-            Cy3.list <- c(Cy3.list, spot$Cy3[id.sort[i]], recursive = TRUE)
-            Cy5.list <- c(Cy5.list, spot$Cy5[id.sort[i]], recursive = TRUE)
-            BgCy3.list <- c(BgCy3.list, spot$BgCy3[id.sort[i]], recursive = TRUE)
-            BgCy5.list <- c(BgCy5.list, spot$BgCy5[id.sort[i]], recursive = TRUE)
-            id.list <- c(id.list, spot$Id[id.sort[i]], recursive = TRUE)
-          }
-          i <- i + 1
-	}
-	spotName <- attr(mySpot, "name")
-	SD <- list(Cy3 = Cy3.list, Cy5 = Cy5.list, BgCy3 = BgCy3.list, BgCy5 = BgCy5.list, Id = id.list)
-	new("Spot", name = spotName, spotData = SD)
+        
+        if(abs(R.list[i]) > (abs(R.list[i+1]) * 1.2)){
+          resultado <- FALSE
+        }
+      }
+    }    
+    resultado
+  }
+  ids <- ls(envir = idHash)
+  replicates <- function( id ){
+    mainList <- get(id, envir = idHash)
+    if(compara(as.numeric(mainList$spotCy3), as.numeric(mainList$spotCy5)))
+        list(Id = id, Cy3 = mean(mainList$spotCy3), Cy5 = mean(mainList$spotCy5), BgCy3 = mainList$spotBgCy3[length(mainList$spotBgCy3)], BgCy5 = mainList$spotBgCy5[length(mainList$spotBgCy3)])
+  }
+  restCy3 <- restCy5 <- restBgCy3 <- restBgCy5 <- restId <- list()
+  for(i in 1:length(ids)){
+    rest <- replicates(ids[i])
+    restCy3 <- c(restCy3,rest$Cy3,recursive=TRUE)
+    restCy5 <- c(restCy5,rest$Cy5,recursive=TRUE)
+    restBgCy3 <- c(restBgCy3,rest$BgCy3,recursive=TRUE)
+    restBgCy5 <- c(restBgCy5,rest$BgCy5,recursive=TRUE)
+    restId <- c(restId,rest$Id,recursive=TRUE)
+  }
+  SD <- list(Cy3 = restCy3, Cy5 = restCy5, BgCy3 = restBgCy3, BgCy5 = restBgCy5, Id = restId)
+  spotName <- attr(mySpot, "name")
+  new("Spot", name = spotName, spotData = SD)
 }
 
-# Non-extreme values replicate filtering
+                                        # Non-extreme values replicate filtering
 
 alter.unique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
-  id.sort <- sort.list(spot$Id)
-  i <- 1
+  myHash <- new.env(hash=TRUE)
   n <- length(spot$Cy3)
   
-  Cy3.list <- Cy5.list <- BgCy3.list <- BgCy5.list <- id.list <- list()
-  while(i < n){
-    if(spot$Id[id.sort[i]] == spot$Id[id.sort[(i+1)]]){
-      cy3.tmp <- cy5.tmp <- bgcy3.tmp <- bgcy5.tmp <- id.tmp <- list()
-      j <- i
-      while( j <= n && spot$Id[id.sort[i]] == spot$Id[id.sort[j]]){		
-        cy3.tmp <- c(cy3.tmp, spot$Cy3[id.sort[j]], recursive = TRUE)
-        cy5.tmp <- c(cy5.tmp, spot$Cy5[id.sort[j]], recursive = TRUE)
-        bgcy3.tmp <- c(bgcy3.tmp, spot$BgCy3[id.sort[j]], recursive = TRUE)
-        bgcy5.tmp <- c(bgcy5.tmp, spot$BgCy5[id.sort[j]], recursive = TRUE)
-        id.tmp <- c(id.tmp, spot$Id[id.sort[j]], recursive = TRUE)
-        j  <- j + 1
-      }
-      x.tempo <- log(cy5.tmp/cy3.tmp, 2) # obtenemos los ratio
-      x.prueba <- x.tempo[x.tempo < 0] 
-      if(length(x.prueba) == 0 || length(x.prueba) == length(cy3.tmp)){ # todos positivos o todos negativos
-        if(length(x.prueba) == 0 ){ # todos son positivos
-          bueno.index <- as.numeric(which(x.tempo == max(x.tempo)))
-        }
-        else{# todos negativos
-          bueno.index <- as.numeric(which(x.tempo == min(x.tempo)))
-        }
-        tmp1 <- cy3.tmp[bueno.index]
-        tmp2 <- cy5.tmp[bueno.index]
-        tmp3 <- bgcy3.tmp[bueno.index]
-        tmp4 <- bgcy5.tmp[bueno.index]
-        tmp5 <- id.tmp[bueno.index]
-        
-        Cy3.list <- c(Cy3.list, tmp1, recursive = TRUE)
-        Cy5.list <- c(Cy5.list, tmp2, recursive = TRUE)
-        BgCy3.list <- c(BgCy3.list, tmp3, recursive = TRUE)
-        BgCy5.list <- c(BgCy5.list, tmp4, recursive = TRUE)
-        id.list <- c(id.list, tmp5, recursive = TRUE)
-      }
-      i <- i + length(cy3.tmp) - 1
+  for(i in 1:n){
+    if(exists( spot$Id[i], envir = myHash)){
+      idData <- get( spot$Id[i], envir = myHash)
+      assign(spot$Id[i], list(spotCy3 = c( idData$spotCy3, spot$Cy3[i]) ,
+                              spotCy5 = c( idData$spotCy5, spot$Cy5[i]),spotBgCy3 = c( idData$spotBgCy3, spot$BgCy3[i]),
+                              spotBgCy5 = c( idData$spotBgCy5, spot$BgCy5[i])), envir = myHash)
     }
+    
     else{
-      Cy3.list <- c(Cy3.list, spot$Cy3[id.sort[i]], recursive = TRUE)
-      Cy5.list <- c(Cy5.list, spot$Cy5[id.sort[i]], recursive = TRUE)
-      BgCy3.list <- c(BgCy3.list, spot$BgCy3[id.sort[i]], recursive = TRUE)
-      BgCy5.list <- c(BgCy5.list, spot$BgCy5[id.sort[i]], recursive = TRUE)
-      id.list <- c(id.list, spot$Id[id.sort[i]], recursive = TRUE)
+      assign(spot$Id[i], list(spotCy3 =  spot$Cy3[i] ,spotCy5 =  spot$Cy5[i],spotBgCy3 =  spot$BgCy3[i],
+                              spotBgCy5 = spot$BgCy5[i]), envir = myHash)
     }
-    i <- i + 1
+  }
+  ids <- ls(envir = myHash)
+  Cy3.list <- Cy5.list <- BgCy3.list <- BgCy5.list <- Id.list <- list()
+  Cy3s <- Cy5s <- BgCy3s <- BgCy5s <- Ids <- list()
+  
+  replicates2 <- function(id){
+    mainList <- get(id, envir = myHash)
+    Cy3.list <- mainList$spotCy3
+    Cy5.list <- mainList$spotCy5
+    BgCy3.list <- mainList$spotBgCy3
+    BgCy5.list <- mainList$spotBgCy5
+    R.list <- log2(Cy5.list)-log2(Cy3.list)
+    x.prueba <- R.list[R.list < 0]
+    Cy3s <- Cy5s <- BgCy3s <- BgCy5s <- ids <- list()
+    if(length(x.prueba) == 0 || length(x.prueba) == length(Cy3.list)){
+      if(length(x.prueba) == 0){ # all positive
+        bueno.index <- as.numeric(which(R.list == max(R.list)))
+      }
+      else{# all negative
+        bueno.index <- as.numeric(which(R.list == min(R.list)))
+      }
+      Cy3s <- Cy3.list[bueno.index]
+      Cy5s <- Cy5.list[bueno.index]
+      BgCy3s <- BgCy3.list[bueno.index]
+      BgCy5s <- BgCy5.list[bueno.index]
+      ids <- id
+    }
+    list(Cy3 = Cy3s, Cy5 = Cy5s, BgCy3 = BgCy3s, BgCy5 = BgCy5s, Id = ids)
   }
   
+  restCy3 <- restCy5 <- restBgCy3 <- restBgCy5 <- restId <- list()
+  for(i in 1:length(ids)){
+    rest <- replicates2(ids[i])
+    restCy3 <- c(restCy3,rest$Cy3,recursive=TRUE)
+    restCy5 <- c(restCy5,rest$Cy5,recursive=TRUE)
+    restBgCy3 <- c(restBgCy3,rest$BgCy3,recursive=TRUE)
+    restBgCy5 <- c(restBgCy5,rest$BgCy5,recursive=TRUE)
+    restId <- c(restId,rest$Id,recursive=TRUE)
+  }
+  SD <- list(Cy3 = restCy3, Cy5 = restCy5, BgCy3 = restBgCy3, BgCy5 = restBgCy5, Id = restId)
   spotName <- attr(mySpot, "name")
-  SD <- list(Cy3 = Cy3.list, Cy5 = Cy5.list, BgCy3 = BgCy3.list, BgCy5 = BgCy5.list, Id = id.list)
   new("Spot", name = spotName, spotData = SD)
 }
 
 # Remove replicated observations, geometric mean
 spotUnique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
-  id.sort.index <-   rev(sort.list(spot$Id))
-  i <-  1
+  idHash <- new.env(hash=TRUE)
   n <- length(spot$Cy3)
-  Cy3.list <- Cy5.list <- BgCy3.list <- BgCy5.list <- id.list <- list()
-  Cy3.lista <- spot$Cy3[id.sort.index]
-  Cy5.lista <- spot$Cy5[id.sort.index]
-  BgCy3.lista <- spot$BgCy3[id.sort.index]
-  BgCy5.lista <- spot$BgCy5[id.sort.index]
-  Id.lista <- spot$Id[id.sort.index]
-
+  
+  for(i in 1:n){
+    if(spot$Id[i] == ""){
+      spot$Id[i] <- "NOGB_accession"
+    }
+    if(exists( spot$Id[i], envir = idHash)){
+      idData <- get( spot$Id[i], envir = idHash)
+      assign(spot$Id[i], list(spotCy3 = c( idData$spotCy3, spot$Cy3[i],recursive=TRUE) ,
+                              spotCy5 = c( idData$spotCy5, spot$Cy5[i],recursive=TRUE),spotBgCy3 = c( idData$spotBgCy3, spot$BgCy3[i],recursive=TRUE),
+                              spotBgCy5 = c( idData$spotBgCy5, spot$BgCy5[i],recursive=TRUE)), envir = idHash)
+    }
+    
+    else{
+      assign(spot$Id[i], list(spotCy3 =  spot$Cy3[i] ,spotCy5 =  spot$Cy5[i],spotBgCy3 =  spot$BgCy3[i],
+                              spotBgCy5 = spot$BgCy5[i]), envir = idHash)
+      
+    }
+  }
+  
   geometric.mean <-  function(x){
     prod(x^(1/length(x)))
   }
   
-  while( i < n){
-    if(Id.lista[i] == Id.lista[i+1]){
-      cy3.tmp <- cy5.tmp <- id.tmp <- list()
-      j <- i
-      while(j<= n && (Id.lista[i]  == Id.lista[j])){
-        cy3.tmp <-  c(cy3.tmp, Cy3.lista[j], recursive = TRUE)
-        cy5.tmp <-  c(cy5.tmp, Cy5.lista[j], recursive = TRUE)
-        j <-  j + 1
-      }
-      tmp1 <- geometric.mean(cy3.tmp)
-      tmp2 <- geometric.mean(cy5.tmp)
-      Cy3.list <- c(Cy3.list, tmp1, recursive = TRUE)
-      Cy5.list <- c(Cy5.list, tmp2, recursive = TRUE)
-      id.list <- c(id.list, Id.lista[i], recursive = TRUE)
-      BgCy3.list <- c(BgCy3.list, BgCy3.lista[i], recursive = TRUE)
-      BgCy5.list <- c(BgCy5.list, BgCy5.lista[i], recursive = TRUE)
-      i <- i + length(cy3.tmp) - 1
-    }else{ # Si no hay emptys hay que colocarlos en el archivo
-      Cy3.list <- c(Cy3.list, Cy3.lista[i], recursive = TRUE)
-      Cy5.list <- c(Cy5.list, Cy5.lista[i], recursive = TRUE)
-      id.list <- c(id.list, Id.lista[i], recursive = TRUE)
-      BgCy3.list <- c(BgCy3.list, BgCy3.lista[i], recursive = TRUE)
-      BgCy5.list <- c(BgCy5.list, BgCy5.lista[i], recursive = TRUE)
-    }
-    i <- i + 1
+  ids <- ls(envir = idHash)
+  
+  replicates3 <- function(id){
+    mainList <- get(id, envir = idHash)
+    Cy3.list <- mainList$spotCy3
+    Cy5.list <- mainList$spotCy5
+    BgCy3.list <- mainList$spotBgCy3
+    BgCy5.list <- mainList$spotBgCy5
+    Cy3 <- Cy5 <- BgCy3 <- BgCy5 <- Id <- list()
+    tmp1 <- geometric.mean(Cy3.list)
+    tmp2 <- geometric.mean(Cy5.list)
+    Cy3 <- c(Cy3, tmp1, recursive=TRUE)
+    Cy5 <- c(Cy5, tmp2, recursive=TRUE)
+    BgCy3 <- c(BgCy3, BgCy3.list[1],recursive=TRUE)
+    BgCy5 <- c(BgCy5, BgCy5.list[1],recursive=TRUE)
+    Id <- c(Id, id, recursive=TRUE)
+    list(Cy3 = Cy3, Cy5 = Cy5, BgCy3 = BgCy3, BgCy5 = BgCy5, Id = Id)
   }
+  
+  restCy3 <- restCy5 <- restBgCy3 <- restBgCy5 <- restId <- list()
+  for(i in 1:length(ids)){
+    rest <- replicates3(ids[i])
+    restCy3 <- c(restCy3,rest$Cy3,recursive=TRUE)
+    restCy5 <- c(restCy5,rest$Cy5,recursive=TRUE)
+    restBgCy3 <- c(restBgCy3,rest$BgCy3,recursive=TRUE)
+    restBgCy5 <- c(restBgCy5,rest$BgCy5,recursive=TRUE)
+    restId <- c(restId,rest$Id,recursive=TRUE)
+  }
+  
   spotName <- attr(mySpot, "name")
-  SD <- list(Cy3 = Cy3.list, Cy5 = Cy5.list, BgCy3 = BgCy3.list, BgCy5 = BgCy5.list, Id = id.list)
+  SD <- list(Cy3 = restCy3, Cy5 = restCy5, BgCy3 = restBgCy3, BgCy5 = restBgCy5, Id = restId)
   new("Spot", name = spotName, spotData = SD)
 }

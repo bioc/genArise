@@ -1,12 +1,23 @@
+# Windows for diagnostic plots and the analysis
 require(tkrplot)
 require(xtable)
+
+back.gui <- function(envir){
+    answer <- as.character(tkmessageBox(message = "All the performed operations will be deleted from this project. Are you sure?",
+                                        icon = "question", type = "yesnocancel", default = "yes"))
+    if( answer == "yes" ){
+      proj.file <- read.table(get("history.project", envir = envir),header=FALSE,sep="\t")
+      proj.tmp <- proj.file[1:(length(proj.file[,1])-op.counter),]
+      op.counter <<- 0
+      reset.history(get("history.project", envir = envir),proj.tmp)}
+  }
 
 principal <-  function(envir){
   tclRequire("BWidget")
   tt <- tktoplevel()
   o.spot <- get("o.spot", envir = envir)
   datos <- attr(o.spot, "spotData")
-  M <- log(datos$Cy3, 2) - log(datos$Cy5, 2)
+  M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
   tkwm.geometry(tt,"+50+50")
   tkwm.title(tt,"GenArise Microarray Analyzer")
 
@@ -56,6 +67,9 @@ principal <-  function(envir){
   tkbind(help.button, "<Enter>", function() label.function("Display the genArise's help"))
   tkbind(help.button, "<Leave>", function() label.function(""))
 
+  tkbind(exit.button, "<Enter>", function() label.function("Exit GenArise GUI"))
+  tkbind(exit.button, "<Leave>", function() label.function(""))
+
   
   follow.wizard <- function(){
     respuesta <- as.character(tkmessageBox(message = "Do you want to follow the wizard?",
@@ -80,7 +94,6 @@ principal <-  function(envir){
     }
   }
   
-  
   topMenu <- tkmenu(tt)
   tkconfigure(tt,menu=topMenu)
   fileMenu <- tkmenu(topMenu,tearoff=FALSE)
@@ -88,12 +101,13 @@ principal <-  function(envir){
   tkadd(topMenu,"cascade",label="File", menu=fileMenu)
   tkadd(topMenu,"command",label="Back", command = function(){
     tkdestroy(tt)
-    genArise()})
-  
+    genArise()
+  })
   
   tkadd(topMenu,"command",label="Analyze", command = function(){
-    follow.wizard()})
-
+    follow.wizard()
+  })
+  
   save.as.pdf <-  function(){
     name <- tclvalue(tkgetSaveFile(initialdir = get("path.graphics", envir = envir),
                                    initialfile=get("spot.name",envir=envir),filetypes="{{PDF Files} {.pdf}} {{All files} *}"))
@@ -103,21 +117,21 @@ principal <-  function(envir){
       rbVal <- as.character(tclvalue(rbValue))
       if(rbVal == "Red & Green"){
         pdf(paste(name, "R&G.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "R&G.pdf", sep = "_"))
-        imageLimma(log(datos$Cy3, 2) - log(datos$Cy5, 2), row = get("nr", envir = envir), column = get("nc", envir = envir),
+        imageLimma(log(datos$Cy5, 2) - log(datos$Cy3, 2), row = get("nr", envir = envir), column = get("nc", envir = envir),
                    meta.row = get("nmr", envir = envir),meta.column = get("nmc", envir = envir))
         dev.off(dev.cur())
       }
       else{
         if(rbVal == "Red"){
           pdf(paste(name, "R.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "R.pdf", sep = "_"))
-          imageLimma(log(datos$Cy3, 2), get("nr", envir = envir), get("nc", envir = envir),
+          imageLimma(log(datos$Cy5, 2) - log(datos$Cy3, 2), get("nr", envir = envir), get("nc", envir = envir),
                      get("nmr", envir = envir),
                      get("nmc", envir = envir), low = "white", high = "red")
           dev.off(dev.cur())
         }
         else{
           pdf(paste(name, "G.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "G.pdf", sep = "_"))
-          imageLimma(log(datos$Cy5, 2),get("nr", envir = envir), get("nc", envir = envir),
+          imageLimma(log(datos$Cy5, 2) - log(datos$Cy3, 2),get("nr", envir = envir), get("nc", envir = envir),
                      get("nmr", envir = envir),
                      get("nmc", envir = envir), low = "white", high = "green")
           dev.off(dev.cur())
@@ -125,7 +139,6 @@ principal <-  function(envir){
       }
     }
   }
-
   
   optionsMenu <- tkmenu(topMenu,tearoff=FALSE)
   tkadd(optionsMenu,"command",label="Save graphic as PDF",command = function(){
@@ -155,6 +168,8 @@ principal <-  function(envir){
   
   
   radio.frame <- tkframe(frameOverall,relief="groove",borderwidth=2)
+
+  # diagnostic plots
   rbValue <- tclVar("Red & Green")
   rb1 <- tkradiobutton(radio.frame, text = "Red & Green", value = "Red & Green", variable = rbValue,
                        command = function() {tkrreplot(img, fun = function() imageLimma(M,
@@ -194,16 +209,8 @@ principal <-  function(envir){
   tkgrid(area.frame, padx = "10", pady = "10", sticky = "w")
 }
 
+# Auxiliar function to call the Zscore.plot function in the GUI
 Zscore.points <-  function(type="ri",text, envir){
-  back.gui <- function(){
-    answer <- as.character(tkmessageBox(message = "All the performed operations will be deleted from this project. Are you sure?",
-                                        icon = "question", type = "yesnocancel", default = "yes"))
-    if( answer == "yes" ){
-      proj.file <- read.table(get("history.project", envir = envir),header=FALSE,sep="\t")
-      proj.tmp <- proj.file[1:(length(proj.file[,1])-op.counter),]
-      op.counter <<- 0
-      reset.history(get("history.project", envir = envir),proj.tmp)}
-  }
   tt <- tktoplevel()
   tkwm.title(tt,"GenArise Microarray Analyzer")
   topMenu <- tkmenu(tt)
@@ -234,13 +241,13 @@ Zscore.points <-  function(type="ri",text, envir){
                           value=5, variable=dist, command=function(){
                             tkrreplot(img, fun = function() Zscore.plot(get("Zscore.spot", envir = envir)))})
   
-  
   tkgrid(radio1, sticky="w")
   tkgrid(radio2, sticky="w")
   tkgrid(radio3, sticky="w")
   tkgrid(radio4, sticky="w")
   tkgrid(radio5, sticky="w")
-  
+
+  # get the information for the annotation function
   annotations.but <- tkbutton(sd.frame,text = "Annotations", command=function(){
     choose.specie <- tktoplevel()
     tkwm.title(choose.specie,"Specie Selector")
@@ -248,6 +255,7 @@ Zscore.points <-  function(type="ri",text, envir){
     species <- c("Mus musculus","Saccharomyces Cerevisiae","Rattus norvegicus", "NCBI")
     comboBox <- tkwidget(choose.specie, "ComboBox",editable=FALSE,values=species)
     tkgrid(comboBox)
+    
     OnOK <- function()
       {
         datos <- attr(get("Zscore.spot", envir = envir), "dataSets")
@@ -257,28 +265,28 @@ Zscore.points <-  function(type="ri",text, envir){
         annotations(kk, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), "annotations.htm"))
         tkdestroy(choose.specie)
       }
+    
     OnCancel <-  function(){
       tkdestroy(choose.specie)
     }
+    
     OK.but <-tkbutton(choose.specie,text="   OK   ",command=OnOK)
     Cancel.but <-tkbutton(choose.specie,text="   Cancel   ",command=OnCancel)
     tkgrid(OK.but, Cancel.but, padx = "20", pady = "10")
     tkfocus(tt)
   })
   
- 
   tkgrid(ratio.buttons.frame, sticky="w", pady = "20")
   tkgrid(annotations.but, sticky="w", pady = "10")
   
   tkselect(radio5)
-  
   tkadd(fileMenu,"command",label="Close",command=function(){
     tkdestroy(tt)
     genArise.init(envir)})
   tkadd(fileMenu,"command",label="Exit",command=function() tkdestroy(tt))
   tkadd(topMenu,"cascade",label="File",menu=fileMenu)
   tkadd(topMenu,"command",label="Back", command = function(){
-    back.gui()
+    back.gui(envir)
     tkdestroy(tt)
     principal(envir)
   })
@@ -288,8 +296,8 @@ Zscore.points <-  function(type="ri",text, envir){
   make.file.name <- function(file.type, ext){
     switch(as.integer(tclvalue(dist)),
            suggested.name <- paste(get("spot.name",envir=envir), "_lower_1.", ext, sep = ""),
-           suggested.name <- paste(get("spot.name",envir=envir), "_1-1.5.", ext, sep = ""),
-           suggested.name <- paste(get("spot.name",envir=envir), "_1.5-2.", ext, sep = ""),
+           suggested.name <- paste(get("spot.name",envir=envir), "_1-1_5.", ext, sep = ""),
+           suggested.name <- paste(get("spot.name",envir=envir), "_1_5-2.", ext, sep = ""),
            suggested.name <- paste(get("spot.name",envir=envir), "_greater_2.", ext, sep = ""),
            suggested.name <- paste(get("spot.name",envir=envir), "_all.", ext, sep = ""),
            )
@@ -316,6 +324,8 @@ Zscore.points <-  function(type="ri",text, envir){
       dev.off(dev.cur())
     }
   })
+
+  # save the Zscore for the data set in a file
   tkadd(optionsMenu,"command",label="Write as outputfile",command = function() {
     name <- make.file.name(file.type = "{{TXT Files} {.txt}} {{All files} *}", ext="txt")
     if (!nchar(name))
@@ -363,24 +373,15 @@ Zscore.points <-  function(type="ri",text, envir){
   tkinsert(txt,"end",text)
   tkinsert(txt,"end","\n\nZscore Done!!")
   tkconfigure(txt, state="disabled")
-  
   tkgrid(area.frame, padx = "10")
 }
 
-# second window 
+# Window for the analysis
 analysis.window <-  function(texto, follow.wizard = FALSE, envir){
   assign("corrected", 0, envir = envir)
   my.file <- paste(get("name.project", envir = envir), ".prj", sep = "")
-  back.gui <- function(){
-    answer <- as.character(tkmessageBox(message = "All the performed operations will be deleted from this project. Are you sure?",
-                                        icon = "question", type = "yesnocancel", default = "yes"))
-    if( answer == "yes" ){
-      proj.file <- read.table(get("history.project", envir = envir),header=FALSE,sep="\t")
-      proj.tmp <- proj.file[1:(length(proj.file[,1])-op.counter),]
-      op.counter <<- 0
-      reset.history(get("history.project", envir = envir),proj.tmp)}
-  }
-  
+
+  # check if the background correction will be done
   bg.question <- function(){
     answer <-tkmessageBox(message="Do you want to make background correction?",icon="question",type="yesnocancel",default="yes")
     ans <- as.character(answer)
@@ -413,6 +414,8 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
       }
     }
   }
+
+  # GUI behavior after the data normalization
   normalized.gui <- function(type = 1, history.entry, analysis.plot){ # 1 by grid, 2 global
     if(get("corrected",envir=envir) == 0) bg.question()
     if(get("corrected",envir = envir) == 1){
@@ -441,7 +444,8 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
       tkconfigure(tt,cursor="arrow")
     }
   }
-  
+
+  # GUI behavior after the data filtering
   filter.gui <-  function(history.text, analysis.plot){
     if(get("corrected",envir=envir) == 0) bg.question()
     tkconfigure(tt,cursor="watch")
@@ -467,7 +471,8 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
     tkconfigure(tt,cursor="arrow")
   }
   
-                                        # 1 mean replicate filtering, 2 non-extreme values replicate, 3 geometric mean
+  # GUI behavior after remove replicates
+  # 1 mean replicate filtering, 2 non-extreme values replicate, 3 geometric mean
   remove.duplicates.gui <-  function(type = 1, history.entry, analysis.plot){
     if(get("corrected",envir=envir) == 0) bg.question()
     if(get("corrected",envir=envir) == 1){
@@ -504,6 +509,8 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
         tkentryconfigure(topMenu, "3", state ="disable" )}}
     tkconfigure(tt,cursor="arrow")
   }
+
+  # GUI behavior after perform Zscore
   zscore.gui <- function(){
     tkconfigure(tt,cursor="watch")
     assign("Zscore.spot", Zscore(get("a.spot",envir=envir)), envir = envir)
@@ -553,7 +560,7 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
   tkadd(topMenu,"cascade",label="File",menu=fileMenu)
 
   tkadd(topMenu,"command",label="Back", command = function(){
-    back.gui()
+    back.gui(envir)
     tkdestroy(tt)
     principal(envir)
     
@@ -706,7 +713,11 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
   tkconfigure(help.button, heigh = 16, width = 16)
 
   tkcmd("image","create","photo","back",file=file.path(get("icons.dir", envir = envir),"icons/regresar.png"))
-  back.button <- tkbutton(image.menu.frame,image="back",command = function() back.gui())
+  back.button <- tkbutton(image.menu.frame,image="back",command =  function(){
+    back.gui(envir)
+    tkdestroy(tt)
+    principal(envir)
+  } )
   tkconfigure(back.button, heigh = 16, width = 16)
   
   etiqueta <- tklabel(sub.menu.frame, text = "")
@@ -785,6 +796,3 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
     remove.duplicates.gui(3, txt, img)
   }    
 }
-
-
-

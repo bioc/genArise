@@ -39,7 +39,9 @@ Posteriormente, necesitas instalar los paquetes \texttt{tkrplot}, \texttt{locfit
 
 Con esta funci\'on de R autom\'aticamente se descargar\'an y se instalar\'an los tres paquetes desde el CRAN, si se cuenta con una conexi\'on de red. En caso contrario deber\'as descargar los tres paquetes del CRAN para tu plataforma (Linux o Windows) e instalarlos con el script \texttt{R CMD INSTALL nombre\_del\_paquete} para linux y \texttt{Rcmd INSTALL nombre\_del\_paquete} para windows. Con este script deber\'as tambi\'en instalar genArise\footnote{Para mayor informaci\'on sobre la instalaci\'on descargue los manuales de la siguiente direcci\'on: \url{http://biotux.ifc.unam.mx/~pgomez/genArise}}.\\
 
-Si el sistema operativo sobre el cual se va a instalar genArise es linux, debes instalar los rpms Tcl and Tk 8.3 (los cuales puedes instalar desde el disco de instalaci\'on de linux) en /usr/lib, despu\'es descarga BWidget de \url{http://sourceforge.net/projects/tcllib/} descomprimi\'endolo con el comando \texttt{gunzip} tambi\'en en /usr/lib, luego utiliza el comando \texttt{tar -xvf} sobre el archivo .tar. Debes descargar tambi\'en tkimg1.3 (esta es la versi\'on para tcl y tk 8.3) de \url{http://sourceforge.net/project/shoefiles.php?group_id=52039&package_id=46055&release_id=261562} y  descompr\'{\i}melo con el comando \texttt{gunzip} dentro de /usr/lib/ y luego utiliza el comando \texttt{tar -xvf} sobre el archivo .tar. Luego, es probable que debas copiar el directorio /usr/lib/tkimg1.3/Img/exec\_prefix/lib/Img a /usr/lib/.\\
+La interfaz gr\'afica de genArise usa algunos componentes que vienen en los paquetes BWidget e Img, ninguno de los cuales est\'a incluido por default en la instalaci\'on de R. Si se est\'a usando Windows necesitas instalar ActiveTcl 8.4.x desde \url{http://aspn.activestate.com/ASPN/Downloads/ActiveTcl/}. Despu\'es de instalar ActiveTcl, se debe definir la variable de ambiente MY\_TCLTK igual a una cadena no vac\'{\i}a, por ejemplo: \texttt{MY\_TCLTK=Yes} para indicarle al sistema que se desea usar una instalaci\'on distinta de Tcl/Tk. Debes tambi\'en definir la variable TCL\_LIBRARY igual a la ruta d\'onde est\'an los DLLs de Tcl en tu m\'aquina, por ejemplo: \texttt{TCL\_LIBRARY=C:/Tcl/lib/tcl8.4}.\\
+
+Si el sistema operativo sobre el cual se va a instalar genArise es linux, debes instalar los rpms Tcl and Tk 8.3 o posterior (los cuales puedes instalar desde el disco de instalaci\'on de linux), despu\'es descarga BWidget de \url{http://sourceforge.net/projects/tcllib/} descomprimi\'endolo con el comando \texttt{gunzip} en /usr/lib, luego utiliza el comando \texttt{tar -xvf} sobre el archivo .tar. Debes descargar tambi\'en tkimg1.3 (esta es la versi\'on para tcl y tk 8.3) que puedes buscar en \url{http://sourceforge.net} y  descompr\'{\i}melo con el comando \texttt{gunzip} dentro de /usr/lib/ y luego utiliza el comando \texttt{tar -xvf} sobre el archivo .tar. Luego, es probable que debas copiar el directorio /usr/lib/tkimg1.3/Img/exec\_prefix/lib/Img a /usr/lib/.\\
 
 \section{Iniciando genArise}
 
@@ -47,7 +49,7 @@ Una vez que el paquete genArise haya sido instalado, para trabajar con \'el debe
 
 <<>>=
 library(genArise)
-@ vez cargado el paquete puedes utilizar cualquiera de las funciones de genArise y proceder a realizar el an\'alisis de los datos de un microarreglo. genArise contiene funciones que se pueden ejecutar desde el prompt de R en cada paso del an\'alisis; sin embargo, existe tambi\'en una interfaz gr\'afica de usuario para facilitar el uso de todas las funciones en el paquete, la cual ser\'a descrita m\'as adelante.
+@ Ya cargado el paquete puedes utilizar cualquiera de las funciones de genArise y proceder a realizar el an\'alisis de los datos de un microarreglo. genArise contiene funciones que se pueden ejecutar desde el prompt de R en cada paso del an\'alisis; sin embargo, existe tambi\'en una interfaz gr\'afica de usuario para facilitar el uso de todas las funciones en el paquete, la cual ser\'a descrita m\'as adelante.
 
 \section{Las Funciones del paquete genArise\label{sec1}}
 
@@ -336,7 +338,7 @@ del filtrado.
 
 \subsubsection{Eliminaci\'on de duplicados}
 
-Otro paso del an\'alisis es la eliminaci\'on de los datos que tienen el identificador duplicado. genArise cuenta con la funci\'on \texttt{spotUnique}, esta funci\'on no solo conserva un elemento por cada elemento que se encuentre repetido en el arreglo, tambi\'en elimina aquellos datos en donde la diferencia, entre los valores R de los datos duplicados, es mayor al 20\%. Ver figura \ref{fig11}\\
+Otro paso del an\'alisis es la eliminaci\'on de los datos que tienen el identificador duplicado. genArise cuenta con la funci\'on \texttt{spotUnique} que calcula la media geom\'etrica de los duplicados para promediar los valores. De esta manera, los valores ajustados para cada gen pueden ser usados para llevar a cabo fases posteriores del an\'alisis. Ver figura \ref{fig11}\\
 
 \begin{figure}[h]
 \begin{center}
@@ -382,7 +384,7 @@ Argumentos: Un objeto de la clase Spot
 Resultado: Un objeto de la clase Spot sin duplicados.
 \end{Soutput}
 
-genArise cuenta tambi\'en con otra funci\'on para la eliminaci\'on de duplicados cuyo nombre es \texttt{meanUnique}, esta funci\'on obtiene la media (promedio) de los valores de los duplicados. Ver figura \ref{fig13}\\
+genArise cuenta tambi\'en con otra funci\'on para la eliminaci\'on de duplicados cuyo nombre es \texttt{meanUnique}, esta funci\'on obtiene la media (promedio) de los valores de los duplicados. Pero esta funci\'on no solo conserva un elemento por cada id repetido en el arreglo, tambi\'en elimina aquellos datos en donde la diferencia, entre los valores R de los datos duplicados, es mayor al 20\%. Ver figura \ref{fig13}\\
 
 \begin{figure}[h]
 \begin{center}
@@ -582,6 +584,8 @@ anterior.\\
 Cada vez que el cursor del rat\'on sea colocado encima de alg\'un \'{\i}cono en la barra de men\'u principal, se desplegar\'a en el 
 extremo derecho  una descripci\'on de la funci\'on correspondiente al \'{\i}cono. De aqu\'{\i} en adelante, cada \'{\i}cono en esta barra 
 ser\'a identificado por esa descripci\'on.\\
+
+Esta interfaz gr\'afica usa R TclTk, as\'{\i} que si se est\'a usando RGui en Windows, se puede notar f\'acilmente que la ventana principal de RGui frecuentemente se "interpone", por lo que las ventanas de genArise parecen ocultarse detr\'as de esta. Por este motivo, se recomienda evitar el RGui para la interfaz gr\'afica de genArise y ejecutar esta desde la Rterm (desde una ventana de MS-DOS).\\
 
 \subsection{Crear un nuevo proyecto}
 

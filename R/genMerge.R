@@ -13,9 +13,9 @@ genMerge <- function(gene.association, description, population.genes, study.gene
 
 	population.file$V1 <- as.vector(population.file$V1)
 	total.no.detected.genes <- length(population.file$V1)
-	GMRGgenomehash <- new.env(hash = T)
-	descriptionHash <- new.env(hash = T)
-	id.hash <- new.env(hash = T)
+	GMRGgenomehash <- new.env(hash = TRUE)
+	descriptionHash <- new.env(hash = TRUE)
+	id.hash <- new.env(hash = TRUE)
 
 	for(i in 1:total.no.detected.genes){
 		assign(gene.association.file$V1[i], list( GO = gene.association.file$V2[i]), env = GMRGgenomehash)
@@ -41,7 +41,7 @@ genMerge <- function(gene.association, description, population.genes, study.gene
 
 	unique.list <- rle(tmp)
 
-	output.hash <- new.env( hash = T)
+	output.hash <- new.env( hash = TRUE)
 
 	for( i in 1:length(unique.list$values)){
 		assign(unique.list$values[i], list(count = unique.list$lengths[i], frequence = unique.list$lengths[i]/total.no.detected.genes), env = output.hash)

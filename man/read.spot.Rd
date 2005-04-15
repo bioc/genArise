@@ -5,8 +5,7 @@
 Read all file, but only extract the interested columns and create a Spot object.
 }
 \usage{
-read.spot(file.name, cy3 = 1, cy5 = 2, bg.cy3 = 3, bg.cy5 =
-4, ids = 5, header = FALSE, sep = "\t", is.ifc = FALSE)
+read.spot(file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE, sep = "\t", is.ifc = FALSE)
 }
 \arguments{
 \item{file.name}{a connection or a character string giving the
