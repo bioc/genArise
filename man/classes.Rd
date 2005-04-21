@@ -1,6 +1,6 @@
 \name{classes}
 \alias{classes}
-\title{Classes Defined by this Package}
+\title{Classes Defined by genArise Package}
 \description{
 This package defines the following data classes.
 \describe{
