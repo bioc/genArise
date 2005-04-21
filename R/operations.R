@@ -13,18 +13,20 @@ bg.correct <- function(mySpot){
 
 filter.spot <- function (mySpot){
   spot <- attr(mySpot, "spotData")
-  condition <- (spot$Cy3 > 2 * sd(spot$BgCy3)) & (spot$Cy5 > 2 * sd(spot$BgCy5))
-  spot$Cy3 <- spot$Cy3[condition]
-  spot$Cy5 <- spot$Cy5[condition]
-  spot$BgCy3 <- spot$BgCy3[condition]
-  spot$BgCy5 <- spot$BgCy5[condition]
-  spot$Id <- spot$Id[condition]
   cys <- (!is.na(spot$Cy3)) & (!is.na(spot$Cy5)) & (!is.na(spot$BgCy3)) & (!is.na(spot$BgCy5)) & (!is.na(spot$Id))
   spot$Cy3 <- spot$Cy3[cys]
   spot$Cy5 <- spot$Cy5[cys]
   spot$BgCy3 <- spot$BgCy3[cys]
   spot$BgCy5 <- spot$BgCy5[cys]
   spot$Id <- spot$Id[cys]
+
+  condition <- spot$Cy3 > 2 * sd(spot$BgCy3) & spot$Cy5 > 2 * sd(spot$BgCy5)
+  spot$Cy3 <- spot$Cy3[condition]
+  spot$Cy5 <- spot$Cy5[condition]
+  spot$BgCy3 <- spot$BgCy3[condition]
+  spot$BgCy5 <- spot$BgCy5[condition]
+  spot$Id <- spot$Id[condition]
+
   newSpot <- list(Cy3 = spot$Cy3 , Cy5= spot$Cy5 , BgCy3 = spot$BgCy3 , BgCy5 = spot$BgCy5, Id = spot$Id)
   spotName <- attr(mySpot, "name")
   new("Spot", name = spotName, spotData= newSpot)
@@ -134,8 +136,11 @@ meanUnique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
   idHash <- new.env(hash=TRUE)
   n <- length(spot$Cy3)
-  
+  spot$Id <- toupper(spot$Id)
   for(i in 1:n){
+    if(spot$Id[i] == ""){
+      spot$Id[i] <- "EMPTY"
+    }
     if(exists( spot$Id[i], envir = idHash)){
       idData <- get( spot$Id[i], envir = idHash)
       assign(spot$Id[i], list(spotCy3 = c( idData$spotCy3, spot$Cy3[i],recursive=TRUE) ,
@@ -192,8 +197,11 @@ alter.unique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
   myHash <- new.env(hash=TRUE)
   n <- length(spot$Cy3)
-  
+  spot$Id <- toupper(spot$Id)
   for(i in 1:n){
+    if(spot$Id[i] == ""){
+      spot$Id[i] <- "EMPTY"
+    }
     if(exists( spot$Id[i], envir = myHash)){
       idData <- get( spot$Id[i], envir = myHash)
       assign(spot$Id[i], list(spotCy3 = c( idData$spotCy3, spot$Cy3[i]) ,
@@ -232,7 +240,7 @@ alter.unique <- function(mySpot){
       BgCy5s <- BgCy5.list[bueno.index]
       ids <- id
     }
-    list(Cy3 = Cy3s, Cy5 = Cy5s, BgCy3 = BgCy3s, BgCy5 = BgCy5s, Id = ids)
+    list(Cy3 = Cy3s[1], Cy5 = Cy5s[1], BgCy3 = BgCy3s[1], BgCy5 = BgCy5s[1], Id = ids)
   }
   
   restCy3 <- restCy5 <- restBgCy3 <- restBgCy5 <- restId <- list()
@@ -254,10 +262,10 @@ spotUnique <- function(mySpot){
   spot <- attr(mySpot, "spotData")
   idHash <- new.env(hash=TRUE)
   n <- length(spot$Cy3)
-  
+  spot$Id <- toupper(spot$Id)
   for(i in 1:n){
     if(spot$Id[i] == ""){
-      spot$Id[i] <- "NOGB_accession"
+      spot$Id[i] <- "EMPTY"
     }
     if(exists( spot$Id[i], envir = idHash)){
       idData <- get( spot$Id[i], envir = idHash)
@@ -288,11 +296,13 @@ spotUnique <- function(mySpot){
     Cy3 <- Cy5 <- BgCy3 <- BgCy5 <- Id <- list()
     tmp1 <- geometric.mean(Cy3.list)
     tmp2 <- geometric.mean(Cy5.list)
-    Cy3 <- c(Cy3, tmp1, recursive=TRUE)
-    Cy5 <- c(Cy5, tmp2, recursive=TRUE)
-    BgCy3 <- c(BgCy3, BgCy3.list[1],recursive=TRUE)
-    BgCy5 <- c(BgCy5, BgCy5.list[1],recursive=TRUE)
-    Id <- c(Id, id, recursive=TRUE)
+    if(tmp1 != 0 && tmp2 != 0){
+      Cy3 <- c(Cy3, round(tmp1,1), recursive=TRUE)
+      Cy5 <- c(Cy5, round(tmp2,1), recursive=TRUE)
+      BgCy3 <- c(BgCy3, BgCy3.list[length(mainList$spotBgCy3)],recursive=TRUE)
+      BgCy5 <- c(BgCy5, BgCy5.list[length(mainList$spotBgCy5)],recursive=TRUE)
+      Id <- c(Id, id, recursive=TRUE)
+    }
     list(Cy3 = Cy3, Cy5 = Cy5, BgCy3 = BgCy3, BgCy5 = BgCy5, Id = Id)
   }
   

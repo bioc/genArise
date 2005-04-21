@@ -19,7 +19,7 @@
 \author{Ana Patricia G\'omez May\'en\\ Gustavo Corral Guill\'e\\ Lina Riego Ruiz\\ Gerardo Coello Couti\~no}
 
 \begin{document}
-
+\setkeys{Gin}{width=0.5\textwidth}
 \maketitle
 
 \section{Introduction}
@@ -33,7 +33,7 @@ Then, you need install the packages \emph{tkrplot}, \emph{locfit} y \emph{xtable
 > install.packages(c("locfit","tkrplot", "xtable"))
 \end{Scode}
 
-This R function automatically download and install the three packages from CRAN, but you must be connected to the network. In other case, you must download the three packages from CRAN for the correct O.S. (Windows, Linux) and install from the terminal these add-on packages with the script \emph{R CMD INSTALL package\_name} for Linux or \emph{Rcmd INSTALL package\_name} for Windows. With the same script you can install genArise too. You can read the instalation manual in the URL: \url{http://biotux.ifc.unam.mx/~pgomez/genArise}.\\
+This R function automatically download and install the three packages from CRAN, but you must be connected to the network. In other case, you must download the three packages from CRAN for the correct O.S. (Windows, Linux) and install from the terminal these add-on packages with the script \emph{R CMD INSTALL package\_name} for Linux or \emph{Rcmd INSTALL package\_name} for Windows. With the same script you can install genArise too. You can read the instalation manual in the URL: \url{http://www.ifc.unam.mx/genarise}.\\
 
 genArise GUI uses widgets from the BWidget package and from the Img package, neither of which come bundled with the default installation of R. If you are using Windows (and not using the installation wizard), you need to install ActiveTcl 8.4.x from \url{http://aspn.activestate.com/ASPN/Downloads/ActiveTcl/}. After install ActiveTcl, you must set the environment variable MY\_TCLTK to a non-empty value, for example: \texttt{MY\_TCLTK=Yes} and it is assumed that you want to use a different Tcl/Tk 8.4.x installation, and that this is set up correctly. You must too set the environment variable TCL\_LIBRARY with the path where are the DLLs of Tcl in your machine, for example: \texttt{TCL\_LIBRARY=C:/Tcl/lib/tcl8.4}.\\
 
@@ -59,7 +59,7 @@ To start the analysis you must read first the data contained in the input file. 
 Output: an object of class Spot called my.spot
 \end{Soutput}
 
-You can see the details and the meaning of each one of the arguments of this and all the other functions described bellow in the manual genArise.pdf and you can download it from this address \url{http://biotux.ifc.unam.mx/~pgomez/genArise.pdf}\\
+You can see the details and the meaning of each one of the arguments of this and all the other functions described bellow in the manual genArise.pdf and you can download it from this address \url{http://www.ifc.unam.mx/genarise} in the \texttt{Package GenArise \( API \)} link\\
 
 We are not to give an example from this function, but you just have to follow the sintax of the \texttt{read.spot} function described in the manual to create a spot object. In this manual we use a subset of a data set called Simon for the next examples. Simon, as we have said, is a spot object that was created with the \texttt{read.spot} function and you can load this object as follow:
 
@@ -99,7 +99,7 @@ imageLimma(M, 23, 24, 2, 2)
 \end{Scode}
 
 \begin{Soutput}
-Output: Plot the intensity values
+Output: Plot the intensity values See Figure 1
 \end{Soutput}
 
 In the same way that you can plot the $log_2$ intensity ratio for each spot, you can also plot the background value that correspond to each one of the intensities. See Figure \ref{fig2} and \ref{fig3}.\\
@@ -125,7 +125,7 @@ imageLimma(R, 23, 24, 2, 2, high = "red", low = "white")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy3 intensity background plot
+Output: Cy3 intensity background plot. See Figure 2
 \end{Soutput}
 And this is the code to generate the plot for Cy5 Bg intensities shown in Figure \ref{fig3}..
 \begin{figure}[h]
@@ -148,7 +148,7 @@ imageLimma(G, 23, 24, 2, 2, low = "white", high = "green")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy5 intensity Background plot.
+Output: Cy5 intensity Background plot. See Figure 3
 \end{Soutput}
 
 With the previous plots, you can see a preview of the raw data (without background correction and normalization). It is important to clarify that these image plot one does not replace the original TIFF image from the microarray experiment.\\
@@ -192,7 +192,7 @@ Output: M vs A plot. See Figure 5.
 data(Simon)
 cys.plot(Simon)
 @
-\caption{Cy3 vs Cy5 plot. \label{fig6}}
+\caption{log2(Cy3) vs log2(Cy5) plot. \label{fig6}}
 \end{center}
 \end{figure}
 \begin{Scode}
@@ -200,7 +200,7 @@ cys.plot(Simon)
 > cys.plot(Simon)
 \end{Scode}
 \begin{Soutput}
-Output: plot the Cy3 and Cy5 values. See Figure 6.
+Output: plot the log2(Cy3) and log2(Cy5) values. See Figure 6.
 \end{Soutput}
 
 \subsection{Transformation functions}
@@ -230,7 +230,7 @@ ri.plot(c.spot)
 \begin{Soutput}
 Input: The argument of this function is a spot object 
 before background correction.
-Output: A spot object after background correction.
+Output: A spot object after background correction. See Figure 7
 \end{Soutput}
 
 \subsubsection{Data Normalization}
@@ -259,7 +259,7 @@ ri.plot(n.spot)
 Input: The argument of this function is a spot object
        and the number of rows (nr) and columns (nc) 
        of each subgrid.
-Output: A normalized spot object.
+Output: A normalized spot object. See Figure 8
 \end{Soutput}
 
 On the other hand, the global normalization is executed with the function \texttt{global.norm} and it only requires as argument an object of the class Spot. See Figure \ref{fig9}.
@@ -281,7 +281,7 @@ ri.plot(n.spot)
 \end{Scode}
 \begin{Soutput}
 Input: The argument of this function is the spot object.
-Output: A normalized (global normalization) spot object.
+Output: A normalized (global normalization) spot object. See Figure 9
 \end{Soutput}
 
 As we said previously both functions returns different results and for this reason you must choose the suitable function of normalization to the analysis that you want to do. It for any reason spots are eliminated before normalization procedure (applying operations as filtering or duplicates elimination) the global normalization is the only normalization way.\\
@@ -311,7 +311,7 @@ ri.plot(f.spot)
 
 \begin{Soutput}
 Input: The argument of this function is a spot object.
-Output: A filtered spot object.
+Output: A filtered spot object. See Figure 10
 \end{Soutput}
 
 \subsubsection{Replicates Filtering}
@@ -336,7 +336,7 @@ ri.plot(u.spot)
 
 \begin{Soutput}
 Input: The argument of this function is a spot object.
-Output: A spot object without duplicates observations
+Output: A spot object without duplicates observations. See Figure 11
 \end{Soutput}
 
 However, genArise offers other functions for the same purpose, but with a different approach. We mean the function \texttt{alter.unique}. This function takes the R value of each one of the duplicated observations but just keep that observation with the extremest R value. So, if both of them are positives this function keeps the greater one, if both of them are negatives it keep the lower one and if there is one positive and one negative both observations are eliminated. It is clear that with this function a greater number of observations is conserved compared to those that are obtained with \texttt{spotUnique} function. By this way you will probably have at the final of the analysis a greater number of observations in the upper-expressed and lower-expressed because you keep the extreme values. See Figure \ref{fig12}.\\
@@ -359,7 +359,7 @@ ri.plot(u.spot)
 
 \begin{Soutput}
 Input: The argument of this function is a spot object.
-Output: A spot object without duplicates observations
+Output: A spot object without duplicates observations. See Figure 12
 \end{Soutput}
 
 A third function compute the mean for the duplicates. This function keeps not just one element for each id, but also this function eliminates those points where the diference between the R value of the duplicated observations is bigger than 20% of one of them. The name of this function is \texttt{meanUnique}. See Figure \ref{fig13}.
@@ -382,7 +382,7 @@ ri.plot(u.spot)
 
 \begin{Soutput}
 Input: The argument of this function is a spot object
-Output: A spot object without duplicates observations
+Output: A spot object without duplicates observations. See Figure 13
 \end{Soutput}
 
 \subsection{Zscore}
@@ -435,7 +435,7 @@ Zscore.plot(WT.dataset, Zscore.min=1)
 
 \begin{Soutput}
 Input: An object of the class DataSet
-Output: Plot for identify differential expression
+Output: Plot for identify differential expression. See Figure 14
 \end{Soutput}
 
 \subsection{genMerge}
@@ -548,23 +548,15 @@ Each file will contain the ids that are present in all the sets (projects) in ag
 
 \section{The genArise GUI}
 
+To reduce the size of the genArise package in the text bellow the screenshots were not included. You can find the complete manual in the site of genArise \url{http://www.ifc.unam.mx/genarise}\\
+
 For making the analysis easier, genArise joins all functions in a graphic interface, to call this function you must type the next line from the R prompt:
 
 \begin{Scode}
 > genArise()
 \end{Scode}
 
-Now a menu-bar like the one shown in Figure \ref{fig15} is displayed.
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.3]{./images/main.pdf}\\
-\caption{genArise Menu-bar. \label{fig15}}
-\end{center}
-\end{figure}
-
-In this menu there are two options and some icons for specific functions, in this case: \textbf{Create a new project}, \textbf{Open project} and \textbf{Post-analysis} described in the past section.\\
-
-When the mouse is passed over any icon in the main menu bar, a label with a description of the corresponding function will be displayed in the right side. From now on every icon in this menu bar will be identified by this description.\\
+Now a menu-bar with two options and some icons for specific functions is displayed. When the mouse is passed over any icon in the main menu bar, a label with a description of the corresponding function will be displayed in the right side. From now on every icon in this menu bar will be identified by this description.\\
 
 The GUI use R TclTk and if you are using the RGui in Windows, you can quickly notices that the RGui main window frequently "gets in the way", as genArise windows like to hide behind it. It therefore becomes convenient to bypass RGui altogether and just run Rterm and call \texttt{genArise()} from there.\\
 
@@ -572,75 +564,21 @@ The GUI use R TclTk and if you are using the RGui in Windows, you can quickly no
 
 You should create a New Project following the sequence  \textbf{File $\rightarrow$ Project $\rightarrow$ New Project} in the menu, or click the icon \textbf{Create a new Project}.\\
 
-A new window as shown in the Figure \ref{fig16} will be displayed. This window contain two panels (Input and Output). In the first of them you must specify the properties of the file containing the data, for example: location, was the experiment performed in the IFC?, microarray dimensions in other case. In this way, when the experiment was performed in the IFC you must choose the option \textbf{IFC} and the microarray dimensions will be automatically obtained.\\
+A new window containing two panels (Input and Output) will be displayed. In the first of them you must specify the properties of the file containing the data, for example: location, was the experiment performed in the IFC?, microarray dimensions in other case. In this way, when the experiment was performed in the IFC you must choose the option \textbf{IFC} and the microarray dimensions will be automatically obtained.\\
 
 In the input field labeled \textbf{Cy3}, \textbf{Cy5}, \textbf{BgCy3}, \textbf{BgCy5} y \textbf{Id}, you must type the number of the column in the file corresponding Cy3 intensity, Cy5 intensity, Cy3 background, Cy5 background and the gene identifiers, respectively.\\
 
 In the inferior panel, there is an input field labeled with \textbf{Project Name} where you must type the name of the project to create and a new file with prj extension, as well as a directory with the specified name will be created. The next two input fields you must specify the name of the subdirectories from this project where the results files will be placed \textbf{(Location for Results)} and the plots \textbf{(Location for Plots)}. You can change this names writing on the input field a new file name (without the path) or click the \textbf{browse} button.\\
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.3]{./images/prjconfig.pdf}\\
-\caption{Project Configuration Window. \label{fig16}}
-\end{center}
-\end{figure}
+Then, the window containing a preliminary view of the main grid is displayed as an image plot in a green to red scale representing the $log_2$ intensity ratio for each spot on the array. It is important to clarify that these image plot does not replace the original TIFF image from the microarray experiment.
 
-The figure \ref{fig16} show that the analysis will be performed over the data contained in a file called Simon.csv. This experiment was not performed in the Microarray Unit from the Cellular Physiology Institute UNAM and for this reason you must specify the experiment dimensions. The project will be called \textquotedblleft Simon \textquotedblright. \textbf{Location for Plots} and \textbf{Location for Results} will conserve the default names.\\
-
-Then, the window containing a preliminary view of the main grid is displayed as an image plot in a green to red scale representing the $log_2$ intensity ratio for each spot on the array. See Figure \ref{fig17}. It is important to clarify that these image plot does not replace the original TIFF image from the microarray experiment.
-
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.5]{./images/diagnosticplots.pdf}\\
-\caption{Window with image plot in a green to red scale. \label{fig17}}
-\end{center}
-\end{figure}
-
-You can also see the green and red levels by separated just selecting the corresponding option in the lower right part of the window. See Figure \ref{fig18} and \ref{fig19}.
-
-
-\begin{figure}[b]
-\begin{center}
-\includegraphics[height=3in,width=3.15in]{./images/diagnosticplotsRed.pdf}\\
-\caption{Window with image plot for Cy3 Background value. \label{fig18}}
-\end{center}
-\end{figure}
-\textbf{\\\\}
-\begin{figure}[h]
-\begin{center}
-\includegraphics[height=3in,width=3.15in]{./images/diagnosticplotsGreen.pdf}\\
-\caption{Window with image plot for Cy5 Background value. \label{fig19}}
-\end{center}
-\end{figure}
+You can also see the green and red levels by separated just selecting the corresponding option in the lower right part of the window.\\
 
 In the upper right side panel of the window you can see the attributes of the file being analyzed and the experiment dimensions.\\
-You can save the plot in a pdf file by selecting the option \textbf{Save as PDF} in the menu \textbf{Options} or clicking in the \textbf{Save graphic as PDF} icon. With the option \textbf{Note} of the same menu or clicking in the \textbf{Notes about the experiment} icon, a text editor will be launched where you can make some important notes through the analysis and save these in a file called notes.txt. See Figure \ref{fig20}.
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.3]{./images/emacsnotes.pdf}\\
-\caption{An Editor for annotations. \label{fig20}}
-\end{center}
-\end{figure}
+You can save the plot in a pdf file by selecting the option \textbf{Save as PDF} in the menu \textbf{Options} or clicking in the \textbf{Save graphic as PDF} icon. With the option \textbf{Note} of the same menu or clicking in the \textbf{Notes about the experiment} icon, a text editor will be launched where you can make some important notes through the analysis and save these in a file called notes.txt.\\
 
-At this moment you can start the analysis by clicking on the menu \textbf{Analyze} or clicking in the \textbf{Make analysis data} icon, that will display a dialog box like the one showed in Figure \ref{fig21}.\\
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.3]{./images/messagewizard.pdf}\\
-\caption{Asking dialog box.\label{fig21}}
-\end{center}
-\end{figure}
-
-Choosing \textbf{Yes} the program makes the operations in the following sequential order: background correction, loess normalization, intensity-filter, replicates filtering. Once this analysis is over you see the next window. See Figure \ref{fig22}.\\
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale= 0.3]{./images/RvsInodupswizard.pdf}\\
-\caption{Complete analysis following the wizard. \label{fig22}}
-\end{center}
-\end{figure}
+At this moment you can start the analysis by clicking on the menu \textbf{Analyze} or clicking in the \textbf{Make analysis data} icon, that will display a dialog box. Choosing \textbf{Yes} the program makes the operations in the following sequential order: background correction, loess normalization, intensity-filter, replicates filtering. Once this analysis is over you see the next window. \\
 
 This window shows the graphic R -vs- I of the data obtained after the complete analysis. In the right side of the same window there are five options corresponding to the results of the operations performed through the analysis, choosing some of them the plot of the results for this step of the analysis will be displayed in the window.\\
 
@@ -650,53 +588,17 @@ There is a white component in the lower side of the window where you can find th
 
 At the end, you find one file for each operation done in the \textbf{Location for Results} subdirectory. All this files have a default name and you can't modify in no way this file name because they are essencial to be able to open this project with the genArise GUI in the future. \\
 
-Let see what happen if you decide not to follow the wizard. In this case, only the original data (no one operation performed) is displayed in the window as shown in Figure \ref{fig23}. In this case, you can perform any operation selecting the wished option in the menu bar. Once an operation is made, a new reference with the label corresponding to the operation performed will be showed up in the right side of the window and the graphic of the results obtained with that operation will be displayed. Is important to note that the operations are performed on the selected spot. If you wish to make a sequential analysis you must take care of the selected option.\\
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale= 0.3]{./images/nowizardoriginal.pdf}
-\caption{Making the analysis without follow the wizard. \label{fig23}}
-\end{center}
-\end{figure}
+If you decide not to follow the wizard only the original data (no one operation performed) is displayed in a different window. In this case, you can perform any operation selecting the wished option in the menu bar. Once an operation is made, a new reference with the label corresponding to the operation performed will be showed up in the right side of the window and the graphic of the results obtained with that operation will be displayed. Is important to note that the operations are performed on the selected spot. If you wish to make a sequential analysis you must take care of the selected option.\\
 
 \subsubsection{Zscore Window}
-Clicking the \textbf{Zscore} option menu (see Figure \ref{fig24}) you can perform the operation Zscore described in section \ref{sec1} and after select this option a new window will be displayed. You can display four plots for different zscore values in a range defined by the label of the corresponding option. See Figure \ref{fig25}
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale= 0.3]{./images/zscoremenu.pdf}
-\caption{Zscore menu. \label{fig24}}
-\end{center}
-\end{figure}
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale= 0.3]{./images/allzscore.pdf}
-\caption{Making the analysis without follow the wizard. \label{fig25}}
-\end{center}
-\end{figure}
+Clicking the \textbf{Zscore} option menu you can perform the operation Zscore described in section \ref{sec1} and after select this option a new window will be displayed. You can display four plots for different zscore values in a range defined by the label of the corresponding option.
 
 \subsection{Open Project}
-You can open and consult the data of a previously done analysis with the option \textbf{Open Project} from the genArise main menu. After click this option you must select the prj file with the same name of the wished project from the file selector window. After this, a new window like the one in Figure \ref{fig26} is displayed where you can check all plots from the results of the analyasis in that project. This plots are obtained from the data in the result files. 
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale= 0.3]{./images/openprojectwindow.pdf}
-\caption{Open Project Window. \label{fig26}}
-\end{center}
-\end{figure}
+You can open and consult the data of a previously done analysis with the option \textbf{Open Project} from the genArise main menu. After click this option you must select the prj file with the same name of the wished project from the file selector window. After this, a new window is displayed where you can check all plots from the results of the analyasis in that project. This plots are obtained from the data in the result files. \\
 
 \subsection{Post-analysis Window}
 
 This window allows you to obtain all the essencial information for the function \texttt{post.analysis} previously described. The list of the projects are choosed in the left side of the window. You can select several files with extension \texttt{prj} one by one just clicking the Add button.\\
 
-You must type and select the other arguments for the function: the directory that will contain all the output files, the range for the zscore and if the analysis will be done with "up" or "down" regulated. See Figure \ref{fig27}
-
-\begin{figure}
-\begin{center}
-\includegraphics[scale = 1]{./images/postAnalysis.pdf}
-\caption{Post-analysis Window \label{fig27}}
-\end{center}
-\end{figure}
-
+You must type and select the other arguments for the function: the directory that will contain all the output files, the range for the zscore and if the analysis will be done with "up" or "down" regulated.
 \end{document}

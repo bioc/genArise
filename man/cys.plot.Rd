@@ -1,9 +1,9 @@
 \name{cys.plot}
 \alias{cys.plot}
-\title{Data Visualization: Cy3 vs Cy5}
+\title{Data Visualization: log2(Cy3) vs log2(Cy5)}
 \description{
-  This function shows the plot of the values from the Cy3 against
-  Cy5 intensities that belongs to an object of the Spot class.}
+  This function shows the plot of the values from the log Cy3 against
+  log Cy5 intensities that belongs to an object of the Spot class.}
 \syntaxis{
 cys.plot(mySpot, col = "green")
 }

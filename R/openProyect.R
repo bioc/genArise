@@ -9,6 +9,13 @@ old.project <-  function(project.name, envir, parent){
     tkrreplot(img, fun = function() Zscore.plot(get("Zscore.spot", envir = envir),
                      Zscore.min = Zscore.min, Zscore.max = Zscore.max, all = all, col = col))
   }
+  save.pdf <- function(name,Zscore.min = NULL, Zscore.max = NULL, all = TRUE, col = "green"){
+    pdf(name,horiz=F, height=8,width=8,title=paste(name, sep = "_"))
+    Zscore.plot(get("Zscore.spot", envir = envir),
+                     Zscore.min = Zscore.min, Zscore.max = Zscore.max, all = all, col = col)
+    dev.off(dev.cur())
+  }
+
   imageLimma.plot <-  function(datos, low = NULL, high = NULL){
     tkrreplot(img, fun = function() imageLimma(datos, as.numeric(as.vector(spots[3,2])), as.numeric(as.vector(spots[4,2])),
                      as.numeric(as.vector(spots[5,2])), as.numeric(as.vector(spots[6,2])),low =low, high = high))
@@ -43,7 +50,7 @@ old.project <-  function(project.name, envir, parent){
     for(i in 2:6){
       tkgrid(tklabel(frameFeatures, text = paste(spots[i,1], spots[i,2], sep = "\t")), padx = "0",pady = "2", sticky = "w")
     }
-    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep="")),
+    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
            envir =  envir)
     datos <- attr(get("a.spot1",envir=envir), "spotData")
     M <- log(datos$Cy3, 2) - log(datos$Cy5, 2)
@@ -60,7 +67,7 @@ old.project <-  function(project.name, envir, parent){
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
       }else{
         assign(paste("a.spot",as.numeric(tclvalue(dist)),sep=""),
-               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(as.numeric(tclvalue(dist))+1),2],sep="")),
+               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(as.numeric(tclvalue(dist))+1),2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
                envir =  envir)
         assign("a.spot", get(paste("a.spot",i, sep =""), envir = envir), envir = envir)
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
@@ -83,7 +90,7 @@ old.project <-  function(project.name, envir, parent){
       
       assign("Zscore.spot", read.dataset(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(length(spots[,1])),2],sep="")),
              envir =  envir)
-      
+                  
       zscore1 <- tkradiobutton(frame2, text="Zscore < 1", value=1, variable=dist,command=function(){
         selected.zscore(all = FALSE, Zscore.max = 1, col = "green")
       })
@@ -124,7 +131,7 @@ old.project <-  function(project.name, envir, parent){
     
     tkgrid(redgreenimg,redimg,greenimg, pady = "2",padx="10")  
     
-    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep="")), envir = envir)
+    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5), envir = envir)
     assign("a.spot", get("a.spot1",envir = envir),envir=envir)
     img <-  tkrplot(upper.frame, fun = function() graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))
     tkadd(fileMenu,"command",label="Back to main", command=function(){ tkdestroy(tt); genArise() })
@@ -146,21 +153,34 @@ old.project <-  function(project.name, envir, parent){
     
     optionsMenu <- tkmenu(topMenu,tearoff=FALSE)
     tkadd(optionsMenu,"command",label="Save graphic as PDF",command = function() {
-      name <- tclvalue(tkgetSaveFile(initialdir = get("path.graphics", envir = envir),
-                                     initialfile=get("spot.name",envir=envir),
+      assign("spot.name",envir=envir)
+      name <- tclvalue(tkgetSaveFile(initialdir = paste(noext,.Platform$file.sep,graphics.file,sep=""),   
+#                                     initialfile=get("spot.name",envir=envir),
                                      filetypes="{{PDF Files} {.pdf}} {{All files} *}"))
       if (!nchar(name))
         tkmessageBox(parent = tt,  message= "You must write a name of file!", icon = "error", default = "ok")
       else{
         rbVal <- as.numeric(tclvalue(dist))
-      }})
-    tkadd(optionsMenu,"command",label="Annotation")
+      }
+      val <- as.numeric(tclvalue(dist))
+      if(val == 1)
+        save.pdf(name,all = FALSE, Zscore.max = 1, col = "green")
+      if(val == 2)
+        save.pdf(name,Zscore.max = 1.5, Zscore.min = 1, all = FALSE, col = "blue")
+      if(val == 3)
+        save.pdf(name,Zscore.max = 2, Zscore.min = 1.5, all = FALSE, col = "cyan")
+      if(val == 4)
+        save.pdf(name,Zscore.min = 2, all = FALSE, col = "snow")
+      if(val == 5)
+        save.pdf(name)
+      })
+#    tkadd(optionsMenu,"command",label="Notes",command = function()note(envir))
     tkadd(topMenu,"cascade",label="Options", menu =optionsMenu)
     
     helpMenu <- tkmenu(topMenu,tearoff=FALSE)
-    tkadd(helpMenu,"command",label="About genArise...", command=function(){
-      tkmessageBox(title="genArise package",message="This library was made in the\n Institute of Cellular Physiology UNAM\n \nmailto: genArise@ifc.unam.mx",icon="info",type="ok")
-    })
+    tkadd(helpMenu,"command",label="About genArise...", command=function() help())#{
+#      tkmessageBox(title="genArise package",message="This library was made in the\n Institute of Cellular Physiology UNAM\n \nmailto: genArise@ifc.unam.mx",icon="info",type="ok")
+    #})
     
     tkadd(topMenu,"cascade",label="Help",menu = helpMenu)
     

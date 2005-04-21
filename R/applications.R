@@ -17,12 +17,12 @@ annotations <-  function(specie.data, specie, column, output.file = "annotations
                                        specie.data[,column], sep = "")},
          {specie.data[,column] <-  paste('<a href="http://rgd.mcw.edu/generalSearch/RgdSearch.jsp?quickSearch=1&searchKeyword=',
                                          specie.data[,column],'">', specie.data[,column], sep = "")},
-         {specie.data[,column] <- paste('<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?CMD=search&DB=nucleotide&term=',
+         {specie.data[,column] <- paste('<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?CMD=search&DB=gene&term=',
                                 specie.data[,column],'">', specie.data[,column], sep = "")})
   
   specie.data <- data.frame(specie.data)
-
-  # construct the table with the html references
+  
+                                        # construct the table with the html references
   annotation.table <- xtable(specie.data)
   print.xtable(annotation.table, type = "html", file = output.file)
 }
@@ -153,11 +153,13 @@ new.project <- function(envir){
     buttons.frame <- tkframe(select)
 
     ok.function <-  function(){
-      tkconfigure(select, cursor = "watch")
+      if(nchar(tclvalue(tkget(association.entry))) && !file.exists(tclvalue(tkget(association.entry)))){
+        tkmessageBox(message= "This file doesn't exists! ")
+      }
+      
       if(!nchar(tclvalue(tkget(association.entry))) || !nchar(tclvalue(tkget(project.entry))) ||
          !nchar(tclvalue(graphic.file)) || !nchar(tclvalue(output.file))){
         tkmessageBox(message= "No input or output file was specified! ", icon = "error", default = "ok")
-        
       }
       else{
         # read the file containing the data of the experiment
@@ -175,7 +177,10 @@ new.project <- function(envir){
         if(as.character(tclvalue(rbValue)) == "IFC"){
           temp <- temp[-1,] # the header
           row1 <- temp[,1]
-          flag <- which(rev(row1) == "Mean value") 
+          flag <- which(rev(row1) == "Mean value")
+          if(length(flag)==0){
+            tkmessageBox(message= "This experiment is not from the IFC", icon = "error", default = "ok")
+          }
           empty.row <- length(row1[row1==""])
           total.rows <-  length(temp[,1])
           temp <- temp[-((total.rows-(flag-1 + empty.row)):total.rows),]
@@ -218,6 +223,11 @@ new.project <- function(envir){
 
         # if the experiment was performed in any other institution, you must enter the whole configuration in the GUI
         else{
+          row1 <- temp[,1]
+          flag <- which(rev(row1) == "Mean value")
+           if(!length(flag)==0){
+            tkmessageBox(message= "This is not the format for a foreign experiment file.\nPlese check the documentation of genArise for the file format.", icon = "error", default = "ok")
+          }else{
           total <- as.integer(tclvalue(Row)) * as.integer(tclvalue(Col)) * as.integer(tclvalue(MR)) * as.integer(tclvalue(MC))
           if((total + 1) == length(temp[,1])){
             temp <- temp[-1,]
@@ -232,7 +242,7 @@ new.project <- function(envir){
                                   BgCy3 = as.numeric(temp[,as.numeric(tclvalue(BgCy3))]),
                                   BgCy5 = as.numeric(temp[,as.numeric(tclvalue(BgCy5))]),
                                   Id = as.vector(temp[,as.numeric(tclvalue(Id))]))), envir = envir)
-        }
+        }}
         create.project(name.project,tclvalue(output.file), tclvalue(graphic.file))
         history.project <- paste(name.project,".prj", sep = "")
         set.history.project(history.project, "Name:", get("spot.name", envir = envir))

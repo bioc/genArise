@@ -20,7 +20,7 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE,
                  max(as.integer(temp[,4]),na.rm=TRUE), max(as.integer(temp[,5]),na.rm=TRUE), sep = " ")
     print(paste("The dimensions are ", max(as.integer(temp[,2]),na.rm=TRUE), max(as.integer(temp[,3]),na.rm=TRUE), max(as.integer(temp[,4]),na.rm=TRUE), max(as.integer(temp[,5]),na.rm=TRUE), "Is it right? [y/n]",sep = "  "))
     resp <- readline()
-    if(tolower(resp) == "n"|"no"){
+    if(tolower(resp) == "n"| tolower(resp) == "no"){
       print("Enter the right dimensions? ")
       ans <- readline()
                                         }
@@ -54,6 +54,7 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE,
   }
   else{
     spot <- read.csv( file.name, header = header, sep = sep)
+    spot[,ids] <-  as.vector(spot[,ids])
     return(new ("Spot", name = spot.name ,spotData = list(Cy3=spot[,cy3],
                                             Cy5=spot[,cy5], BgCy3=spot[,bg.cy3], BgCy5=spot[,bg.cy5], Id = as.vector(spot[,ids]))))
   }
@@ -70,4 +71,3 @@ read.dataset <- function( file.name, cy3 = 1, cy5 = 2, ids = 3, zscore = 4, type
                                          Zscore = as.numeric(as.vector(dataset[,zscore]))), type= type)
   
 }
-  

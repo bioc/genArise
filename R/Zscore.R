@@ -14,6 +14,9 @@ Zscore <- function(spot.object, type = "ri", window.size = 50){
         
 	sort.index <- sort.list(x.axis)        
         y.axis <- y.axis[sort.index]
+        cy5 <- spot.data$Cy5[sort.index]
+        cy3 <- spot.data$Cy3[sort.index]
+        id <- spot.data$Id[sort.index]
 	x.axis <- x.axis[sort.index]
         
         spot.data$Cy3 <- spot.data$Cy3[sort.index]
@@ -23,22 +26,22 @@ Zscore <- function(spot.object, type = "ri", window.size = 50){
 	n.datos <- length(y.axis)
 	inicio.y.axis <- unlist(sapply(1:as.integer(window.size/2), function(x) y.axis[x]))
         tmp <-  unlist(sapply(1:window.size, function(x) y.axis[x]))
-        media <- mean(tmp)
-	std <- sd(tmp)
+        media <- mean(tmp,na.rm=TRUE)
+	std <- sd(tmp,na.rm=TRUE)
         inicio.Zscore <- (inicio.y.axis - media)/ std
 	resultados <- inicio.Zscore
         
 	final.y.axis  <- unlist(sapply((n.datos - as.integer(window.size/2)):n.datos, function(x) y.axis[x]))
         tmp <-  unlist(sapply((n.datos - window.size):window.size, function(x) y.axis[x]))
-	media <- mean(tmp)
-	std <- sd(tmp)
+	media <- mean(tmp,na.rm=TRUE)
+	std <- sd(tmp,na.rm=TRUE)
 	final.Zscore <- (final.y.axis - media) / std
-   
+
 	for( i in 26:(n.datos-26)){
 		y.axis.temp <- unlist(sapply((i-as.integer(window.size/2)):(i+as.integer(window.size/2)), function(x) y.axis[x]))
-		media <- mean(y.axis.temp)
-		std <- sd(y.axis.temp)
-		resultados <- c(resultados, (y.axis[i]- media)/std, recursive = TRUE)
+		media <- mean(y.axis.temp,na.rm=TRUE)
+ 		std <- sd(y.axis.temp,na.rm=TRUE)
+		resultados <- c(resultados, (y.axis[i] - media)/std, recursive = TRUE) 
 	}
 	resultados <- c(resultados, final.Zscore, recursive = TRUE)
 
