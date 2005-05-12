@@ -8,7 +8,6 @@
 \evensidemargin 0.0in
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage{Sweave}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 
