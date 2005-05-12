@@ -7,7 +7,6 @@
 \oddsidemargin 0.0in
 \evensidemargin 0.0in
 \usepackage{url}
-\usepackage{Sweave}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
