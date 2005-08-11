@@ -380,8 +380,9 @@ Zscore.points <-  function(type="ri",text, envir){
     else{
       val <- as.integer(tclvalue(dist))
       if( val == 5){
+             write.table("Cy3\tCy5\tId\tZscore",name, quote = FALSE,sep = "\t", col.names = FALSE, row.names = FALSE )
         write.table(attr(get("Zscore.spot", envir = envir), "dataSets"),
-                    name, quote = FALSE, col.names = FALSE, row.names = FALSE)
+                    name, quote = FALSE, col.names = FALSE, row.names = FALSE,sep="\t",append=TRUE)
       }else if(val == 4){
         write.dataSet(get("Zscore.spot", envir = envir), name, Zscore.min = 2)
       }

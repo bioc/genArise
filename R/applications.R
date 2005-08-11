@@ -167,7 +167,9 @@ new.project <- function(envir){
         name.project <-  tclvalue(tkget(project.entry))
         assign("path", inputFile, envir = envir)
         name.tmp <- unlist(strsplit(inputFile, paste("\\", .Platform$file.sep, sep = "")))
-        assign("spot.name", unlist(strsplit(name.tmp[length(name.tmp)], "\\."))[1], envir = envir)
+        tmp <- unlist(strsplit(name.tmp[length(name.tmp)], "\\."))
+        name.tmp <- paste(tmp[-length(tmp)],sep=".",collapse=".")
+        assign("spot.name", name.tmp, envir = envir)
         set.path.project(name.project, tclvalue(output.file),
                          tclvalue(graphic.file), envir)
         temp <- read.csv(inputFile, header = FALSE, sep = "\t", comment.char = "")
@@ -271,6 +273,10 @@ new.project <- function(envir){
 
 # Post analysis configuration Window
 projects.select <- function(envir, nombre = "sets-analysis"){
+  if(.Platform$OS.type == "unix")
+    nombre <- paste(Sys.getenv("HOME"),nombre,sep=.Platform$file.sep)
+  else{ if(.Platform$OS.type == "windows")
+    nombre <- paste(Sys.getenv("R_USER"),nombre,sep=.Platform$file.sep)}
   tt <- tktoplevel()
   tkwm.title(tt,"File Selector")
   upper.frame <- tkframe(tt)
@@ -279,35 +285,41 @@ projects.select <- function(envir, nombre = "sets-analysis"){
   frameupdown <- tkframe(frameOverall,relief="groove",borderwidth=2)
   range  <- tclVar(1)
   updown <- tclVar(1)
+  output <- tkentry(frameOverall,width="30", bg = "white", textvariable=tclVar(nombre))
+
   radio1 <- tkradiobutton(framerange, value=1, variable=range, command=function(){
     tkconfigure(output, state="normal")
-    tkdelete(output,"0.0","end")
+   # nombre <- tclvalue(tkget(output))
+    tkdelete(output,"0","end")
     switch(as.integer(tclvalue(updown)),
+               
            {
-                tkinsert(output,"0.0",paste(nombre,"1-1_5sd","Up",sep=""))
+                tkinsert(output,"end",paste(nombre,"1-1_5sd","Up",sep=""))
               },
            {
-                 tkinsert(output,"0.0",paste(nombre,"1-1_5sd","Down",sep=""))
+                 tkinsert(output,"end",paste(nombre,"1-1_5sd","Down",sep=""))
                })})
   radio2 <- tkradiobutton(framerange, value=2, variable=range,command=function(){
     tkconfigure(output, state="normal")
-    tkdelete(output,"0.0","end")
+   # nombre <- tclvalue(tkget(output))
+    tkdelete(output,"0","end")
     switch(as.integer(tclvalue(updown)),
            {
-                tkinsert(output,"0.0",paste(nombre,"1_5-2sd","Up",sep=""))
+                tkinsert(output,"end",paste(nombre,"1_5-2sd","Up",sep=""))
               },
            {
-                 tkinsert(output,"0.0",paste(nombre,"1_5-2sd","Down",sep=""))
+                 tkinsert(output,"end",paste(nombre,"1_5-2sd","Down",sep=""))
                })})
   radio3 <- tkradiobutton(framerange, value=3, variable=range,command=function(){
     tkconfigure(output, state="normal")
-    tkdelete(output,"0.0","end")
+    #nombre <- tclvalue(tkget(output))
+    tkdelete(output,"0","end")
     switch(as.integer(tclvalue(updown)),
            {
-             tkinsert(output,"0.0",paste(nombre,"Greater2sd","Up",sep=""))
+             tkinsert(output,"end",paste(nombre,"Greater2sd","Up",sep=""))
            },
            {
-             tkinsert(output,"0.0",paste(nombre,"Greater2sd","Down",sep=""))
+             tkinsert(output,"end",paste(nombre,"Greater2sd","Down",sep=""))
            })})
     
   tkgrid(tklabel(framerange,text="Select the range"),pady = "2",padx="10")
@@ -316,45 +328,54 @@ projects.select <- function(envir, nombre = "sets-analysis"){
   tkgrid(tklabel(framerange,text="more than 2 sd"),radio3,pady = "2",padx="10")
   radioup <- tkradiobutton(frameupdown, value=1, variable=updown, command=function(){
     tkconfigure(output, state="normal")
-    tkdelete(output,"0.0","end")
+    #nombre <- tclvalue(tkget(output))
+    tkdelete(output,"0","end")
     switch(as.integer(tclvalue(range)),
            {
-                tkinsert(output,"0.0",paste(nombre,"1-1_5sd","Up",sep=""))
+                tkinsert(output,"end",paste(nombre,"1-1_5sd","Up",sep=""))
               },
            {
-                 tkinsert(output,"0.0",paste(nombre,"1_5-2sd","Up",sep=""))
+                 tkinsert(output,"end",paste(nombre,"1_5-2sd","Up",sep=""))
                },
            {
-                 tkinsert(output,"0.0",paste(nombre,"Greater2sd","Up",sep=""))
+                 tkinsert(output,"end",paste(nombre,"Greater2sd","Up",sep=""))
                }
            )})
   radiodown <- tkradiobutton(frameupdown, value=2, variable=updown, command=function(){
     tkconfigure(output, state="normal")
-    tkdelete(output,"0.0","end")
+   # nombre <- tclvalue(tkget(output))
+    tkdelete(output,"0","end")
     switch(as.integer(tclvalue(range)),
            {
-                tkinsert(output,"0.0",paste(nombre,"1-1_5sd","Down",sep=""))
+                tkinsert(output,"end",paste(nombre,"1-1_5sd","Down",sep=""))
               },
            {
-                 tkinsert(output,"0.0",paste(nombre,"1_5-2sd","Down",sep=""))
+                 tkinsert(output,"end",paste(nombre,"1_5-2sd","Down",sep=""))
                },
            {
-                 tkinsert(output,"0.0",paste(nombre,"Greater2sd","Down",sep=""))
+                 tkinsert(output,"end",paste(nombre,"Greater2sd","Down",sep=""))
                }
            )})
   tkgrid(tklabel(frameupdown,text="Select the desired option"),pady = "2")
   tkgrid(tklabel(frameupdown,text="Up-regulated"),radioup,pady = "2")
   tkgrid(tklabel(frameupdown,text="Down-regulated"),radiodown,pady = "2")
   tkgrid(tklabel(frameOverall,text="Where you want to save the output"), padx = "10", pady = "10")
-  output <- tktext(frameOverall,width="30",height="1", bg = "white", bg = "white")
-    tkinsert(output,"end",nombre)
-  tkconfigure(output, state="disabled")
   
-  out.but <- tkbutton(frameOverall,text="Browse",command=function(){
+ 
+
+ #   tkinsert(output,"end",nombre)
+ # tkconfigure(output, state="disabled")
+  out.function <-function(){
     dirname <- tclvalue(tkgetSaveFile())
-    if (nchar(dirname))
+    if (!nchar(dirname))
+      tkmessageBox(message="No file was selected!",icon = "error", default = "ok")
+    else{
       tkconfigure(output,textvariable = tclVar(dirname))
-  })
+      nombre <<- dirname
+      }
+  }
+  
+  out.but <- tkbutton(frameOverall,text="Browse",command=function() out.function())
 
   tkgrid(output,out.but, padx = "5")
   
@@ -416,7 +437,7 @@ projects.select <- function(envir, nombre = "sets-analysis"){
       }else{
         up.down <- "down"
       }
-      dirname <- substr(tclvalue(tkget(output,"0.0","end")),0,nchar(tclvalue(tkget(output,"0.0","end")))-1)
+      dirname <- substr(tclvalue(tkget(output)),0,nchar(tclvalue(tkget(output))))
       post.analysis(values,
                     minimo, maximo, up.down = up.down, output = dirname)
 
@@ -428,7 +449,7 @@ projects.select <- function(envir, nombre = "sets-analysis"){
     tkconfigure(tt, cursor="watch")
     operacion()
     tkconfigure(tt, cursor="arrow")
-    tkmessageBox(title = "Post-Analysis", icon="info", message=paste("The Post-Analysis has done.\n The results files are in this directory:", tclvalue(tkget(output,"0.0","end"))), type="ok")
+    tkmessageBox(title = "Post-Analysis", icon="info", message=paste("The Post-Analysis has done.\n The results files are in this directory:", tclvalue(tkget(output))), type="ok")
     tkdestroy(tt)
     genArise()
   })

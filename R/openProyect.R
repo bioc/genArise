@@ -50,10 +50,10 @@ old.project <-  function(project.name, envir, parent){
     for(i in 2:6){
       tkgrid(tklabel(frameFeatures, text = paste(spots[i,1], spots[i,2], sep = "\t")), padx = "0",pady = "2", sticky = "w")
     }
-    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
            envir =  envir)
     datos <- attr(get("a.spot1",envir=envir), "spotData")
-    M <- log(datos$Cy3, 2) - log(datos$Cy5, 2)
+    M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
     prjlength <- length(spots[,1])
     name <- as.character(as.vector(spots[2,2]))
     
@@ -67,7 +67,7 @@ old.project <-  function(project.name, envir, parent){
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
       }else{
         assign(paste("a.spot",as.numeric(tclvalue(dist)),sep=""),
-               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(as.numeric(tclvalue(dist))+1),2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(as.numeric(tclvalue(dist))+1),2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
                envir =  envir)
         assign("a.spot", get(paste("a.spot",i, sep =""), envir = envir), envir = envir)
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
@@ -131,7 +131,7 @@ old.project <-  function(project.name, envir, parent){
     
     tkgrid(redgreenimg,redimg,greenimg, pady = "2",padx="10")  
     
-    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5), envir = envir)
+    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5), envir = envir)
     assign("a.spot", get("a.spot1",envir = envir),envir=envir)
     img <-  tkrplot(upper.frame, fun = function() graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))
     tkadd(fileMenu,"command",label="Back to main", command=function(){ tkdestroy(tt); genArise() })
