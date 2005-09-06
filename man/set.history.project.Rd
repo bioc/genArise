@@ -8,7 +8,7 @@ future. This is just an auxiliary function for the GUI, and can not be
 used in the command line.
 }
 \usage{
-set.history.project(history.file, id.name, data file)
+set.history.project(history.file, id.name, data.file)
 }
 \arguments{
   \item{history.file}{The name of the prj history file.}

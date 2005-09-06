@@ -13,7 +13,8 @@ Description: genArise is a easy to use tool for dual color microarray
         user performs a basic, but not simple, data analysis just
         following a wizard. In addition it provides some tools for the
         developer.
+biocViews: Microarray, TwoChannel, Preprocessing
 License: Free for non-commercial use
 URL: http://www.ifc.unam.mx/genarise
-Packaged: Sun Apr 10 13:42:06 2005; root
+
 
