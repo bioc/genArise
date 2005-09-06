@@ -50,7 +50,7 @@ old.project <-  function(project.name, envir, parent){
     for(i in 2:6){
       tkgrid(tklabel(frameFeatures, text = paste(spots[i,1], spots[i,2], sep = "\t")), padx = "0",pady = "2", sticky = "w")
     }
-    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=FALSE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
            envir =  envir)
     datos <- attr(get("a.spot1",envir=envir), "spotData")
     M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
