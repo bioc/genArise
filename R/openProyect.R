@@ -134,10 +134,10 @@ old.project <-  function(project.name, envir, parent){
     redgreenimg <- tkradiobutton(frameimage, text="Red & Green", value=11, variable=dist,command=function(){
       imageLimma.plot(M)})
     
-    redimg <- tkradiobutton(frameimage, text="Red", value=12, variable=dist,command = function(){
+    redimg <- tkradiobutton(frameimage, text="Background Cy5", value=12, variable=dist,command = function(){
       imageLimma.plot(log(datos$BgCy5, 2),"white","red")})
     
-    greenimg <- tkradiobutton(frameimage, text="Green", value=13, variable=dist,command=function(){
+    greenimg <- tkradiobutton(frameimage, text="Background Cy3", value=13, variable=dist,command=function(){
       imageLimma.plot(log(datos$BgCy3, 2),"white","green")})
     
     tkgrid(redgreenimg,redimg,greenimg, pady = "2",padx="10")  
