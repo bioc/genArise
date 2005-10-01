@@ -47,10 +47,12 @@ old.project <-  function(project.name, envir, parent){
     frameimage <- tkframe(upper.frame, relief="groove",borderwidth=2)
     frameFeatures <-  tkframe(frameOverall, relief="groove")
     tkgrid(tklabel(frameFeatures, text = "Spot Features"), pady = "7")
+#Array geometry
     for(i in 2:6){
       tkgrid(tklabel(frameFeatures, text = paste(spots[i,1], spots[i,2], sep = "\t")), padx = "0",pady = "2", sticky = "w")
     }
-    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=FALSE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+#original data
+    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
            envir =  envir)
     datos <- attr(get("a.spot1",envir=envir), "spotData")
     M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
@@ -75,10 +77,15 @@ old.project <-  function(project.name, envir, parent){
       tkentryconfigure(topMenu,"2",state="normal")
       tkentryconfigure(topMenu,"3",state="normal")
     }
-    
+    #Operations
     tkpack(tklabel(frame1, text = "OPERATIONS"), pady = "7")
     if(spots[(length(spots[,1])),1] == "RI Zscore" || spots[(length(spots[,1])),1] == "MA Zscore" ){
-      for(i in 7:(length(spots[,1])-1)){
+      radio.original <- tkradiobutton(frame1, text="Original Spot", value=6, variable=dist,command=function(){
+          otra.funcion(as.numeric(tclvalue(dist)))
+        })
+      tkpack(radio.original,anchor="w", pady = "2",padx="10")
+      
+      for(i in 8:(length(spots[,1])-1)){
         radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=(i-1), variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
@@ -113,7 +120,11 @@ old.project <-  function(project.name, envir, parent){
       tkpack(zscore5,anchor="w", pady = "2",padx="10")
     }
     else{
-      for(i in 7:(length(spots[,1]))){
+      radio.original <- tkradiobutton(frame1, text="Original Spot", value=6, variable=dist,command=function(){
+          otra.funcion(as.numeric(tclvalue(dist)))
+        })
+      tkpack(radio.original,anchor="w", pady = "2",padx="10")
+      for(i in 8:(length(spots[,1]))){
         radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=(i-1), variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
@@ -124,10 +135,10 @@ old.project <-  function(project.name, envir, parent){
       imageLimma.plot(M)})
     
     redimg <- tkradiobutton(frameimage, text="Red", value=12, variable=dist,command = function(){
-      imageLimma.plot(log(datos$BgCy3, 2),"white","red")})
+      imageLimma.plot(log(datos$BgCy5, 2),"white","red")})
     
     greenimg <- tkradiobutton(frameimage, text="Green", value=13, variable=dist,command=function(){
-      imageLimma.plot(log(datos$BgCy5, 2),"white","green")})
+      imageLimma.plot(log(datos$BgCy3, 2),"white","green")})
     
     tkgrid(redgreenimg,redimg,greenimg, pady = "2",padx="10")  
     
@@ -184,6 +195,7 @@ old.project <-  function(project.name, envir, parent){
     
     frame.label <- tkframe(tt,relief="groove",borderwidth=2)
     tkfocus(tt)
+    tkselect(radio.original)
     tkgrid(img,frameOverall, padx = "10", pady = "10",sticky="w")
     tkgrid(frameimage, padx = "90", pady = "10",sticky="w")
     tkgrid(frameFeatures)

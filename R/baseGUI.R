@@ -128,15 +128,15 @@ principal <-  function(envir){
       }
       else{
         if(rbVal == "Red"){
-          pdf(paste(name, "R.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "R.pdf", sep = "_"))
-          imageLimma(log(datos$Cy5, 2) - log(datos$Cy3, 2), get("nr", envir = envir), get("nc", envir = envir),
+          pdf(paste(name, "BgCy5.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "R.pdf", sep = "_"))
+          imageLimma(log(datos$BgCy5, 2), get("nr", envir = envir), get("nc", envir = envir),
                      get("nmr", envir = envir),
                      get("nmc", envir = envir), low = "white", high = "red")
           dev.off(dev.cur())
         }
         else{
-          pdf(paste(name, "G.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "G.pdf", sep = "_"))
-          imageLimma(log(datos$Cy5, 2) - log(datos$Cy3, 2),get("nr", envir = envir), get("nc", envir = envir),
+          pdf(paste(name, "BgCy3.pdf", sep = "_"),horiz=F, height=8,width=8,title=paste(name, "G.pdf", sep = "_"))
+          imageLimma(log(datos$BgCy3, 2),get("nr", envir = envir), get("nc", envir = envir),
                      get("nmr", envir = envir),
                      get("nmc", envir = envir), low = "white", high = "green")
           dev.off(dev.cur())
@@ -182,14 +182,14 @@ principal <-  function(envir){
                                                               get("nc", envir = envir),
                                                               get("nmr", envir = envir),
                                                               get("nmc", envir = envir)))})
-  rb2 <- tkradiobutton(radio.frame, text = "Red", value = "Red", variable = rbValue,
-                       command = function() {tkrreplot(img, fun = function()imageLimma(log(datos$BgCy3,2),
+  rb2 <- tkradiobutton(radio.frame, text = "Background Cy5", value = "Red", variable = rbValue,
+                       command = function() {tkrreplot(img, fun = function()imageLimma(log(datos$BgCy5,2),
                                                               get("nr", envir = envir),
                                                               get("nc", envir = envir),
                                                               get("nmr", envir = envir),
                                                               get("nmc", envir = envir), low = "white", high = "red"))})
-  rb3 <- tkradiobutton(radio.frame, text = "Green", value = "Green", variable = rbValue,
-                       command = function() {tkrreplot(img, fun = function()imageLimma(log(datos$BgCy5, 2),
+  rb3 <- tkradiobutton(radio.frame, text = "Background Cy3", value = "Green", variable = rbValue,
+                       command = function() {tkrreplot(img, fun = function()imageLimma(log(datos$BgCy3, 2),
                                                               get("nr", envir = envir),
                                                               get("nc", envir = envir),
                                                               get("nmr", envir = envir),
@@ -197,12 +197,15 @@ principal <-  function(envir){
   tkgrid(rb1, sticky = "w", pady = "2",padx="10")
   tkgrid(rb2, sticky = "w", pady = "2",padx="10")
   tkgrid(rb3, sticky = "w", pady = "2",padx="10")
-  tkgrid(frameUpper, padx  = "20", pady = "120")
+  tkgrid(frameUpper, padx  = "10", pady = "120")
+#Label Diagnostic Plots
+  tkgrid(tklabel(upper.frame, text = "Diagnostic Plots"))  
   tkgrid(radio.frame, padx  = "20", pady = "10")
-  tkgrid(img, frameOverall, sticky = "nw")
+  tkgrid(img, frameOverall, padx = "10", pady = "10")
+  tkgrid(tklabel(upper.frame, text = "Diagnostic plots can reveal the variation of R and Background values over the array.", font = "Helvetica 10"))  
   tkgrid(upper.frame, pady = "10")
   
-  area.frame <- tkframe(tt,relief="groove",borderwidth=2)
+  area.frame <- tkframe(upper.frame,relief="groove")
   yscr <- tkscrollbar(area.frame, repeatinterval = 5,
                       command=function(...)tkyview(txt,...))
   txt <- tktext(area.frame,bg="white",font="courier",width ="70",height="5",yscrollcommand=function(...)tkset(yscr,...))
@@ -211,7 +214,7 @@ principal <-  function(envir){
   tkinsert(txt,"end","GenArise Microarray Analyzer\n")
   tkinsert(txt,"end","Institute of Cellular Physiology UNAM")
   tkconfigure(txt, state="disabled")
-  tkgrid(area.frame, padx = "10", pady = "10", sticky = "w")
+  tkgrid(area.frame, padx = "10", pady = "10", sticky = "ew")
 }
 
 # Auxiliar function to call the Zscore.plot function in the GUI
@@ -361,7 +364,7 @@ Zscore.points <-  function(type="ri",text, envir){
     if (!nchar(name))
       tkmessageBox(parent = tt,  message= "You must write a name of file!", icon = "error", default = "ok")
     else{
-      pdf(name, horiz = F, height = 8, width = 8, title = name)
+      pdf(paste(name,".pdf",sep=""), horiz = FALSE, height = 8, width = 8, title = name)
       switch(as.integer(tclvalue(dist)),
              Zscore.plot(get("Zscore.spot", envir = envir), all = FALSE, Zscore.max = 1, col = "green"),
              Zscore.plot(get("Zscore.spot", envir = envir), Zscore.max = 1.5, Zscore.min = 1, all = FALSE, col = "blue"),
@@ -411,7 +414,7 @@ Zscore.points <-  function(type="ri",text, envir){
                  hscale= get("Myhscale", envir = envir),vscale = get("Myvscale",envir = envir))
   tkgrid(img,sd.frame, padx = "10", pady = "10")
   tkgrid(upper.frame, pady = "10")
-  area.frame <- tkframe(tt,relief="groove",borderwidth=2)
+  area.frame <- tkframe(upper.frame,relief="groove")
   yscr <- tkscrollbar(area.frame, repeatinterval = 5,
                       command=function(...)tkyview(txt,...))
   
@@ -421,7 +424,7 @@ Zscore.points <-  function(type="ri",text, envir){
   tkinsert(txt,"end",text)
   tkinsert(txt,"end","\n\nZscore Done!!")
   tkconfigure(txt, state="disabled")
-  tkgrid(area.frame, padx = "10")
+  tkgrid(area.frame, padx = "10", sticky = "ew")
 }
 
 # Window for the analysis
@@ -877,19 +880,19 @@ analysis.window <-  function(texto, follow.wizard = FALSE, envir){
   frame.label <- tkframe(tt,relief="groove",borderwidth=2)
   tkfocus(tt)
   assign("a.spot", get("o.spot", envir = envir), envir = envir)
-  img <- tkrplot(upper.frame,fun = function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)), hscale= get("Myhscale", envir = envir),vscale = get("Myvscale",
-                                                                                                                                                                        envir = envir))
+  img <- tkrplot(upper.frame,fun = function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)), hscale= get("Myhscale", envir = envir),vscale = get("Myvscale", envir = envir))
+  tkgrid(tklabel(upper.frame, text = "Graphical Presentation of Slide Data"))  
   tkgrid(img,frame1,padx="10",pady="10")
   tkgrid(upper.frame, pady = "10")
   
-  area.frame <- tkframe(tt,relief="groove",borderwidth=2)
+  area.frame <- tkframe(upper.frame,relief="groove",borderwidth=2)
   yscr <- tkscrollbar(area.frame, repeatinterval = 5, command=function(...)tkyview(txt,...))
   txt <- tktext(area.frame,bg="white",font="courier",width ="70",height="5",yscrollcommand=function(...)tkset(yscr,...))
   tkgrid(txt, yscr)
   tkgrid.configure(yscr,rowspan=4,sticky="nsw")
   tkinsert(txt,"end",texto)
   tkconfigure(txt, state="disabled")
-  tkgrid(area.frame, padx = "10")
+  tkgrid(area.frame, padx = "10", pady = "10", sticky = "ew")
   if(follow.wizard){
     op.counter <<- op.counter + 1
     write.spot(get("o.spot", envir = envir), paste(get("path.results", envir = envir),

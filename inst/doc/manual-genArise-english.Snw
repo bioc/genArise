@@ -73,7 +73,7 @@ environment so you will be able to apply to that object any
 function of genArise that receives a spot as argument.
 \end{Soutput}
 
-\subsection{Diagnostic plots}
+\subsection{Spatial plots}
 Previous to any kind of transformation on the data once loaded the input, you are able to visualize it using the function \texttt{imageLimma}. This function constructs an image plot in a green to red scale representing the $log_2$ intensity ratio for each spot on the array. See Figure \ref{fig1}.\\
 
  The imageLimma function receives several arguments depending on the data that is going to be analyzed. imageLimma is completly based in the imageplot function from the limma package.\footnote{\textit{Gordon K. Smyth (2004) \textquotedblleft Linear Models and Empirical Bayes Methods for Assessing Differential Expression in Microarray Experiments \textquotedblright, Statistical Applications in Genetics and Molecular Biology: Vol. 3: No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}}} \\
@@ -83,7 +83,7 @@ Previous to any kind of transformation on the data once loaded the input, you ar
 <<fig=TRUE, echo=FALSE>>=
 data(Simon)
 datos <- attr(Simon, "spotData")
-M <- log(datos$Cy3, 2) - log(datos$Cy5, 2)
+M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
 imageLimma(M, 23, 24, 2, 2)
 @
 \caption{Image plot in a green to red scale.\label{fig1}}
@@ -92,7 +92,7 @@ imageLimma(M, 23, 24, 2, 2)
 \begin{Scode}
 > data(Simon)
 > datos <- attr(Simon, "spotData")# Extract spot data
-> M <- log(datos$Cy3, 2) - log(datos$Cy5, 2)
+> M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
 > imageLimma(z = M, row = 23, column = 24, meta.row = 2, 
   meta.column = 2, low = NULL, high = NULL)
 \end{Scode}
@@ -101,7 +101,7 @@ imageLimma(M, 23, 24, 2, 2)
 Output: Plot the intensity values See Figure 1
 \end{Soutput}
 
-In the same way that you can plot the $log_2$ intensity ratio for each spot, you can also plot the background value that correspond to each one of the intensities. See Figure \ref{fig2} and \ref{fig3}.\\
+A spatial plot of the background or Ratio-values can often reveal spatial trends or artifacts of various kinds. Figure \ref{fig2} shows a spatial plot of red channel background for one array. Each spot on the array corresponds to one small square region on the plot. High background trends towards the edges of the plot stand out in the plot.\\
 
 For example, the next code generates the plot for Cy3 Bg intensities shown in Figure \ref{fig2}.
 \begin{figure}[h]
@@ -109,45 +109,45 @@ For example, the next code generates the plot for Cy3 Bg intensities shown in Fi
 <<fig=TRUE, echo=FALSE>>=
 data(Simon)
 datos <- attr(Simon, "spotData")
-R <- log(datos$BgCy3, 2)
+R <- log(datos$BgCy5, 2)
 imageLimma(R, 23, 24, 2, 2, high = "red", low = "white")
 @
-\caption{Cy3 intensity background preview. \label{fig2}}
+\caption{Cy5 intensity background preview. \label{fig2}}
 \end{center}
 \end{figure}
 \begin{Scode}
 > data(Simon)
 > datos <- attr(Simon, "spotData")# Extract spot data
-> R <- log(datos$BgCy3, 2)
+> R <- log(datos$BgCy5, 2)
 > imageLimma(z = R, row = 23, column = 24, meta.row = 2, 
   meta.column = 2, low = "white", high = "red")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy3 intensity background plot. See Figure 2
+Output: Cy5 intensity background plot. See Figure 2
 \end{Soutput}
-And this is the code to generate the plot for Cy5 Bg intensities shown in Figure \ref{fig3}..
+And this is the code to generate the plot for green channel background shown in Figure \ref{fig3}..
 \begin{figure}[h]
 \begin{center}
 <<fig=TRUE, echo=FALSE>>=
 data(Simon)
 datos <- attr(Simon, "spotData")
-G <- log(datos$BgCy5, 2)
+G <- log(datos$BgCy3, 2)
 imageLimma(G, 23, 24, 2, 2, low = "white", high = "green")
 @
-\caption{Cy5 intensity background preview. \label{fig3}}	
+\caption{Cy3 intensity background preview. \label{fig3}}	
 \end{center}
 \end{figure}
 \begin{Scode}
 > data(Simon)
 > datos <- attr(Simon, "spotData")# Extract spot data
-> G <- log(datos$BgCy5, 2)
+> G <- log(datos$BgCy3, 2)
 > imageLimma(z = G, row = 23, column = 24, meta.row = 2, 
   meta.column = 2, low = "white", high = "green")
 \end{Scode}
 
 \begin{Soutput}
-Output: Cy5 intensity Background plot. See Figure 3
+Output: Cy3 intensity Background plot. See Figure 3
 \end{Soutput}
 
 With the previous plots, you can see a preview of the raw data (without background correction and normalization). It is important to clarify that these image plot one does not replace the original TIFF image from the microarray experiment.\\

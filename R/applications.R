@@ -172,7 +172,7 @@ new.project <- function(envir){
         assign("spot.name", name.tmp, envir = envir)
         set.path.project(name.project, tclvalue(output.file),
                          tclvalue(graphic.file), envir)
-        temp <- read.csv(inputFile, header = FALSE, sep = "\t", comment.char = "")
+        temp <- read.csv(inputFile, header = FALSE, sep = "\t", comment.char = "",quote="")
         temp <- apply(temp, 2, as.vector)
 
         # check if the experiment was performed in the Cellular Physiology Institute of UNAM
