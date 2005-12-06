@@ -9,10 +9,11 @@
   in the command line.
 }
 \usage{
-principal(envir)
+principal(envir, swap)
 }
 \arguments{
   \item{envir}{Environment where are the genArise variables}
+  \item{swap}{Is this a swap analysis or an individual analysis}
   }
 \value{
   tkwidget

@@ -3,7 +3,10 @@
 # Read all file, but only extract the interested columns and create a Spot object
 # The numnber of columns are the IFC format 
 
-read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE, sep = "\t", is.ifc = FALSE){
+read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE, sep = "\t", is.ifc = FALSE,envir){
+  if(missing(envir)){
+    envir <- globalenv()
+  }
   tmp <- unlist(strsplit(file.name, "\\/"))
   spot.name <- unlist(strsplit(tmp[length(tmp)], "\\."))[1]
   if(is.ifc){
@@ -18,12 +21,16 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE,
     temp <- apply(temp, 2, as.vector)
     ans <- paste(max(as.integer(temp[,2]),na.rm=TRUE), max(as.integer(temp[,3]),na.rm=TRUE),
                  max(as.integer(temp[,4]),na.rm=TRUE), max(as.integer(temp[,5]),na.rm=TRUE), sep = " ")
-    print(paste("The dimensions are ", max(as.integer(temp[,2]),na.rm=TRUE), max(as.integer(temp[,3]),na.rm=TRUE), max(as.integer(temp[,4]),na.rm=TRUE), max(as.integer(temp[,5]),na.rm=TRUE), "Is it right? [y/n]",sep = "  "))
-    resp <- readline()
-    if(tolower(resp) == "n"| tolower(resp) == "no"){
-      print("Enter the right dimensions? ")
-      ans <- readline()
-                                        }
+#    print(paste("The dimensions are ", max(as.integer(temp[,2]),na.rm=TRUE), max(as.integer(temp[,3]),na.rm=TRUE), max(as.integer(temp[,4]),na.rm=TRUE), max(as.integer(temp[,5]),na.rm=TRUE), "Is it right? [y/n]",sep = "  "))
+ #   resp <- readline()
+  #  if(tolower(resp) == "n"| tolower(resp) == "no"){
+   #   print("Enter the right dimensions? ")
+    #  ans <- readline()
+     #                                   }
+    assign("nr.global",max(as.integer(temp[,4])),envir = envir)
+    assign("nc.global",max(as.integer(temp[,5])),envir = envir)
+    assign("nmr.global",max(as.integer(temp[,2])),envir = envir)
+    assign("nmc.global",max(as.integer(temp[,3])),envir = envir)
     dimensiones <-  unlist(strsplit(ans, " "))
     dimensiones <- as.numeric(dimensiones)
     
@@ -54,7 +61,7 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE,
                   BgCy3 = as.numeric(result.list[,3]), BgCy5 = as.numeric(result.list[,4]), Id = as.vector(result.list[,5]))))
   }
   else{
-    spot <- read.csv( file.name, header = header, sep = sep, quote = "", comment.char = "")
+    spot <- read.csv( file.name, header = header, sep = sep)
     spot[,ids] <-  as.vector(spot[,ids])
     return(new ("Spot", name = spot.name ,spotData = list(Cy3=spot[,cy3],
                                             Cy5=spot[,cy5], BgCy3=spot[,bg.cy3], BgCy5=spot[,bg.cy5], Id = as.vector(spot[,ids]))))
@@ -64,7 +71,7 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, header = FALSE,
 read.dataset <- function( file.name, cy3 = 1, cy5 = 2, ids = 3, zscore = 4, type = 5, header = FALSE, sep = "\t"){
   tmp <- unlist(strsplit(file.name, "\\/"))
   dataset.name <- unlist(strsplit(tmp[length(tmp)], "\\."))[1]
-  dataset <- read.csv( file.name, header = header, quote = "", comment.char = "", sep = sep)
+  dataset <- read.csv( file.name, header = header, sep = sep)
   type <- trim(as.character(dataset[1,4]))
   dataset <- dataset[-1,]
   new ("DataSet", name = dataset.name ,dataSets = list(Cy3 = as.numeric(dataset[,cy3]),

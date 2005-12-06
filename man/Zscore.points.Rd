@@ -22,12 +22,13 @@
   used in the command line.
 }
 \usage{
-  Zscore.points(type,text,envir)
+  Zscore.points(type,text,envir, swap)
 }
 \arguments{
   \item{type}{Type of analysis done: "ri" is for a R-I analysis and "ma" is
     for M-A analysis}
   \item{text}{The text for the text area of the history of the project}
   \item{envir}{Environment where the variables are stored}
+  \item{swap}{Is this a swap analysis or an individual analysis}
   }
 \keyword{aplot}

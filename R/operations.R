@@ -72,7 +72,7 @@ grid.norm <- function(mySpot, nr, nc){
       d <- d[!zero.index]
       e <- e[!zero.index]
 
-      tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, cut  = 0.9 ))
+      tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, ev=rbox(cut  = 0.9) ))
       Cy5 <- c(Cy5, b * (1/2^tmp), recursive = TRUE)
       Cy3 <- c(Cy3, a, recursive = TRUE)
       BgCy3 <- c(BgCy3, c, recursive = TRUE)
@@ -114,7 +114,7 @@ global.norm <- function(mySpot){
     d <- d[!zero.index]
     e <- e[!zero.index]
     
-    tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, cut  = 0.9 ))
+    tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, ev=rbox(cut  = 0.9 )))
     Cy5 <- b * (1/2^tmp)
     Cy3 <- a
     BgCy3 <- c

@@ -40,6 +40,7 @@ note <-  function(envir){
 # Create a new project Window 
 new.project <- function(envir){
   select <- tktoplevel()
+  tkfocus(select)
   window.configuration.project <- function(){
     active.options <- function(is.ifc = TRUE){
       if(is.ifc){
@@ -278,6 +279,7 @@ projects.select <- function(envir, nombre = "sets-analysis"){
   else{ if(.Platform$OS.type == "windows")
     nombre <- paste(Sys.getenv("R_USER"),nombre,sep=.Platform$file.sep)}
   tt <- tktoplevel()
+  tkfocus(tt)
   tkwm.title(tt,"File Selector")
   upper.frame <- tkframe(tt)
   frameOverall <- tkframe(upper.frame)
@@ -401,9 +403,14 @@ projects.select <- function(envir, nombre = "sets-analysis"){
   }
   
   onAdd <-  function(){
-    tempo <- tclvalue(tkgetOpenFile(filetypes = "{{PRJ Files} {.prj}} {{All files} *}"))
-    if(nchar(tempo)){
-      tkinsert(files.list,"end",tempo)
+    tempo <- tclvalue(tkgetOpenFile(filetypes = "{{PRJ Files} {.prj}} {{All files} *}",multiple = "1"))
+    tempo <- unlist(strsplit(tempo," "))
+    if(length(tempo)!= 0){
+      for(i in 1:length(tempo)){ 
+        if(nchar(tempo[i])){
+          tkinsert(files.list,"end",tempo[i])
+        }
+      }
     }
   }
   

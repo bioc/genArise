@@ -31,6 +31,7 @@ old.project <-  function(project.name, envir, parent){
   }
   else{
     tt <- tktoplevel()
+    tkfocus(tt)
     tkwm.geometry(tt,"+50+50")
     tkwm.title(tt,"GenArise Microarray Analyzer")
     tmp <- unlist(strsplit(project.name, .Platform$file.sep))
@@ -52,7 +53,7 @@ old.project <-  function(project.name, envir, parent){
       tkgrid(tklabel(frameFeatures, text = paste(spots[i,1], spots[i,2], sep = "\t")), padx = "0",pady = "2", sticky = "w")
     }
 #original data
-    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+    assign("a.spot1", read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""), header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5,envir=envir),
            envir =  envir)
     datos <- attr(get("a.spot1",envir=envir), "spotData")
     M <- log(datos$Cy5, 2) - log(datos$Cy3, 2)
@@ -69,7 +70,7 @@ old.project <-  function(project.name, envir, parent){
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
       }else{
         assign(paste("a.spot",as.numeric(tclvalue(dist)),sep=""),
-               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[(as.numeric(tclvalue(dist))+1),2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5),
+               read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[as.numeric(tclvalue(dist)),2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5,envir=envir),
                envir =  envir)
         assign("a.spot", get(paste("a.spot",i, sep =""), envir = envir), envir = envir)
         tkrreplot(img,fun=function()graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))        
@@ -80,13 +81,13 @@ old.project <-  function(project.name, envir, parent){
     #Operations
     tkpack(tklabel(frame1, text = "OPERATIONS"), pady = "7")
     if(spots[(length(spots[,1])),1] == "RI Zscore" || spots[(length(spots[,1])),1] == "MA Zscore" ){
-      radio.original <- tkradiobutton(frame1, text="Original Spot", value=6, variable=dist,command=function(){
+      radio.original <- tkradiobutton(frame1, text="Original Spot", value=7, variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
       tkpack(radio.original,anchor="w", pady = "2",padx="10")
       
       for(i in 8:(length(spots[,1])-1)){
-        radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=(i-1), variable=dist,command=function(){
+        radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=i, variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
         tkpack(radio,anchor="w", pady = "2",padx="10")
@@ -111,38 +112,42 @@ old.project <-  function(project.name, envir, parent){
         selected.zscore(Zscore.max = 2, Zscore.min = 1.5, all = FALSE, col = "cyan")})
       tkpack(zscore3,anchor="w", pady = "2",padx="10")
       
-      zscore4 <- tkradiobutton(frame2, text="Zscore > 2", value=4, variable=dist,command=function(){
-        selected.zscore(Zscore.min = 2, all = FALSE, col = "snow")})
+      zscore4 <- tkradiobutton(frame2, text="Zscore > 1.5", value=4, variable=dist,command=function(){
+        selected.zscore(Zscore.min = 1.5, all = FALSE, col = "yellow")})
       tkpack(zscore4,anchor="w", pady = "2",padx="10")
       
-      zscore5 <- tkradiobutton(frame2, text="All", value=5, variable=dist,command=function(){
-        selected.zscore()})
+      zscore5 <- tkradiobutton(frame2, text="Zscore > 2", value=5, variable=dist,command=function(){
+        selected.zscore(Zscore.min = 2, all = FALSE, col = "snow")})
       tkpack(zscore5,anchor="w", pady = "2",padx="10")
+      
+      zscore6 <- tkradiobutton(frame2, text="All", value=6, variable=dist,command=function(){
+        selected.zscore()})
+      tkpack(zscore6,anchor="w", pady = "2",padx="10")
     }
     else{
-      radio.original <- tkradiobutton(frame1, text="Original Spot", value=6, variable=dist,command=function(){
+      radio.original <- tkradiobutton(frame1, text="Original Spot", value=7, variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
       tkpack(radio.original,anchor="w", pady = "2",padx="10")
       for(i in 8:(length(spots[,1]))){
-        radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=(i-1), variable=dist,command=function(){
+        radio <- tkradiobutton(frame1, text=as.vector(spots[i,1]), value=i, variable=dist,command=function(){
           otra.funcion(as.numeric(tclvalue(dist)))
         })
         tkpack(radio,anchor="w", pady = "2",padx="10")
       }
     }
-    redgreenimg <- tkradiobutton(frameimage, text="Red & Green", value=11, variable=dist,command=function(){
+    redgreenimg <- tkradiobutton(frameimage, text="Red & Green", value=12, variable=dist,command=function(){
       imageLimma.plot(M)})
     
-    redimg <- tkradiobutton(frameimage, text="Background Cy5", value=12, variable=dist,command = function(){
+    redimg <- tkradiobutton(frameimage, text="Background Cy5", value=13, variable=dist,command = function(){
       imageLimma.plot(log(datos$BgCy5, 2),"white","red")})
     
-    greenimg <- tkradiobutton(frameimage, text="Background Cy3", value=13, variable=dist,command=function(){
+    greenimg <- tkradiobutton(frameimage, text="Background Cy3", value=14, variable=dist,command=function(){
       imageLimma.plot(log(datos$BgCy3, 2),"white","green")})
     
     tkgrid(redgreenimg,redimg,greenimg, pady = "2",padx="10")  
     
-    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5), envir = envir)
+    assign("a.spot1",read.spot(paste(noext,.Platform$file.sep,results.file,.Platform$file.sep,spots[7,2],sep=""),header=TRUE,cy3=1,cy5=2,bg.cy3=3,bg.cy5=4,ids=5, envir=envir), envir = envir)
     assign("a.spot", get("a.spot1",envir = envir),envir=envir)
     img <-  tkrplot(upper.frame, fun = function() graphic.choose(get("a.spot", envir = envir), get("graphic.type", envir = envir)))
     tkadd(fileMenu,"command",label="Back to main", command=function(){ tkdestroy(tt); genArise() })
@@ -181,8 +186,10 @@ old.project <-  function(project.name, envir, parent){
       if(val == 3)
         save.pdf(name,Zscore.max = 2, Zscore.min = 1.5, all = FALSE, col = "cyan")
       if(val == 4)
-        save.pdf(name,Zscore.min = 2, all = FALSE, col = "snow")
+        save.pdf(name,Zscore.min = 1.5, all = FALSE, col = "yellow")
       if(val == 5)
+        save.pdf(name,Zscore.min = 2, all = FALSE, col = "snow")
+      if(val == 6)
         save.pdf(name)
       })
 #    tkadd(optionsMenu,"command",label="Notes",command = function()note(envir))

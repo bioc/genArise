@@ -20,6 +20,7 @@ genArise                GUI: Graphical User Interface
 genArise.init           genArise.init
 genMerge                genMerge: Post-Genomic Analysis
 get.values              Auxiliar function for post-analysis
+get.Zscore		Swap from Files
 global.norm             Global Normalization of Spot
 graphic.choose          Graphic choose
 grid.norm               Normalization by grid of Spot
@@ -28,6 +29,7 @@ i.arise                 I Arise
 imageLimma              Image Plot of Microarray
 m.arise                 M Arise
 ma.plot                 Data Visualization: M vs. A plot
+make.swap		Swap analysis
 meanUnique              Remove Duplicates
 new.project             new.project
 note                    note
@@ -42,10 +44,11 @@ reset.history           Reset the prj history file
 ri.plot                 Data Visualization: R vs I
 set.grid.properties     set.grid.properties
 set.history.project     Save the history of a project
-set.path.project        set.path.project
-set.project.properties
-                        set.project.properties
+set.path.project        set path project
+set.project.properties	Set project properties
+single.norm		Individual analysis for both files of swap
 spotUnique              Replicate filtering
+swap.select		Dye swap files selector
 trim                    Trim
 write.dataSet           Write dataSet
 write.spot              Write Spot

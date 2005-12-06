@@ -3,6 +3,8 @@
 help <- function(){
   tclRequire("BWidget")
   tt <- tktoplevel()
+  tkfocus(tt)
+  tkfocus(tt)
   tkwm.title(tt,"genArise Help")
   upper.frame <- tkframe(tt)
   
@@ -62,7 +64,7 @@ help <- function(){
   tkinsert(treeWidget,"end",  "root", "genArise Keyboard Shortcuts", text = "genArise Keyboard Shortcuts")
   
   tkselection.set(treeWidget,"About genArise")
-  topic <- as.character(tclvalue(tkcmd(treeWidget,"selection","get")))
+  topic <- as.character(tclvalue(tcl(treeWidget,"selection","get")))
   first <- substr(topic,1,1)
   last <- substr(topic,nchar(topic),nchar(topic))
   if(first =="{" && last == "}") topic <- substr(topic,2,nchar(topic)-1)
@@ -74,7 +76,7 @@ help <- function(){
   events <- function(){
     tkconfigure(txt, state="normal")
     tkdelete(txt,"0.0","end")
-    topic <- tclvalue(tkcmd(treeWidget,"selection","get"))
+    topic <- tclvalue(tcl(treeWidget,"selection","get"))
     first <- substr(topic,1,1)
     last <- substr(topic,nchar(topic),nchar(topic))
     if(first =="{" && last == "}") topic <- substr(topic,2,nchar(topic)-1)

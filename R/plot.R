@@ -55,10 +55,11 @@ Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all
   if(all){
     par(bg = "black", col.axis = "white", col.lab = "white",fg="white")
     # get the ranges for the color-code
-    azul <- abs(Zscore) < 1
-    verde <- (abs(Zscore) >= 1) & (abs(Zscore) < 1.5)
-    rojo <- (abs(Zscore) >= 1.5) & (abs(Zscore) <= 2)
-    naranja <- abs(Zscore) > 2
+    blue <- abs(Zscore) < 1
+    green <- (abs(Zscore) >= 1) & (abs(Zscore) < 1.5)
+    red <- (abs(Zscore) >= 1.5) & (abs(Zscore) <= 2)
+    #yellow <- abs(Zscore) > 1.5
+    orange <- abs(Zscore) > 2
     # the plot will be R vs I or M vs A
     if(type == "ri"){    
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "I", ylab = "R")
@@ -66,10 +67,11 @@ Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "A", ylab = "M")
     }
     # draw the points
-    points(x.axis[naranja], y.axis[naranja], col = "snow", pch =3)      
-    points(x.axis[azul], y.axis[azul], col = "green", pch = 3)
-    points(x.axis[verde], y.axis[verde], col = "blue",pch= 3)
-    points(x.axis[rojo], y.axis[rojo], col = "turquoise", pch = 3)
+    points(x.axis[orange], y.axis[orange], col = "snow", pch =3)      
+    points(x.axis[blue], y.axis[blue], col = "green", pch = 3)
+    points(x.axis[green], y.axis[green], col = "blue",pch= 3)
+#    points(x.axis[yellow], y.axis[yellow], col="yellow", pch= 3)
+    points(x.axis[red], y.axis[red], col = "turquoise", pch = 3)
   }
   else{
     if(is.null(Zscore.min) && is.null(Zscore.max)){
@@ -80,20 +82,20 @@ Zscore.plot <-  function(dataSet.spot, Zscore.min = NULL, Zscore.max = NULL, all
     }
     par(bg = "black", col.axis = "white", col.lab = "white", fg = "white")
     if(is.null(Zscore.min)){
-      verde <- abs(Zscore) < Zscore.max
+      green <- abs(Zscore) < Zscore.max
     }else{
       if(is.null(Zscore.max)){
-        verde <- abs(Zscore) > Zscore.min
+        green <- abs(Zscore) > Zscore.min
       }else{
-        verde <- (abs(Zscore) > Zscore.min) & (abs(Zscore) < Zscore.max)
+        green <- (abs(Zscore) > Zscore.min) & (abs(Zscore) < Zscore.max)
       }
     }
     if(type == "ri"){
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "I", ylab = "R")      
-      points(x.axis[verde], y.axis[verde], col = col, pch = 3)
+      points(x.axis[green], y.axis[green], col = col, pch = 3)
     }else{
       plot(x.axis, y.axis, col = "black", pch =3, xlab = "A", ylab = "M")
-      points(x.axis[verde], y.axis[verde], col = col, pch = 3)
+      points(x.axis[green], y.axis[green], col = col, pch = 3)
     }
   }
 }

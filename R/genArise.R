@@ -1,11 +1,11 @@
 # Main Window of genArise
 # Contains menus for all the options in the system
-genArise.init <- function(envir){
- 
+genArise.init <- function(envir){ 
   tclRequire("BWidget")
   tclRequire("Img")
   op.counter <<- 0  
   tt <- tktoplevel()
+  tkfocus(tt)
   tkwm.geometry(tt,"+50+50")
   tkwm.maxsize(tt, get("height", envir = envir), get("width", envir = envir))
   tkwm.minsize(tt, get("height", envir = envir), get("width", envir = envir))
@@ -36,6 +36,11 @@ genArise.init <- function(envir){
     tkdestroy(tt)
     projects.select(envir = envir)
   }
+
+  swap.analysis <- function(){
+    tkdestroy(tt)
+    swap.select(envir = envir)
+  }
   
   destroy <- function(){
     tkdestroy(tt)
@@ -48,9 +53,11 @@ genArise.init <- function(envir){
     abre.project()
   })
   tkadd(fileMenu,"cascade",label="Project",menu=project.menu)
-  tkadd(fileMenu,"command",label="Post-analysis      (Ctrl-P)", command = function(){
+  tkadd(fileMenu,"command",label="Swap Analysis   (Ctrl-S)",command=function(){
+    swap.analysis()})
+  tkadd(fileMenu,"command",label="Post-analysis     (Ctrl-P)", command = function(){
     projectos.select()})
-  tkadd(fileMenu,"command",label="Quit                    (Ctrl-X)",command=function() destroy())
+  tkadd(fileMenu,"command",label="Quit                   (Ctrl-X)",command=function() destroy())
   tkadd(topMenu,"cascade",label="File",menu=fileMenu)
   helpMenu <- tkmenu(topMenu,tearoff=FALSE)
   tkadd(helpMenu,"command",label="About genArise...", command=function() help())
@@ -67,6 +74,8 @@ genArise.init <- function(envir){
   tkbind(tt, "<Control-o>",abre.project)
   tkbind(tt, "<Control-N>",nuevo.project)
   tkbind(tt, "<Control-n>",nuevo.project)
+  tkbind(tt, "<Control-S>",swap.analysis)
+  tkbind(tt, "<Control-s>",swap.analysis)   
   tkbind(tt, "<Control-P>",projectos.select)
   tkbind(tt, "<Control-p>",projectos.select)   
   tkbind(tt, "<Control-X>",destroy)
@@ -77,27 +86,34 @@ genArise.init <- function(envir){
                           .Tcl.args(command = nuevo.project)))
 
   # icons in the bar menu
-  tkcmd("image","create","photo","help",file=file.path(get("icons.dir", envir = envir),"icons/help.png"))
+  tcl("image","create","photo","help",file=file.path(get("icons.dir", envir = envir),"icons/help.png"))
   help.button <- tkbutton(butt.frame,image="help", command = function() help())
   tkconfigure(help.button, heigh = 16, width = 16)
+
+  tcl("image","create","photo","swap",file=file.path(get("icons.dir", envir = envir),"icons/swap.png"))
+  swap.button <- tkbutton(butt.frame,image="swap", command = function() swap.analysis())
+  tkconfigure(swap.button, heigh = 16, width = 16)
   
-  tkcmd("image","create","photo","exit",file=file.path(get("icons.dir", envir = envir),"icons/logout.png"))
+  tcl("image","create","photo","exit",file=file.path(get("icons.dir", envir = envir),"icons/logout.png"))
   exit.button <- tkbutton(butt.frame,image="exit", command = function(){
     tkdestroy(tt)})
   tkconfigure(exit.button, heigh = 16, width = 16)
                   
   tkpack(etiqueta, anchor = "e")
-  tkgrid(newButton, openButton, help.button, exit.button, sticky = "nw")
+  tkgrid(newButton, openButton, swap.button, help.button, exit.button, sticky = "nw")
   tkgrid(butt.frame, label.frame)
 
   
-  label.function <-  function(texto.etiqueta) tkconfigure(etiqueta, text = texto.etiqueta, width = "100")
+  label.function <-  function(texto.etiqueta) tkconfigure(etiqueta, text = texto.etiqueta, width = "100", fg = "red")
 
   tkbind(openButton, "<Enter>", function() label.function("Open a project"))
   tkbind(openButton, "<Leave>", function() label.function(""))
 
   tkbind(newButton, "<Enter>", function()  label.function("Create a  new project"))
   tkbind(newButton, "<Leave>", function() label.function(""))
+
+  tkbind(swap.button, "<Enter>", function() label.function("Dye-Swap Analysis"))
+  tkbind(swap.button, "<Leave>", function() label.function(""))
 
   tkbind(help.button, "<Enter>", function() label.function("Display genArise's Help"))
   tkbind(help.button, "<Leave>", function() label.function(""))
