@@ -7,7 +7,7 @@ Author: Ana Patricia Gomez Mayen <pgomez@ifc.unam.mx>,\\ Gustavo
         <gcoello@ifc.unam.mx>
 Acknowledgements: Jorge Ramirez Salcedo and Microarray Unit from IFC
 Maintainer: IFC Development Team <info-genarise@ifc.unam.mx>
-Depends: R (>= 1.7.1), locfit, tkrplot, xtable, methods
+Depends: locfit, tkrplot, xtable
 Description: genArise is an easy to use tool for dual color microarray
         data. Its GUI-Tk based environment let any non-experienced
         user performs a basic, but not simple, data analysis just
