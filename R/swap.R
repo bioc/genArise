@@ -1,6 +1,12 @@
-make.swap <- function(spot1, spot2, Cy3, Cy5, BgCy3, BgCy5, Id, header = FALSE, is.ifc = FALSE,envir,nr,nc){
-  spot.ori <- read.spot(spot1,Cy3,Cy5,BgCy3,BgCy5,Id,header = header,is.ifc = is.ifc,envir=envir)
-  spot.swap <- read.spot(spot2,Cy3,Cy5,BgCy3,BgCy5,Id,header = header,is.ifc = is.ifc,envir=envir)
+make.swap <- function(spot1, spot2, Cy3, Cy5, BgCy3, BgCy5, Id, Symdesc=NULL, header = FALSE, is.ifc = FALSE,envir,nr,nc){
+  if(is.null(Symdesc)){
+    spot.ori <- read.spot(spot1,Cy3,Cy5,BgCy3,BgCy5,Id, header = header,is.ifc = is.ifc,envir=envir)
+    spot.swap <- read.spot(spot2,Cy3,Cy5,BgCy3,BgCy5,Id, header = header,is.ifc = is.ifc,envir=envir)
+  }
+  else{
+    spot.ori <- read.spot(spot1,Cy3,Cy5,BgCy3,BgCy5,Id, Symdesc, header = header,is.ifc = is.ifc,envir=envir)
+    spot.swap <- read.spot(spot2,Cy3,Cy5,BgCy3,BgCy5,Id, Symdesc, header = header,is.ifc = is.ifc,envir=envir)
+  }
   if(is.ifc){
     nr <- get("nr.global",envir=envir)
     nc <- get("nc.global",envir=envir)
@@ -38,7 +44,10 @@ make.swap <- function(spot1, spot2, Cy3, Cy5, BgCy3, BgCy5, Id, header = FALSE, 
   Cy5.new <- sapply(y, geometric.mean)
   BgCy3.new <- sapply(z, geometric.mean)
   BgCy5.new <- sapply(w, geometric.mean)
-  SD <- list(Cy3 = as.numeric(Cy3.new),Cy5 = as.numeric(Cy5.new),BgCy3 = as.numeric(BgCy3.new),BgCy5 = as.numeric(BgCy5.new),Id = as.vector(spot1.data$Id[!cond]))
+  if(is.null(Symdesc))
+    SD <- list(Cy3 = as.numeric(Cy3.new),Cy5 = as.numeric(Cy5.new),BgCy3 = as.numeric(BgCy3.new),BgCy5 = as.numeric(BgCy5.new),Id = as.vector(spot1.data$Id[!cond]))
+  else
+    SD <- list(Cy3 = as.numeric(Cy3.new),Cy5 = as.numeric(Cy5.new),BgCy3 = as.numeric(BgCy3.new),BgCy5 = as.numeric(BgCy5.new),Id = as.vector(spot1.data$Id[!cond]), Symdesc = as.vector(spot1.data$Symdesc[!cond]))
   assign("o.spot", new ("Spot", name = paste(attr(spot.ori, "name"),"vs",attr(spot.swap, "name"),sep=""), spotData = SD), envir = envir)
   assign("a.spot",get("o.spot",envir=envir), envir = envir)
   assign("spot.name",paste(attr(spot.ori, "name"),"vs",attr(spot.swap, "name"),sep=""), envir = envir)
@@ -70,7 +79,6 @@ single.norm <- function(envir){
   swap.dif <- Zscore(swap.u)
   assign("ori.dif",ori.dif, envir = envir)
   assign("swap.dif",swap.dif, envir = envir)
-  
 }
 
 get.Zscore <- function( spot, name, Zscore.min=NULL, Zscore.max=NULL, all=FALSE, envir) {
@@ -108,33 +116,57 @@ get.Zscore <- function( spot, name, Zscore.min=NULL, Zscore.max=NULL, all=FALSE,
   zscore.swap.length <- length(zscore.swap$Id)
   zscoreIdUp <- zscore$Id[Up.index]
   zscoreZscoreUp <- zscore$Zscore[Up.index]
+  if(!is.null(zscore$Symdesc)){
+    zscoreSymUp <- zscore$Symdesc[Up.index]
+    zscoreSymDown <- zscore$Symdesc[Down.index]
+  }
   up.length <- length(zscoreIdUp)
   zscoreIdDown <- zscore$Id[Down.index]
   zscoreZscoreDown <- zscore$Zscore[Down.index]
   
   for(i in 1:n){
-    assign(zscore.ori$Id[i], list(ZscoreUp ="null" ,ZscoreDown = "null", Zscore.ori = zscore.ori$Zscore[i] , Zscore.swap =0),envir=idHash)
+    if(!is.null(zscore.ori$Symdesc))
+      assign(paste(zscore.ori$Id[i],zscore.ori$Symdesc[i],sep="\t"), list(ZscoreUp ="null" ,ZscoreDown = "null", Zscore.ori = zscore.ori$Zscore[i] , Zscore.swap =0),envir=idHash)
+    else
+      assign(zscore.ori$Id[i], list(ZscoreUp ="null" ,ZscoreDown = "null", Zscore.ori = zscore.ori$Zscore[i] , Zscore.swap =0),envir=idHash)
   }
   
   for(i in 1:zscore.swap.length){
-    if(exists( zscore.swap$Id[i], envir = idHash)){
-      idData <- get( zscore.swap$Id[i], envir = idHash)
-      assign(zscore.swap$Id[i], list(ZscoreUp = idData$ZscoreUp, ZscoreDown= idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap =zscore.swap$Zscore[i]),envir=idHash)
-    }             
+    if(!is.null(zscore.ori$Symdesc)){
+      if(exists(paste(zscore.swap$Id[i],zscore.swap$Symdesc[i],sep="\t"), envir = idHash)){
+        idData <- get( paste(zscore.swap$Id[i],zscore.swap$Symdesc[i],sep="\t"), envir = idHash)
+        assign(paste(zscore.swap$Id[i],zscore.swap$Symdesc[i],sep="\t"), list(ZscoreUp = idData$ZscoreUp, ZscoreDown= idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap =zscore.swap$Zscore[i]),envir=idHash)}
+    }
+    else{
+      if(exists(zscore.swap$Id[i], envir = idHash)){
+        idData <- get(zscore.swap$Id[i], envir = idHash)
+        assign(zscore.swap$Id[i], list(ZscoreUp = idData$ZscoreUp, ZscoreDown= idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap =zscore.swap$Zscore[i]),envir=idHash)}
+    }
+  }
+
+  for(i in 1:up.length){
+    if(is.null(zscore$Symdesc)){
+      if(exists( zscoreIdUp[i], envir = idHash)){
+        idData <- get( zscoreIdUp[i], envir = idHash)
+        assign(zscoreIdUp[i], list(ZscoreUp =zscoreZscoreUp[i], ZscoreDown = idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)}
+    }
+    else{
+      if(exists(paste(zscoreIdUp[i],zscoreSymUp[i],sep="\t"), envir = idHash)){
+        idData <- get(paste(zscoreIdUp[i],zscoreSymUp[i],sep="\t"), envir = idHash)
+        assign(paste(zscoreIdUp[i],zscoreSymUp[i],sep="\t"), list(ZscoreUp =zscoreZscoreUp[i], ZscoreDown = idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)}   }
   }
   
-  for(i in 1:up.length){                                
-    if(exists( zscoreIdUp[i], envir = idHash)){
-      idData <- get( zscoreIdUp[i], envir = idHash)
-      assign(zscoreIdUp[i], list(ZscoreUp =zscoreZscoreUp[i], ZscoreDown = idData$ZscoreDown, Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)
-    }             
-    
-  }
   down.length <- length(zscoreIdDown)
-  for(i in 1:down.length){                                
-    if(exists( zscoreIdDown[i], envir = idHash)){
-      idData <- get( zscoreIdDown[i], envir = idHash)
-      assign(zscoreIdDown[i], list(ZscoreUp = idData$ZscoreUp, ZscoreDown =zscoreZscoreDown[i], Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)
+  for(i in 1:down.length){
+    if(is.null(zscore$Symdesc)){
+       if(exists( zscoreIdDown[i], envir = idHash)){
+        idData <- get( zscoreIdDown[i], envir = idHash)
+        assign(zscoreIdDown[i], list(ZscoreUp = idData$ZscoreUp, ZscoreDown = zscoreZscoreDown[i], Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)}
+     }
+    else{
+      if(exists(paste(zscoreIdDown[i],zscoreSymDown[i],sep="\t"), envir = idHash)){
+      idData <- get(paste(zscoreIdDown[i],zscoreSymDown[i],sep="\t"), envir = idHash)
+        assign(paste(zscoreIdDown[i],zscoreSymDown[i],sep="\t"), list(ZscoreUp = idData$ZscoreUp, ZscoreDown = zscoreZscoreDown[i], Zscore.ori = idData$Zscore.ori, Zscore.swap = idData$Zscore.swap),envir=idHash)}
     }
   }
   
@@ -142,21 +174,41 @@ get.Zscore <- function( spot, name, Zscore.min=NULL, Zscore.max=NULL, all=FALSE,
     zScore <- get(id, envir = idHash)
     if(range == "up"){
       if( zScore$ZscoreUp !="null"){
-        list(Id=id,Zscore=zScore$ZscoreUp, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
+        if(!is.null(zscore$Symdesc)){
+          id2 <- unlist(strsplit(id,split="\t"))[1]
+          sym <-  unlist(strsplit(id,split="\t"))[2]
+          list(Id=id2, Symdesc=sym, Zscore=zScore$ZscoreUp, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
+        }
+        else
+          list(Id=id, Zscore=zScore$ZscoreUp, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
       }
     }else{
       if( zScore$ZscoreDown !="null"){
-        list(Id=id,Zscore=zScore$ZscoreDown, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
+        if(!is.null(zscore$Symdesc)){
+          id2 <- unlist(strsplit(id,split="\t"))[1]
+          sym <-  unlist(strsplit(id,split="\t"))[2]
+          list(Id=id2, Symdesc=sym, Zscore=zScore$ZscoreDown, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
+        }
+        else
+          list(Id=id, Zscore=zScore$ZscoreDown, Zscore.ori=zScore$Zscore.ori,Zscore.swap=zScore$Zscore.swap)
       }
-    } 
+    }
   }
+  
   if(all){
     if(file.exists(paste(name,".",ext, sep="")))
-       file.remove(paste(name,".",ext, sep=""))
-    write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,".",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+      file.remove(paste(name,".",ext, sep=""))
+    if(is.null(zscore.ori$Symdesc))
+      write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+    else
+      write.table("Id\tSymbol or description\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
     for(i in 1:n){
-      write.table(get.finalZ(zscore.ori$Id[i],"up"), paste(name,".",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
-      write.table(get.finalZ(zscore.ori$Id[i],"down"), paste(name,".", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
+      if(!is.null(zscore.ori$Symdesc))
+        id <- paste(zscore.ori$Id[i],zscore.ori$Symdesc[i],sep="\t")
+      else
+        id <- zscore.ori$Id[i]
+      write.table(get.finalZ(id,"up"), paste(name,"_All.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
+      write.table(get.finalZ(id,"down"), paste(name,"_All.", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
     }
   }
   else{
@@ -164,15 +216,28 @@ get.Zscore <- function( spot, name, Zscore.min=NULL, Zscore.max=NULL, all=FALSE,
       file.remove(paste(name,"_Up.", ext, sep=""))
     if(file.exists(paste(name,"_Down.", ext, sep="")))
       file.remove(paste(name,"_Down.", ext, sep=""))
-    write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Up.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+    if(is.null(zscore.ori$Symdesc)){
+      write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Up.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+      write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Down.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+    }
+    else{
+      write.table("Id\tSymbol or description\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Up.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+      write.table("Id\tSymbol or description\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Down.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
+    }
     for(i in 1:n){
-      write.table(get.finalZ(zscore.ori$Id[i],"up"), paste(name,"_Up.", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
+      if(!is.null(zscore.ori$Symdesc))
+        id <- paste(zscore.ori$Id[i],zscore.ori$Symdesc[i],sep="\t")
+      else
+        id <- zscore.ori$Id[i]
+      write.table(get.finalZ(id,"up"), paste(name,"_Up.", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
     }
     
-    write.table("Id\tSwapped Zscore\tZscore File1\tZscore File2", paste(name,"_Down.",ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=FALSE)
     for(i in 1:n){
-      write.table(get.finalZ(zscore.ori$Id[i],"down"), paste(name,"_Down.", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
+      if(!is.null(zscore.ori$Symdesc))
+        id <- paste(zscore.ori$Id[i],zscore.ori$Symdesc[i],sep="\t")
+      else
+        id <- zscore.ori$Id[i]
+      write.table(get.finalZ(id,"down"), paste(name,"_Down.", ext, sep=""),col.names=FALSE,row.names=FALSE,quote=FALSE,sep="\t",append=TRUE)
     }
   }  
 }
-

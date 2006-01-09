@@ -46,7 +46,7 @@ library(genArise)
 Once loaded, you can use any function of genArise and proceed with the analysis of the microarray data. genArise is provided with functions that can be applied from R prompt in every step of analysis; however, there is also a graphical user interface to facilitate the use of all the functions in the package.
 
 \section{The genArise Package's Functions\label{sec1}}
-To start the analysis you must read first the data contained in the input file. To read this file, genArise provide the function \texttt{read.spot}. This function returns an object of type Spot (a table structure with the name of the file without extension and the data for the analysis: Cy3 intensity, Cy5 intensity, Cy3 Background, Cy5 Background, Ids) because many other functions of genArise that carry out transformations on the data need a spot object as argument. The syntax for this function is:
+To start the analysis you must read first the data contained in the input file. To read this file, genArise provide the function \texttt{read.spot}. This function returns an object of type Spot (a table structure with the name of the file without extension and the data for the analysis: Cy3 intensity, Cy5 intensity, Cy3 Background, Cy5 Background, Ids and maybe an optional column for an extra identifier or gene symbol) because many other functions of genArise that carry out transformations on the data need a spot object as argument. The syntax for this function is:
 
 \begin{Scode}
 > my.spot <- read.spot( file.name, cy3 = 1, cy5 = 2, 
@@ -547,7 +547,7 @@ Each file will contain the ids that are present in all the sets (projects) in ag
 
 \section{The genArise GUI}
 
-To reduce the size of the genArise package, in the text bellow the screenshots were not included. You can find the complete manual in the site of genArise \url{http://www.ifc.unam.mx/genarise}\\
+To reduce the size of the genArise package, in the text bellow the screenshots were not included. You can find the complete manual in the site of genArise \url{http://www.ifc.unam.mx/genarise}. The title is $genArise_images.pdf$.\\
 
 For making the analysis easier, genArise joins all functions in a graphic interface, to call this GUI, you must type the next line from the R prompt:
 
@@ -565,7 +565,7 @@ You should create a New Project following the sequence  \textbf{File $\rightarro
 
 A new window containing two panels (Input and Output) will be displayed. In the first of them you must specify the properties of the file containing the data, for example: location, was the experiment performed in the IFC?, microarray dimensions in other case. In this way, when the experiment was performed in the IFC you must choose the option \textbf{IFC} and the microarray dimensions will be automatically obtained.\\
 
-In the input field labeled \textbf{Cy3}, \textbf{Cy5}, \textbf{BgCy3}, \textbf{BgCy5} and \textbf{Id}, you must type the number of the column in the file corresponding Cy3 intensity, Cy5 intensity, Cy3 background, Cy5 background and the gene identifiers, respectively.\\
+In the input field labeled \textbf{Cy3}, \textbf{Cy5}, \textbf{BgCy3}, \textbf{BgCy5} and \textbf{Id} you must type the number of the column in the file corresponding Cy3 intensity, Cy5 intensity, Cy3 background, Cy5 background and the gene identifiers, respectively. The input field labeled \textbf{Symbol} is optional and and here you can type the number of the column in the file with an extra identifier (for example: $Gene_Symbol$).
 
 In the inferior panel, there is an input field labeled with \textbf{Project Name} where you must type the name of the project to create and a new file with prj extension, as well as a directory with the specified name will be created. The next two input fields you must specify the name of the subdirectories from this project where the results files will be placed \textbf{(Location for Results)} and the plots \textbf{(Location for Plots)}. You can change this names writing on the input field a new file name (without the path) or click the \textbf{browse} button.\\
 

@@ -49,19 +49,21 @@ swap.select <- function(envir){
   tkgrid(radio.frame,padx="5", pady = "10")
   tkgrid(tklabel(spot.frame, text = "Fill the text entries with the correct columns in your file"), columnspan=11)
   columns.frame <- tkframe(spot.frame)
-
+  symbol.frame <- tkframe(spot.frame)
   Cy3 <- tclVar("")
   Cy5 <- tclVar("")
   BgCy3 <- tclVar("")
   BgCy5 <- tclVar("")
   Id <- tclVar("")
-  
+  Symbol <- tclVar("")
   tkgrid(tklabel(columns.frame,text="Cy3"),tkentry(columns.frame,width="5", textvariable=Cy3, bg = "white"),
          tklabel(columns.frame,text="Cy5"),tkentry(columns.frame,width="5", textvariable=Cy5, bg = "white"),
          tklabel(columns.frame,text="BgCy3"),tkentry(columns.frame,width="5", textvariable=BgCy3, bg = "white"),
          tklabel(columns.frame,text="BgCy5"),tkentry(columns.frame,width="5", textvariable=BgCy5, bg = "white"),
          tklabel(columns.frame,text="Id"),tkentry(columns.frame,width="5", textvariable=Id ,bg = "white"),pady=20,padx="4")
-   tkgrid(columns.frame)
+  tkgrid(tklabel(symbol.frame,text="Symbol"),tkentry(symbol.frame,width="5",textvariable=Symbol, bg = "white"), tklabel(symbol.frame,text="[optional]"))
+  tkgrid(columns.frame)
+  tkgrid(symbol.frame)
   
     Row <- tclVar("")
     Col <- tclVar("")
@@ -191,9 +193,19 @@ swap.select <- function(envir){
       
       assign("op.counter",0,envir = envir)
       if(as.character(tclvalue(rbValue)) == "IFC"){
-        make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)),header = TRUE, is.ifc = TRUE,envir=envir,0,0)
+        if(as.character(tclvalue(Symbol)) == ""){
+          make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)), Symdesc=NULL, header = TRUE, is.ifc = TRUE,envir=envir,0,0)
+        }
+        else{
+          make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)), as.numeric(tclvalue(Symbol)), header = TRUE, is.ifc = TRUE,envir=envir,0,0)
+        }
       }else{
-        make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)),header = FALSE, is.ifc = FALSE,envir=envir,as.numeric(tclvalue(Row)),as.numeric(tclvalue(Col)))
+        if(as.character(tclvalue(Symbol)) == ""){
+          make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)), Symdesc=NULL, header = FALSE, is.ifc = FALSE,envir=envir,as.numeric(tclvalue(Row)),as.numeric(tclvalue(Col)))
+        }
+        else{
+          make.swap(values[1],values[2],as.numeric(tclvalue(Cy3)),as.numeric(tclvalue(Cy5)),as.numeric(tclvalue(BgCy3)),as.numeric(tclvalue(BgCy5)),as.numeric(tclvalue(Id)), as.numeric(tclvalue(Symbol)), header = FALSE, is.ifc = FALSE,envir=envir,as.numeric(tclvalue(Row)),as.numeric(tclvalue(Col)))
+        }
       }
       create.project(name.project,tclvalue(output.file), tclvalue(graphic.file))
       history.project <- paste(name.project,".prj", sep = "")

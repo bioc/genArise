@@ -344,24 +344,41 @@ Zscore.points <-  function(type="ri",text, envir,swap){
           indexDown <- Zscore < -2
           name <- "_greater_2SD"
         }
-          Up <- list(Cy3 = datos$Cy3[indexUp], Cy5 = datos$Cy5[indexUp],
-                     Id = datos$Id[indexUp], Zscore = datos$Zscore[indexUp])
-          Down <- list(Cy3 = datos$Cy3[indexDown], Cy5 = datos$Cy5[indexDown],
-                       Id = datos$Id[indexDown], Zscore = datos$Zscore[indexDown])
+          if(!is.null(datos$Symdesc)){
+            Up <- list(Cy3 = datos$Cy3[indexUp], Cy5 = datos$Cy5[indexUp],
+                       Id = datos$Id[indexUp], Symdesc = datos$Symdesc[indexUp], Zscore = datos$Zscore[indexUp])
+            Down <- list(Cy3 = datos$Cy3[indexDown], Cy5 = datos$Cy5[indexDown],
+                         Id = datos$Id[indexDown], Symdesc = datos$Symdesc[indexDown], Zscore = datos$Zscore[indexDown])
+          }
+          else{
+            Up <- list(Cy3 = datos$Cy3[indexUp], Cy5 = datos$Cy5[indexUp],
+                       Id = datos$Id[indexUp], Zscore = datos$Zscore[indexUp])
+            Down <- list(Cy3 = datos$Cy3[indexDown], Cy5 = datos$Cy5[indexDown],
+                         Id = datos$Id[indexDown], Zscore = datos$Zscore[indexDown])
+          }
           kk <- as.data.frame(Up)
           kk2 <- as.data.frame(Down)
           kk <- apply(kk, 2, as.vector)
           kk2 <- apply(kk2, 2, as.vector)
           la.especie <- as.numeric(tclvalue(tcl(comboBox,"getvalue")))
-          annotations(kk, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), paste("annotationsUp",name,".htm",sep="")))
-          annotations(kk2, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), paste("annotationsDown",name,".htm",sep="")))
+          if(!is.null(datos$Symdesc)){
+            annotations(kk, species[(la.especie + 1)], 3, symbol=4, file.path(get("path.project", envir = envir), paste("annotationsUp",name,".htm",sep="")))
+            annotations(kk2, species[(la.especie + 1)], 3, symbol=4, file.path(get("path.project", envir = envir), paste("annotationsDown",name,".htm",sep="")))
+          }
+          else{
+            annotations(kk, species[(la.especie + 1)], 3, symbol=NULL, file.path(get("path.project", envir = envir), paste("annotationsUp",name,".htm",sep="")))
+            annotations(kk2, species[(la.especie + 1)], 3, symbol=NULL,file.path(get("path.project", envir = envir), paste("annotationsDown",name,".htm",sep="")))
+          }
           tkdestroy(choose.specie)
          }
         else{
           kk <- as.data.frame(datos)
           kk <- apply(kk, 2, as.vector)
           la.especie <- as.numeric(tclvalue(tcl(comboBox,"getvalue")))
-          annotations(kk, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
+          if(!is.null(datos$Symdesc))
+            annotations(kk, species[(la.especie + 1)], 3, 4, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
+          else
+            annotations(kk, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
           tkdestroy(choose.specie)
          }
       }
@@ -447,7 +464,10 @@ Zscore.points <-  function(type="ri",text, envir,swap){
       val <- as.integer(tclvalue(dist))
       if(swap==0){
         if( val == 6){
-          write.table("Cy3\tCy5\tId\tZscore",name, quote = FALSE,sep = "\t", col.names = FALSE, row.names = FALSE )
+          if(is.null(attr(get("Zscore.spot", envir = envir),"dataSets")$Symdesc))
+            write.table("Cy3\tCy5\tId\tZscore",name, quote = FALSE,sep = "\t", col.names = FALSE, row.names = FALSE )
+          else
+            write.table("Cy3\tCy5\tId\tSymbol\tZscore",name, quote = FALSE,sep = "\t", col.names = FALSE, row.names = FALSE )
           write.table(attr(get("Zscore.spot", envir = envir), "dataSets"),
                       name, quote = FALSE, col.names = FALSE, row.names = FALSE,sep="\t",append=TRUE)
         }else if(val == 5){
@@ -478,22 +498,23 @@ Zscore.points <-  function(type="ri",text, envir,swap){
           single.norm(envir)
           assign("ind.norm",1,envir=envir)
         }
+        Zscore.spot <- get("Zscore.spot", envir = envir)
         if( val == 6){
-          get.Zscore(get("Zscore.spot", envir = envir), name, Zscore.min = 0, all=TRUE, envir = envir)
+            get.Zscore(Zscore.spot, name, Zscore.min = 0, all=TRUE, envir = envir)
         }else if(val == 5){
-          get.Zscore(get("Zscore.spot", envir = envir), name, Zscore.min = 2, envir = envir)
+            get.Zscore(Zscore.spot, name, Zscore.min = 2, envir = envir)
         }
         else if(val == 4){
-          get.Zscore(get("Zscore.spot", envir = envir), name, Zscore.min = 1.5, envir = envir)
+            get.Zscore(Zscore.spot, name, Zscore.min = 1.5, envir = envir)
         }
         else if(val == 3){
-          get.Zscore(get("Zscore.spot", envir = envir), name, Zscore.min = 1.5, Zscore.max = 2, envir = envir)
+            get.Zscore(Zscore.spot, name, Zscore.min = 1.5, Zscore.max = 2, envir = envir)
         }
         else if(val == 2){
-          get.Zscore(get("Zscore.spot", envir = envir), name, Zscore.min = 1, Zscore.max = 1.5, envir = envir)
+            get.Zscore(Zscore.spot, name, Zscore.min = 1, Zscore.max = 1.5, envir = envir)
         }
         else if(val == 1){
-          write.dataSet(get("Zscore.spot", envir = envir), name, Zscore.max = 1)
+            write.dataSet(Zscore.spot, name, Zscore.max = 1)
         }
         tkdestroy(warn)
       }
@@ -552,6 +573,7 @@ if(swap==1){
       assign("c.spot", c.spot, envir = envir)
       write.spot(get("c.spot", envir = envir), paste(get("path.results", envir = envir),
                                  .Platform$file.sep, "corrected.txt",sep = ""))
+#      print(attr(get("c.spot", envir = envir),"spotData")$Symdesc)
       set.history.project(get("history.project", envir = envir), "Corrected Spot", "corrected.txt")
       assign("a.spot", c.spot, envir = envir)
       tkpack(corr.radio,anchor="w",padx="10")

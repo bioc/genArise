@@ -9,7 +9,7 @@ adjust the measured intensities to facilitate comparisons.
 You need install the packages tkrplot and locfit in order to be able to use this 
 package. This can be done as follows:
 
-> install.packages(c("locfit","tkrplot"))
+> install.packages(c("locfit","tkrplot","xtable"))
 
 genArise is provided with functions that can be applied from R prompt in every step 
 of analysis; however, there is also a graphical user interface to facilitate the use 
@@ -27,14 +27,14 @@ Creating a New Project
 To create a new project:
 
 1. Open the File menu and choose Project.
-2. Click in the New Project submenu.
+2. Click on the New Project submenu.
 
 
 A new window will be displayed where you must specify the Project Configuration.
 
 *Input:
 	In the Location Spot File text entry, type the path of the file with the 
-	results of the experiment or click in the Browse button and search the file
+	results of the experiment or click on the Browse button and search the file
 	in the disk. Next, you must choose the correct option: the experiment was
 	performed by the IFC in UNAM or is an experiment performed in a different 
 	place.
@@ -52,7 +52,7 @@ A new window will be displayed where you must specify the Project Configuration.
 	
 *Output:
 	In the Project Name text entry, type the name of the project (this will create
-	a directory with this name in the current directory) or click in the Browse 
+	a directory with this name in the current directory) or click on the Browse 
 	button and go to the location where you want to create the project. In the 
 	Location for Plots text entry type the name of the directory where you want to 
 	save your plots and in the Location for Results type the name of the directory 
@@ -211,7 +211,7 @@ Background Correction
 	That is performed just with a subtraction (Cy3 - Background of Cy3) and 
 	(Cy5 - Background of Cy5) for each spot in the microarray.
 
-	If you don't follow the wizard, when you click in the Normalize menu, a
+	If you don't follow the wizard, when you click on the Normalize menu, a
 	dialog asking if you want to correct the background is open. You must click
 	Yes.
 *
@@ -338,7 +338,7 @@ R -vs- I
 	1. In the window after the microarray analysis select the option you 
 	want to plot.
 	2. Open the Graphics menu.
-	3. Click in the R -vs- I submenu and the plot will be displayed.
+	3. Click on the R -vs- I submenu and the plot will be displayed.
 *
 M -vs- A
 
@@ -354,16 +354,16 @@ M -vs- A
 	1. In the window after the microarray analysis select the option you 
 	want to plot.
 	2. Open the Graphics menu.
-	3. Click in the M -vs- A submenu and the plot will be displayed.
+	3. Click on the M -vs- A submenu and the plot will be displayed.
 *
-Cy3 -vs- Cy5
+log2(Cy3) -vs- log2(Cy5)
 
 	Plot the original intensities. Query sample versus reference sample.
 
 	1. In the window after the microarray analysis select the option you 
 	want to plot.
 	2. Open the Graphics menu.
-	3. Click in the Cy3 -vs- Cy5 submenu and the plot will be displayed.
+	3. Click on the log2(Cy3) -vs- log2(Cy5) submenu and the plot will be displayed.
 *
 Write Output
 
@@ -379,7 +379,7 @@ Write Output
 	1. In the window after the microarray analysis select the option you 
 	want to save their data as output file.
 	2. Open the Options menu.
-	3. Click in the Write as outputfile submenu.
+	3. Click on the Write as outputfile submenu.
 	4. Type the name of the output file.
 
 	If you want to save in an output file the values for observations 
@@ -390,7 +390,7 @@ Write Output
 	1. In the window after the Z-score select the option you want
 	to save their data as output file.
 	2. Open the Options menu.
-	3. Click in the Write as outputfile submenu.
+	3. Click on the Write as outputfile submenu.
 	4. Type the name of the output file.
 *
 Z-score
@@ -403,9 +403,16 @@ Z-score
 *
 Post-Analysis
 
-lkhsdhf
-skjdfh
-ksdfh
+	With this function you can obtain which genes are shared between two or 
+	more projects.
+
+	You must follow the next steps:
+	
+	1. From the genArise's main window in the File menu, click on Post-analysis.
+	2. Click on the Add file button to add all the .prj files one by one.
+	3. Select the range for the z-score.
+	4. Select which set you want to compare (up or down-regulated).
+	5. Type the name of the direcory where the results will be save.
 *
 genArise Keyboard Shortcuts
 

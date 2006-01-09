@@ -18,6 +18,7 @@ setValidity("Spot",function(object){
 	BgCy3 <- spotData$BgCy3
 	BgCy5 <-spotData$BgCy5
 	Id <- spotData$Id
+        Symdesc <- spotData$Symdesc
         
 	if(is.null(Cy3) || is.null(Cy5)) return("Element R or G missing")
 	if(!is.numeric(Cy3) || !is.numeric(Cy5)) return("R or G contain non-numeric elements")
@@ -39,6 +40,7 @@ setValidity("DataSet", function(object){
   Cy3 <-  dataSets$Cy3
   Cy5 <-  dataSets$Cy5
   Id  <-  dataSets$Id
+  Symdesc <- dataSets$Symdesc
   Zscore <- dataSets$Zscore
   if(!(type == "ri" || type == "ma")) return ("Type argument must be ri or ma")
   if(is.null(Cy3) || is.null(Cy5) || is.null(Id) || is.null(Zscore)) return("Some element is missing")

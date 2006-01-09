@@ -2,7 +2,7 @@
 require(xtable)
 
 # Get the annotations for a given data set
-annotations <-  function(specie.data, specie, column, output.file = "annotations.html"){
+annotations <-  function(specie.data, specie, column, symbol=NULL, output.file = "annotations.html"){
   species <- c("Mus musculus","Saccharomyces Cerevisiae","Rattus norvegicus", "NCBI")
   if(! is.element(specie,species))
     stop("The specie option must be one of the following: Mus musculus, Saccharomyces Cerevisiae, Rattus norvegicus or NCBI")
@@ -12,13 +12,23 @@ annotations <-  function(specie.data, specie, column, output.file = "annotations
   # send to the corresponding database
   switch(the.specie,
          {specie.data[,column] <- paste('<a href="http://www.informatics.jax.org/javawi2//servlet/WIFetch?page=searchTool&query=',
-                                specie.data[,column],'&selectedQuery=Genes+and+Markers">', specie.data[,column], sep = "")},
+                                specie.data[,column],'&selectedQuery=Genes+and+Markers">', specie.data[,column], sep = "")
+          if(!is.null(symbol))
+          specie.data[,symbol] <- paste('<a href="http://www.informatics.jax.org/javawi2//servlet/WIFetch?page=searchTool&query=',specie.data[,symbol],'&selectedQuery=Genes+and+Markers">',specie.data[,symbol],sep="")
+       },
          {specie.data[,column] <- paste('<a href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=',specie.data[,column],'">',
-                                       specie.data[,column], sep = "")},
+                                       specie.data[,column], sep = "")
+          if(!is.null(symbol))
+            specie.data[,symbol] <- paste('<a href="http://db.yeastgenome.org/cgi-bin/locus.pl?locus=',specie.data[,symbol],'">',specie.data[,symbol], sep = "")},
          {specie.data[,column] <-  paste('<a href="http://rgd.mcw.edu/generalSearch/RgdSearch.jsp?quickSearch=1&searchKeyword=',
-                                         specie.data[,column],'">', specie.data[,column], sep = "")},
+                                         specie.data[,column],'">', specie.data[,column], sep = "")
+          if(!is.null(symbol))
+            specie.data[,symbol] <- paste('<a href="http://rgd.mcw.edu/generalSearch/RgdSearch.jsp?quickSearch=1&searchKeyword=', specie.data[,symbol],'">', specie.data[,symbol], sep = "")},
          {specie.data[,column] <- paste('<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?CMD=search&DB=gene&term=',
-                                specie.data[,column],'">', specie.data[,column], sep = "")})
+                                specie.data[,column],'">', specie.data[,column], sep = "")
+          if(!is.null(symbol))
+            specie.data[,symbol] <- paste('<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?CMD=search&DB=gene&term=',
+                  specie.data[,symbol],'">', specie.data[,symbol], sep = "")})
   
   specie.data <- data.frame(specie.data)
   
@@ -89,17 +99,21 @@ new.project <- function(envir){
     tkgrid(radio.frame,padx="5", pady = "10")
     tkgrid(tklabel(spot.frame, text = "Fill the text entries with the correct columns in your file"), padx = "10", pady = "5")
     columns.frame <- tkframe(spot.frame)
+    symbol.frame <- tkframe(spot.frame)
     Cy3 <- tclVar("")
     Cy5 <- tclVar("")
     BgCy3 <- tclVar("")
     BgCy5 <- tclVar("")
     Id <- tclVar("")
+    Symbol <- tclVar("")
     tkgrid(tklabel(columns.frame,text="Cy3"),tkentry(columns.frame,width="5",textvariable=Cy3, bg = "white"),
            tklabel(columns.frame,text="Cy5"),tkentry(columns.frame,width="5",textvariable=Cy5, bg = "white"),
            tklabel(columns.frame,text="BgCy3"),tkentry(columns.frame,width="5",textvariable=BgCy3, bg = "white"),
            tklabel(columns.frame,text="BgCy5"),tkentry(columns.frame,width="5",textvariable=BgCy5, bg = "white"),
-           tklabel(columns.frame,text="Id"),tkentry(columns.frame,width="5",textvariable=Id, bg = "white"),pady="10",padx="4")
+           tklabel(columns.frame,text="Id"),tkentry(columns.frame,width="5",textvariable=Id, bg = "white"), pady="10",padx="4")
+    tkgrid(tklabel(symbol.frame,text="Symbol"),tkentry(symbol.frame,width="5",textvariable=Symbol, bg = "white"), tklabel(symbol.frame,text="[optional]"))
     tkgrid(columns.frame)
+    tkgrid(symbol.frame)
     
     Row <- tclVar("")
     Col <- tclVar("")
@@ -210,18 +224,30 @@ new.project <- function(envir){
           lista <-  ubications(dimensiones[1],dimensiones[2],dimensiones[3],dimensiones[4])
           conf <-  paste(temp[,2],temp[,3],temp[,4],temp[,5], sep = " ")
           index <- is.element(lista,conf)
-          result.list <-  matrix(ncol = 5, nrow=length(lista))
+          if(as.character(tclvalue(Symbol)) == "")
+            result.list <-  matrix(ncol = 5, nrow=length(lista))
+          else{
+            result.list <-  matrix(ncol = 6, nrow=length(lista))
+            result.list[!index,6] <- "empty"
+          }
           result.list[!index,1:4] <- as.integer(0)
           result.list[!index,5] <- "empty"
           koala <- match(conf,lista)
-          result.list[koala,] <- c(temp[koala, as.numeric(tclvalue(Cy3))], temp[koala,as.numeric(tclvalue(Cy5))], temp[koala, as.numeric(tclvalue(BgCy3))], temp[koala, as.numeric(tclvalue(BgCy5))], temp[koala, as.numeric(tclvalue(Id))])
-
-          set.grid.properties(envir,name.project, dimensiones[3], dimensiones[4], dimensiones[1],dimensiones[2])
+          if(as.character(tclvalue(Symbol)) == ""){
+            result.list[koala,] <- c(temp[koala, as.numeric(tclvalue(Cy3))], temp[koala,as.numeric(tclvalue(Cy5))], temp[koala, as.numeric(tclvalue(BgCy3))], temp[koala, as.numeric(tclvalue(BgCy5))], temp[koala, as.numeric(tclvalue(Id))])
+            assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
+                                  spotData = list(Cy3 = as.numeric(result.list[,1]), Cy5 = as.numeric(result.list[,2]),
+                                    BgCy3 = as.numeric(result.list[,3]), BgCy5 = as.numeric(result.list[,4]), Id = as.vector(result.list[,5]))), envir = envir)
+          }
+          else{
+            result.list[koala,] <- c(temp[koala, as.numeric(tclvalue(Cy3))], temp[koala,as.numeric(tclvalue(Cy5))], temp[koala, as.numeric(tclvalue(BgCy3))], temp[koala, as.numeric(tclvalue(BgCy5))], temp[koala, as.numeric(tclvalue(Id))], temp[koala, as.numeric(tclvalue(Symbol))])
+            assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
+                                  spotData = list(Cy3 = as.numeric(result.list[,1]), Cy5 = as.numeric(result.list[,2]),
+                                    BgCy3 = as.numeric(result.list[,3]), BgCy5 = as.numeric(result.list[,4]), Id = as.vector(result.list[,5]),
+                                  Symdesc = as.vector(result.list[,6]))), envir = envir)
+          }
           
-                                        # return the Spot object
-          assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
-                                spotData = list(Cy3 = as.numeric(result.list[,1]), Cy5 = as.numeric(result.list[,2]),
-                  BgCy3 = as.numeric(result.list[,3]), BgCy5 = as.numeric(result.list[,4]), Id = as.vector(result.list[,5]))), envir = envir)
+          set.grid.properties(envir,name.project, dimensiones[3], dimensiones[4], dimensiones[1],dimensiones[2])
         }
 
         # if the experiment was performed in any other institution, you must enter the whole configuration in the GUI
@@ -238,13 +264,20 @@ new.project <- function(envir){
           }
           set.grid.properties(envir,name.project,
                               as.integer(tclvalue(Row)), as.integer(tclvalue(Col)),as.integer(tclvalue(MR)), as.integer(tclvalue(MC)))
-          
-          assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
-                                spotData = list(Cy3 = as.numeric(temp[,as.numeric(tclvalue(Cy3))]),
-                                  Cy5 = as.numeric(temp[,as.numeric(tclvalue(Cy5))]),
-                                  BgCy3 = as.numeric(temp[,as.numeric(tclvalue(BgCy3))]),
-                                  BgCy5 = as.numeric(temp[,as.numeric(tclvalue(BgCy5))]),
-                                  Id = as.vector(temp[,as.numeric(tclvalue(Id))]))), envir = envir)
+          if(as.character(tclvalue(Symbol)) == "")  
+            assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
+                                  spotData = list(Cy3 = as.numeric(temp[,as.numeric(tclvalue(Cy3))]),
+                                    Cy5 = as.numeric(temp[,as.numeric(tclvalue(Cy5))]),
+                                    BgCy3 = as.numeric(temp[,as.numeric(tclvalue(BgCy3))]),
+                                    BgCy5 = as.numeric(temp[,as.numeric(tclvalue(BgCy5))]),
+                                    Id = as.vector(temp[,as.numeric(tclvalue(Id))]))), envir = envir)
+          else
+            assign("o.spot", new ("Spot", name = get("spot.name", envir = envir),
+                                  spotData = list(Cy3 = as.numeric(temp[,as.numeric(tclvalue(Cy3))]),
+                                    Cy5 = as.numeric(temp[,as.numeric(tclvalue(Cy5))]),
+                                    BgCy3 = as.numeric(temp[,as.numeric(tclvalue(BgCy3))]),
+                                    BgCy5 = as.numeric(temp[,as.numeric(tclvalue(BgCy5))]),
+                                    Id = as.vector(temp[,as.numeric(tclvalue(Id))]), Symdesc = as.vector(temp[,as.numeric(tclvalue(Symdesc))]) )), envir = envir)
         }}
         create.project(name.project,tclvalue(output.file), tclvalue(graphic.file))
         history.project <- paste(name.project,".prj", sep = "")

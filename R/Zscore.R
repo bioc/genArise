@@ -14,14 +14,19 @@ Zscore <- function(spot.object, type = "ri", window.size = 50){
         
 	sort.index <- sort.list(x.axis)        
         y.axis <- y.axis[sort.index]
-        cy5 <- spot.data$Cy5[sort.index]
-        cy3 <- spot.data$Cy3[sort.index]
-        id <- spot.data$Id[sort.index]
+#        cy5 <- spot.data$Cy5[sort.index]
+ #       cy3 <- spot.data$Cy3[sort.index]
+  #      id <- spot.data$Id[sort.index]
 	x.axis <- x.axis[sort.index]
         
         spot.data$Cy3 <- spot.data$Cy3[sort.index]
         spot.data$Cy5 <- spot.data$Cy5[sort.index]
         spot.data$Id <- spot.data$Id[sort.index]
+
+        if(!is.null(spot.data$Symdesc))
+   #       symdesc <- spot.data$Symdesc[sort.index]
+          spot.data$Symdesc <- spot.data$Symdesc[sort.index]
+        
 
 	n.datos <- length(y.axis)
 	inicio.y.axis <- unlist(sapply(1:as.integer(window.size/2), function(x) y.axis[x]))
@@ -44,7 +49,10 @@ Zscore <- function(spot.object, type = "ri", window.size = 50){
 		resultados <- c(resultados, (y.axis[i] - media)/std, recursive = TRUE) 
 	}
 	resultados <- c(resultados, final.Zscore, recursive = TRUE)
-
-        new("DataSet", name = attr(spot.object, "name"),
-            dataSets = list(Cy3 = spot.data$Cy3, Cy5 = spot.data$Cy5, Id = spot.data$Id, Zscore = resultados), type = type) 
+        if(is.null(spot.data$Symdesc))
+          new("DataSet", name = attr(spot.object, "name"),
+              dataSets = list(Cy3 = spot.data$Cy3, Cy5 = spot.data$Cy5, Id = spot.data$Id, Zscore = resultados), type = type)
+        else
+          new("DataSet", name = attr(spot.object, "name"),
+              dataSets = list(Cy3 = spot.data$Cy3, Cy5 = spot.data$Cy5, Id = spot.data$Id, Symdesc = spot.data$Symdesc, Zscore = resultados), type = type) 
       }
