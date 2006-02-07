@@ -4,9 +4,6 @@
 \description{
 This function allows to plot \bold{R-values} vs \bold{I-values}
 \bold{I-value} from a Spot object}
-\syntaxis{
-ri.plot(mySpot, col = "green")
-}
 \usage{
 ri.plot(mySpot, col = "green")
 }

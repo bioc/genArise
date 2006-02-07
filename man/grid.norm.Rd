@@ -5,9 +5,6 @@
 This function normalize R and I values and fit the value of Cy5 for each
 grid in the spot that it receives as argument. In this function the
 dimension of grid is (meta-row * meta-column).}
-\syntax{
-grid.norm(mySpot, nr, nc)
-}
 \usage{
 grid.norm(mySpot, nr, nc)
 }

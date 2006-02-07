@@ -4,9 +4,6 @@
 \description{
 This function allows to plot \bold{R-values} vs \bold{I-values} or
 \bold{M-values} vs \bold{A-values} for identifying differential expression.}
-\syntaxis{
-Zscore.plot(dataSet.spot)
-}
 \usage{
 Zscore.plot(dataSet.spot, Zscore.min, Zscore.max, all, col)
 }

@@ -4,9 +4,6 @@
 \description{
   This function shows the plot of the values from the log Cy3 against
   log Cy5 intensities that belongs to an object of the Spot class.}
-\syntaxis{
-cys.plot(mySpot, col = "green")
-}
 \usage{
 cys.plot(mySpot, col = "green")
 }

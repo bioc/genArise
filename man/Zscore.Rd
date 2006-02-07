@@ -7,9 +7,6 @@
   calculate the mean and standard deviation within a window surrounding
   each data point, and define a Z-score where Z measures the number of
   standard deviations a data point is from the mean.}
-\syntax{
-Zscore(spot.object)
-}
 \usage{
 Zscore(spot.object,type,window.size)
 }

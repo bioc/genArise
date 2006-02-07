@@ -4,9 +4,6 @@
 \description{
 This function allows to plot \bold{M -vs- A} in spot.
 }
-\syntaxis{
-ma.plot(mySpot, col = "green")
-}
 \usage{
 ma.plot(mySpot, col = "green")
 }

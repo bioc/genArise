@@ -7,9 +7,6 @@
   applied to all observations to get the lowess factor and then fit
   Cy5 with this factor. The observations. The observations with values
   R = 0 are deleted because they have no change in their expression levels.}
-\syntax{
-global.norm(mySpot)
-}
 \usage{
 global.norm(mySpot)
 }

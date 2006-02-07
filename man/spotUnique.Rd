@@ -7,9 +7,6 @@ log(ratio,2) measures for each gene so that the transformed values are
 equal. To do this we take the geometric mean.\\
 This procedure can be extended to averaging over \code{n} replicates.
 }
-\syntax{
-spotUnique(mySpot)
-}
 \usage{
 spotUnique(mySpot)
 }

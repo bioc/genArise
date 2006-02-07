@@ -7,9 +7,6 @@
   Cy3 intensity and Cy5 intensity.
   
 }
-\syntax{
-meanUnique(mySpot)
-}
 \usage{
 meanUnique(mySpot)
 }

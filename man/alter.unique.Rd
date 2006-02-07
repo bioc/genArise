@@ -7,9 +7,6 @@ moving one of the repeated Id's the function compute the log ratio of
 both values with the same Id and delete the least absolute value if both
 of them are positive or negative. In other case delete both observations. 
 }
-\syntax{
-  alter.unique(mySpot)
-}
 \usage{
 alter.unique(mySpot)
 }
