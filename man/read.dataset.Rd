@@ -10,8 +10,8 @@ the data with the function write.dataSet, but there is no way to read
 this files with this function).
 }
 \usage{
-read.dataset(file.name, cy3 = 1, cy5 = 2, ids = 3, symdesc = 4, zscore =
-5, type = 6, header = FALSE, sep = "\t")
+read.dataset(file.name, cy3 = 1, cy5 = 2, ids = 3, symdesc = NULL,
+zscore = 4, type = 6, header = FALSE, sep = "\t")
 }
 \arguments{
 \item{file.name}{a connection or a character string giving the

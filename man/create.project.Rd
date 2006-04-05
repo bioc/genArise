@@ -5,7 +5,8 @@
 Auxiliar function for genAriseGUI
 }
 \usage{
-create.project(project.name, results.file = "Results", graphics.file = "Graphics")
+create.project(project.name, results.file = "Results",
+graphics.file = "Graphics")
 }
 \arguments{
   \item{project.name}{}

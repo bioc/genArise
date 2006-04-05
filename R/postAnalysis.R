@@ -8,7 +8,7 @@ get.values <- function(list.values, genes.values, up.down, min.val, max.val){
       indices <- (list.values > min.val) & (list.values <= max.val)
     }else{
       if(is.null(max.val)){
-        indices <- list.values > min.val
+        indices <- list.values >= min.val
       }else{
         indices <- list.values <= max.val
       }
@@ -34,8 +34,12 @@ post.analysis <-  function(values, min.val, max.val, up.down, output){
   for(i in 1 :length(values)){
     results.file <- read.table(values[i], sep ="\t", header = FALSE)[1,1]
     file.data <- read.csv(file.path(unlist( strsplit(values[i], "\\.prj"))[1],
-                                      results.file, "zscore.txt"),sep = "\t", header = TRUE) 
-    assign(values[i], get.values(as.vector(file.data[,4]), as.vector(file.data[,3]), up.down, min.val, max.val), envir = myHash)
+                                      results.file, "zscore.txt"),sep = "\t", header = FALSE)
+    file.data <- file.data[-1,]
+    if(length(file.data[1,])==5)
+      assign(values[i], get.values(as.vector(file.data[,5]), as.vector(file.data[,3]), up.down, min.val, max.val), envir = myHash)
+    else
+      assign(values[i], get.values(as.vector(file.data[,4]), as.vector(file.data[,3]), up.down, min.val, max.val), envir = myHash)
   }
 
 
@@ -84,7 +88,13 @@ post.analysis <-  function(values, min.val, max.val, up.down, output){
   final <- function(lista){
     
     contador.binario <- rep(0, times = length(lista))
-    dir.create(output)
+    if(file.exists(output)){
+      files.list <- list.files(output)
+      for(i in 1:length(files.list))
+        file.remove(paste(output,files.list[i],sep=.Platform$file.sep))
+    }
+    else
+      dir.create(output)
     write.table(lista, file.path(output, "order.txt"), sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
     cat("The order of the files is important for the right interpretation of the data.", file = file.path(output, "order.txt"),
         append = TRUE)

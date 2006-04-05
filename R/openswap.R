@@ -130,11 +130,13 @@ swap.select <- function(envir){
   
   onAdd <-  function(){
     tempo <- tclvalue(tkgetOpenFile(filetypes = "{{CSV Files} {.csv}} {{TXT Files} {.txt}} {{All files} *}"))
-    tempo <- unlist(strsplit(tempo," "))
+   # tempo <- unlist(strsplit(tempo," "))
     for(i in 1:length(tempo)){    
       if(nchar(tempo[i])){
         tkinsert(files.list,"end",tempo[i])
       }
+      else
+        tkmessageBox(message="No file was selected!",icon = "error", default = "ok")
     }
   }
   

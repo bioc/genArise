@@ -1,6 +1,7 @@
 # Windows for diagnostic plots and the analysis
 require(tkrplot)
 require(xtable)
+
 back.gui <- function(envir){
   flag <- 1
   answer <- as.character(tkmessageBox(message = "All the performed operations will be deleted from this project. Are you sure?",
@@ -41,6 +42,13 @@ principal <-  function(envir,swap=0){
   editor.button <- tkbutton(image.menu.frame,image="editor", command = function() note(envir))
   tkconfigure(editor.button, heigh = 16, width = 16)
   
+  tcl("image","create","photo","back",file=file.path(get("icons.dir", envir = envir),"icons/regresar.png"))
+  back.button <- tkbutton(image.menu.frame,image="back",command =  function(){
+    genArise(); tkdestroy(tt)
+    unlink(paste(get("path.project", envir = envir),".prj",sep=""))
+    unlink(get("path.project", envir = envir), recursive = TRUE)})
+  tkconfigure(back.button, heigh = 16, width = 16)
+  
   tcl("image","create","photo","help",file=file.path(get("icons.dir", envir = envir),"icons/help.png"))
   help.button <- tkbutton(image.menu.frame,image="help", command = function() help())
   tkconfigure(help.button, heigh = 16, width = 16)
@@ -50,7 +58,7 @@ principal <-  function(envir,swap=0){
     tkdestroy(tt)})
   tkconfigure(exit.button, heigh = 16, width = 16)
   
-  tkgrid(analysis.button, acroread.button, editor.button, help.button, exit.button, sticky = "nw")
+  tkgrid(analysis.button, acroread.button, editor.button, back.button, help.button, exit.button, sticky = "nw")
   
   etiqueta <- tklabel(lower.menu, text = "")
   tkconfigure(etiqueta, text = "", width = "90") 
@@ -249,13 +257,13 @@ principal <-  function(envir,swap=0){
   area.frame <- tkframe(tt,relief="groove")
   yscr <- tkscrollbar(area.frame, repeatinterval = 5,
                       command=function(...)tkyview(txt,...))
-  txt <- tktext(area.frame,bg="white",font="courier",width ="70",height="5",yscrollcommand=function(...)tkset(yscr,...))
+  txt <- tktext(area.frame,bg="white",font="courier",width =get("barWidth",envir=envir),height=get("barHeight",envir=envir),yscrollcommand=function(...)tkset(yscr,...))
   tkgrid(txt, yscr, sticky = "w")
   tkgrid.configure(yscr,rowspan=4,sticky="ns")
   tkinsert(txt,"end","GenArise Microarray Analyzer\n")
   tkinsert(txt,"end","Institute of Cellular Physiology UNAM")
   tkconfigure(txt, state="disabled")
-  tkgrid(area.frame, padx = "10", pady = "10", sticky = "ew")
+  tkgrid(area.frame, padx = "10", pady = "10", sticky = "w")
 }
 
 # Auxiliar function to call the Zscore.plot function in the GUI
@@ -378,7 +386,7 @@ Zscore.points <-  function(type="ri",text, envir,swap){
           if(!is.null(datos$Symdesc))
             annotations(kk, species[(la.especie + 1)], 3, 4, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
           else
-            annotations(kk, species[(la.especie + 1)], 3, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
+            annotations(kk, species[(la.especie + 1)], 3,symbol=NULL, file.path(get("path.project", envir = envir), "annotationsAll.htm"))
           tkdestroy(choose.specie)
          }
       }
@@ -530,6 +538,69 @@ Zscore.points <-  function(type="ri",text, envir,swap){
   
   
   frame.label <- tkframe(tt,relief="groove",borderwidth=2)
+
+  #######################
+
+  lower.menu <- tkframe(tt, relief = "groove", borderwidth=2)
+  
+  image.menu.frame <- tkframe(lower.menu)
+  
+  tcl("image","create","photo","acroread",file= file.path(get("icons.dir", envir = envir),"icons/acroread.png"))
+  acroread.button <- tkbutton(image.menu.frame,image="acroread", command = function(){
+    name <- make.file.name(file.type = "{{PDF Files} {.pdf}} {{All files} *}", ext ="pdf")
+    name <- unlist(strsplit(name, "\\."))[1]
+    if (!nchar(name))
+      tkmessageBox(parent = tt,  message= "You must write a name of file!", icon = "error", default = "ok")
+    else{
+      pdf(paste(name,".pdf",sep=""), horiz = FALSE, height = 8, width = 8, title = name)
+      switch(as.integer(tclvalue(dist)),
+             Zscore.plot(get("Zscore.spot", envir = envir), all = FALSE, Zscore.max = 1, col = "green"),
+             Zscore.plot(get("Zscore.spot", envir = envir), Zscore.max = 1.5, Zscore.min = 1, all = FALSE, col = "blue"),
+             Zscore.plot(get("Zscore.spot", envir = envir), Zscore.max = 2, Zscore.min = 1.5, all = FALSE, col = "cyan"),
+             Zscore.plot(get("Zscore.spot", envir = envir), Zscore.min = 1.5, all = FALSE, col = "yellow"),
+             Zscore.plot(get("Zscore.spot", envir = envir), Zscore.min = 2, all = FALSE, col = "snow"),
+             Zscore.plot(get("Zscore.spot", envir = envir)))
+      dev.off(dev.cur())
+    }
+  }) 
+  tkconfigure(acroread.button, heigh = 16, width = 16)
+  
+  tcl("image","create","photo","editor",file=file.path(get("icons.dir", envir = envir),"icons/editor.png"))
+  editor.button <- tkbutton(image.menu.frame,image="editor", command = function() note(envir))
+  tkconfigure(editor.button, heigh = 16, width = 16)
+  
+  tcl("image","create","photo","back",file=file.path(get("icons.dir", envir = envir),"icons/regresar.png"))
+  back.button <- tkbutton(image.menu.frame,image="back",command =  function(){
+     sure <- back.gui(envir)
+    if(sure == 0){
+      tkdestroy(tt)
+      if(swap== 0){
+        principal(envir,0)
+      }
+      else if(swap == 1){
+        principal(envir,1)
+      }
+  }})
+  tkconfigure(back.button, heigh = 16, width = 16)
+  
+  tcl("image","create","photo","help",file=file.path(get("icons.dir", envir = envir),"icons/help.png"))
+  help.button <- tkbutton(image.menu.frame,image="help", command = function() help())
+  tkconfigure(help.button, heigh = 16, width = 16)
+
+  tcl("image","create","photo","exit",file=file.path(get("icons.dir", envir = envir),"icons/logout.png"))
+  exit.button <- tkbutton(image.menu.frame,image="exit", command = function(){
+    tkdestroy(tt)})
+  tkconfigure(exit.button, heigh = 16, width = 16)
+  
+  tkgrid(acroread.button, editor.button, back.button, help.button, exit.button, sticky = "nw")
+  
+  etiqueta <- tklabel(lower.menu, text = "")
+  tkconfigure(etiqueta, text = "", width = "90") 
+  tkgrid(image.menu.frame, etiqueta, sticky = "w")
+  tkgrid(lower.menu)
+
+
+  #######################
   tkfocus(tt)
   img <- tkrplot(upper.frame,fun = function()Zscore.plot(get("Zscore.spot", envir = envir),type),
                  hscale= get("Myhscale", envir = envir),vscale = get("Myvscale",envir = envir))
@@ -539,13 +610,14 @@ Zscore.points <-  function(type="ri",text, envir,swap){
   yscr <- tkscrollbar(area.frame, repeatinterval = 5,
                       command=function(...)tkyview(txt,...))
   
-  txt <- tktext(area.frame,bg="white",font="courier",width ="70",height="5",yscrollcommand=function(...)tkset(yscr,...))
+ 
+  txt <- tktext(area.frame,bg="white",font="courier",width =get("barWidth",envir=envir),height=get("barHeight",envir=envir),yscrollcommand=function(...)tkset(yscr,...))
   tkgrid(txt, yscr)
   tkgrid.configure(yscr,rowspan=4,sticky="nsw")
   tkinsert(txt,"end",text)
   tkinsert(txt,"end","\n\nZscore Done!!")
   tkconfigure(txt, state="disabled")
-  tkgrid(area.frame, padx = "10", sticky = "ew")
+  tkgrid(area.frame, padx = "10", sticky = "w")
 }
 
 # Window for the analysis
@@ -929,7 +1001,7 @@ else if(swap==1){
     assign("Zscore.spot", Zscore(get("a.spot",envir=envir), type = "ma"), envir = envir)
     write.zscore(get("Zscore.spot", envir = envir),file.path(get("path.results", envir = envir), "zscore.txt"))
     set.history.project(get("history.project", envir = envir), "MA Zscore", "zscore.txt")
-    Zscore.points(type="ma",text=tclvalue(tkget(txt,"0.0","end")), envir)
+    Zscore.points(type="ma",text=tclvalue(tkget(txt,"0.0","end")), envir,swap)
     tkdestroy(tt)
   })
   
@@ -1139,7 +1211,7 @@ else if(swap==1){
   
   area.frame <- tkframe(tt,relief="groove")
   yscr <- tkscrollbar(area.frame, repeatinterval = 5, command=function(...)tkyview(txt,...))
-  txt <- tktext(area.frame,bg="white",font="courier",width ="70",height="5",yscrollcommand=function(...)tkset(yscr,...))
+  txt <- tktext(area.frame,bg="white",font="courier",width =get("barWidth",envir=envir),height=get("barHeight",envir=envir),yscrollcommand=function(...)tkset(yscr,...))
   tkgrid(txt, yscr)
   tkgrid.configure(yscr,rowspan=4,sticky="nsw")
   tkinsert(txt,"end",texto)

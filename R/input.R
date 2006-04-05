@@ -86,13 +86,17 @@ read.spot <- function( file.name, cy3, cy5, bg.cy3, bg.cy5, ids, symdesc, header
   }
 }
 
-read.dataset <- function( file.name, cy3 = 1, cy5 = 2, ids = 3, symdesc = 4, zscore = 5, type = 6, header = FALSE, sep = "\t"){
+read.dataset <- function( file.name, cy3 = 1, cy5 = 2, ids = 3, symdesc=NULL, zscore = 4, type = 6, header = FALSE, sep = "\t"){
+  if(!is.null(symdesc)){
+    zscore <- 5
+    symdesc <- 4
+  }
   tmp <- unlist(strsplit(file.name, "\\/"))
   dataset.name <- unlist(strsplit(tmp[length(tmp)], "\\."))[1]
   dataset <- read.csv( file.name, header = header, sep = sep)
   type <- trim(as.character(dataset[1,4]))
   dataset <- dataset[-1,]
-  if(missing(symdesc)){
+  if(is.null(symdesc)){
     new ("DataSet", name = dataset.name ,dataSets = list(Cy3 = as.numeric(dataset[,cy3]),
                                          Cy5 = as.numeric(dataset[,cy5]), Id = as.vector(dataset[,ids]),
                                          Zscore = as.numeric(as.vector(dataset[,zscore]))), type= type)

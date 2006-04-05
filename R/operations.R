@@ -52,7 +52,6 @@ grid.norm <- function(mySpot, nr, nc){
   y <- spot$Cy5
   k <-(nc * nr)-1
   j <- 1
-  i <- 1
   Cy3 <- Cy5 <- BgCy3 <- BgCy5<- Id <- Symdesc <- list()
   bloque <- 1
   n <- length (x)
@@ -90,17 +89,15 @@ grid.norm <- function(mySpot, nr, nc){
       e <- e[!zero.index]
       if(!is.null(spot$Symdesc)){
         f <- f[!zero.index]
+        Symdesc <- c(Symdesc, f, recursive = TRUE)
       }
       }
-      tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, ev=rbox(cut  = 0.9) ))
-      Cy5 <- c(Cy5, b * (1/2^tmp), recursive = TRUE)
-      Cy3 <- c(Cy3, a, recursive = TRUE)
-      BgCy3 <- c(BgCy3, c, recursive = TRUE)
-      BgCy5 <- c(BgCy5, d, recursive = TRUE)
-      Id <- c(Id, e, recursive = TRUE)
-    if(!is.null(spot$Symdesc)){
-      Symdesc <- c(Symdesc, f, recursive = TRUE)
-    }
+    tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, ev=rbox(cut  = 0.9)))
+    Cy5 <- c(Cy5, b * (1/2^tmp), recursive = TRUE)
+    Cy3 <- c(Cy3, a, recursive = TRUE)
+    BgCy3 <- c(BgCy3, c, recursive = TRUE)
+    BgCy5 <- c(BgCy5, d, recursive = TRUE)
+    Id <- c(Id, e, recursive = TRUE)
     j <- j + k + 1
   }
   Cy3 <- as.integer(Cy3)
@@ -144,6 +141,7 @@ global.norm <- function(mySpot){
     e <- e[!zero.index]
     if(!is.null(spot$Symdesc)){
       f <- f[!zero.index]
+      Symdesc <- f
     }
 
     tmp <- fitted(locfit(R~I,alpha = 0.1, deg = 1, ev=rbox(cut  = 0.9) ))
@@ -152,9 +150,6 @@ global.norm <- function(mySpot){
     BgCy3 <- c
     BgCy5 <- d
     Id <- e
-    if(!is.null(spot$Symdesc)){
-      Symdesc <- f
-    }
   }
   Cy3 <- as.integer(Cy3)
   Cy5 <- as.integer(Cy5)

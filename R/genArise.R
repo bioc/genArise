@@ -1,6 +1,8 @@
 # Main Window of genArise
 # Contains menus for all the options in the system
 genArise.init <- function(envir){ 
+if(.Platform$pkgType == "mac.binary")
+  addTclPath("/Library/Tcl")
   tclRequire("BWidget")
   tclRequire("Img")
   op.counter <<- 0  
@@ -29,7 +31,8 @@ genArise.init <- function(envir){
   # open a new project to be performed
   nuevo.project <-  function(){
     tkdestroy(tt)
-    new.project(envir)}
+#    new.project(envir)}
+    select.experiments(envir)}
 
   # select the projects to perform the post-analysis
   projectos.select <- function() {

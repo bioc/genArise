@@ -42,7 +42,6 @@ write.dataSet <- function(dataSet.spot, fileName, quote = FALSE, col.names=FALSE
     write.table(Center, paste(fileName,"_Center.", ext, sep = ""), quote = quote, sep = sep, col.names = col.names, row.names = row.names, append = TRUE)
   }else{
     if(is.null(data.values$Symdesc)){
-      print("hola")
       write.table("Cy3\tCy5\tId\tZscore", paste(fileName,"_Up.", ext, sep = "") , quote = quote,sep = sep, col.names = col.names, row.names = row.names )
       write.table("Cy3\tCy5\tId\tZscore", paste(fileName,"_Down.", ext, sep = "") , quote = quote,sep = sep, col.names = col.names, row.names = row.names )
     }
@@ -58,7 +57,6 @@ write.dataSet <- function(dataSet.spot, fileName, quote = FALSE, col.names=FALSE
       Up.index <-  data.values$Zscore > Zscore.min
       Down.index <- data.values$Zscore < (-Zscore.min)
       if(is.null(data.values$Symdesc)){
-        print("hola")
         Up <- list(Cy3 = data.values$Cy3[Up.index], Cy5 = data.values$Cy5[Up.index],
                    Id = data.values$Id[Up.index], Zscore = data.values$Zscore[Up.index])
         Down <- list(Cy3 = data.values$Cy3[Down.index], Cy5 = data.values$Cy5[Down.index],
@@ -78,7 +76,6 @@ write.dataSet <- function(dataSet.spot, fileName, quote = FALSE, col.names=FALSE
       Up.index <-  (data.values$Zscore > Zscore.min) & (data.values$Zscore < Zscore.max)
       Down.index <- (data.values$Zscore < (-Zscore.min)) & (data.values$Zscore > (-Zscore.max))
       if(is.null(data.values$Symdesc)){
-        print("hola")
         Up <- list(Cy3 = data.values$Cy3[Up.index], Cy5 = data.values$Cy5[Up.index],
                    Id = data.values$Id[Up.index], Zscore = data.values$Zscore[Up.index])
         Down <- list(Cy3 = data.values$Cy3[Down.index], Cy5 = data.values$Cy5[Down.index],

@@ -49,6 +49,7 @@ make.swap <- function(spot1, spot2, Cy3, Cy5, BgCy3, BgCy5, Id, Symdesc=NULL, he
   else
     SD <- list(Cy3 = as.numeric(Cy3.new),Cy5 = as.numeric(Cy5.new),BgCy3 = as.numeric(BgCy3.new),BgCy5 = as.numeric(BgCy5.new),Id = as.vector(spot1.data$Id[!cond]), Symdesc = as.vector(spot1.data$Symdesc[!cond]))
   assign("o.spot", new ("Spot", name = paste(attr(spot.ori, "name"),"vs",attr(spot.swap, "name"),sep=""), spotData = SD), envir = envir)
+  write.spot(get("o.spot",envir=envir),"original")
   assign("a.spot",get("o.spot",envir=envir), envir = envir)
   assign("spot.name",paste(attr(spot.ori, "name"),"vs",attr(spot.swap, "name"),sep=""), envir = envir)
   assign("name.project", paste(attr(spot.ori, "name"),"vs",attr(spot.swap, "name"),sep=""), envir = envir)

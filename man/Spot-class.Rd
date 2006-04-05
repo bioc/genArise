@@ -16,7 +16,8 @@ Objects are normally created by \code{\link{read.spot}}.
 \section{Slots/List Components}{
 This class contains no slots (other than \code{.Data}), but objects should contain the following list components:
 \tabular{ll}{
-  \code{Cy5}:\tab numeric matrix containing the red (cy5) foreground intensities.  Rows correspond to spots and columns to arrays.\cr
+  \code{Cy5}:\tab numeric matrix containing the red (cy5) foreground
+  intensities. Rows correspond to spots and columns to arrays.\cr
   \code{Cy3}:\tab numeric matrix containing the green (cy3) foreground intensities.\cr
   \code{BgCy5}:\tab numeric matrix containing the red (cy5) background intensities.\cr
   \code{BgCy3}:\tab numeric matrix containing the green background intensities.\cr

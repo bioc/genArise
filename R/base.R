@@ -2,17 +2,24 @@
 
 # Just set the options for the GUI
 set.project.properties <- function(envir){
-  assign("height", "550", envir = envir)
+
   assign("graphic.type", 2, envir = envir)
   assign("icons.dir", file.path(system.file(),"..", "genArise", "doc"), envir = envir)
+
   if(.Platform$OS.type == "unix"){
     assign("Myhscale", 1 , envir = envir)
     assign("Myvscale", 1 , envir = envir)
+    assign("barWidth", 70, envir=envir)
+    assign("barHeight", 5, envir=envir)
+    assign("height","550",envir=envir)
     assign("width", "55", envir = envir)
     assign("editor", "emacs", envir = envir)
   }else{
     assign("Myhscale", 1.3 , envir = envir)
     assign("Myvscale", 1.3 , envir = envir)
+    assign("height","550",envir=envir)
+    assign("barWidth", 50, envir=envir)
+    assign("barHeight", 3, envir=envir)
     assign("width", "55", envir = envir)
     assign("editor", "notepad", envir = envir)
   }

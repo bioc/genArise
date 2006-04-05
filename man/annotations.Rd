@@ -5,7 +5,8 @@
   Performed an HTML file
 }
 \usage{
-annotations(specie.data, specie, column, symbol, output.file = "annotations.html")
+annotations(specie.data, specie, column, symbol,
+output.file = "annotations.html")
 }
 \arguments{
   \item{specie.data}{A data frame}
