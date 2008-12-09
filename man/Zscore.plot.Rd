@@ -14,7 +14,7 @@ Zscore.plot(dataSet.spot, Zscore.min, Zscore.max, all, col)
   \item{Zscore.max}{The greater value in a range, if Zscore.max = NULL
     then file will be contain all values above Zscore.min. Both values,
     Zscore.min and Zscore.max can not be NULL}
-  \item{all} {Plot all the observations in four sets: Z < 1, 1 < Z <
+  \item{all}{Plot all the observations in four sets: Z < 1, 1 < Z <
     1.5, 1.5 < Z < 2, Z > 2}
     \item{col}{ Color in which the pioints of the plot will be shown where
     only the points from center are plot. This argument must be quoted
