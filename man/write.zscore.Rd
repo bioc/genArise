@@ -15,7 +15,7 @@ write.zscore(dataSet.spot, fileName, sep = "\t")
 \item{dataSet.spot}{An object of DataSet class}
 \item{fileName}{The name of the output file where the data will be
   writen. This argument must be quoted.}
-\item{sep}{Character to separate the columns in file. By default sep = "\t".}
+\item{sep}{Character to separate the columns in file. By default sep = "\\t".}
 }
 \examples{
 data(WT.dataset)

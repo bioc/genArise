@@ -26,7 +26,7 @@ Zscore.min = NULL, Zscore.max = NULL, sep = "\t")
   then file will be contain all values above Zscore.min. Both values,
   Zscore.min and Zscore.max can not be NULL}
 \item{sep}{Character to separate the columns in file. By default sep
-  = "\t".}
+  = "\\t".}
 }
 \examples{
 data(WT.dataset)

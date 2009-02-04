@@ -15,7 +15,7 @@ col.names = FALSE, row.names = FALSE)
 \item{fileName}{The name of the output file where the data will be
   writen. This argument must be quoted.}
 \item{quote}{If quote = TRUE, all values in the file will be quoted.}
-\item{sep}{Character to separate the columns in file. By default sep = "\t".}
+\item{sep}{Character to separate the columns in file. By default sep = "\\t".}
 \item{col.names}{If col.names = TRUE, an integer is writen in every
   column as header. By default col.names = FALSE.}
 \item{row.names}{If row.names = TRUE will be an extra column that

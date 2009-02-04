@@ -7,7 +7,7 @@
   This function is called post.analysis and it is mandatory that
   you have done the Zscore operation in all the selected projects. It is
   important to clarify that this function receives a list of files with
-  extension \texttt{prj} as ergument and for this reason you can't use
+  extension \code{prj} as argument and for this reason you can't use
   it if the results to compare was not obtained by the genArise GUI.
 }
 \usage{
