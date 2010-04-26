@@ -1,0 +1,19 @@
+import(methods)
+import(tcltk)
+importFrom(graphics, image, lines, par, plot, points)
+importFrom(grDevices, col2rgb, dev.cur, dev.off, pdf, rgb)
+importFrom(stats, fitted, lowess, sd)
+importFrom(utils, read.csv, read.table, write.table)
+importFrom(xtable, xtable)
+
+exportClasses(Spot, DataSet)
+export(a.arise, alter.unique, analysis.window, annotations, back.gui,
+       bg.correct, create.project, cys.plot, filter.spot, genArise,
+       genArise.init, genMerge, get.values, get.Zscore, global.norm,
+       graphic.choose, grid.norm, help, i.arise, imageLimma, m.arise,
+       ma.plot, make.swap, meanUnique, note, old.project, post.analysis,
+       principal, projects.select, r.arise, read.dataset, read.spot,
+       reset.history, ri.plot, set.grid.properties, set.history.project,
+       set.path.project, set.project.properties, single.norm, spotUnique,
+       swap.select, trim, write.dataSet, write.spot, write.zscore, Zscore,
+       Zscore.plot, Zscore.points)
