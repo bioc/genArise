@@ -1,5 +1,5 @@
 Package: genArise
-Version: 1.35.0
+Version: 1.35.1
 Title: Microarray Analysis tool
 Author: Ana Patricia Gomez Mayen <pgomez@ifc.unam.mx>,\\ Gustavo
         Corral Guille <gcorral@ifc.unam.mx>, \\ Lina Riego Ruiz
@@ -16,4 +16,5 @@ Description: genArise is an easy to use tool for dual color microarray
         developer.
 biocViews: Microarray, TwoChannel, Preprocessing
 License: file LICENSE
+License_restricts_use: yes
 URL: http://www.ifc.unam.mx/genarise
